@@ -1,0 +1,50 @@
+.box-info {
+    display: flex; 
+    justify-content: space-around; 
+    flex-wrap: nowrap; 
+    padding: 0px 70px;
+    gap: 50px; 
+    width: 100%; 
+    max-width: 1200px;
+    
+}
+
+.shopping-icon, .trade-icon, .sell-icon, .analy-icon {
+    font-size: 70px; 
+    color: black; 
+}
+
+.buy, .sell, .trade, .analytics {
+    padding: 30px 20px;
+    height: 100%;
+    border-radius: 50px;
+    background-color: #f2f2f7;
+    transform-style: preserve-3d;
+    box-shadow: rgba(0, 0, 0, 0) 40px 50px 25px -40px, 
+                rgba(0, 0, 0, 0.2) 0px 25px 25px -5px;
+    transition: transform 0.3s, box-shadow 0.3s; 
+    filter: brightness(0.85);
+}
+
+/* .buy:hover, .sell:hover, .trade:hover {
+    /* transform: scale(1.05); 
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 25px 50px -5px, 
+                rgba(0, 0, 0, 0.3) 0px 10px 20px -5px; 
+} */
+
+
+body {
+    display: grid;
+    height: 100%;
+    place-items: center;
+}
+
+.slogan {
+    margin-top: 70px;  
+    margin-left: 100px; 
+    margin-bottom: 50px;
+    font-size: 50px;
+    text-decoration: underline;
+    text-decoration-thickness: 5px;
+
+}

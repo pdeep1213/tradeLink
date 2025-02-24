@@ -1,0 +1,27 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    backdrop-filter: blur(70px);
+}
+
+.logo {
+    font-size: 28px;
+    color: black;
+    font-weight: 600;
+}
+
+.navbar-items a {
+    position: relative;
+    color: black;
+    font-weight: 500;
+    margin-left: 30px;
+}
+
+
