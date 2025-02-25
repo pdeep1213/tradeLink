@@ -40,15 +40,7 @@ const Register = () => {
             required
           />
 
-          <label htmlFor="dob">Date of Birth</label>
-          <input
-            type="date"
-            id="dob"
-            name="dob"
-            value={formData.dob}
-            onChange={handleChange}
-            required
-          />
+          
 
           <label htmlFor="email">Email</label>
           <input
