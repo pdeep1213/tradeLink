@@ -3,19 +3,39 @@
     top: 0;
     left: 0;
     width: 100%;
-    padding: 15px 5%;
+    padding: 15px 5% 10px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: transparent;
-    backdrop-filter: blur(70px);
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    backdrop-filter: blur(20px);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    margin-left: 0;
 }
 
 .logo {
-    font-size: 28px;
-    color: black;
-    font-weight: 600;
+
+    height: 50px; 
+    width: auto;
+    margin-right: 10px; 
+    border-radius: 50%;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
 }
+
+.title {
+    font-size: 28px;
+    color: white;
+    font-weight: 600;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
 
 .navbar-items a {
     position: relative;

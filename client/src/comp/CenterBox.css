@@ -16,7 +16,8 @@
 
 .buy, .sell, .trade, .analytics {
     padding: 30px 20px;
-    height: 100%;
+    width: 25%;
+    height: 310px;
     border-radius: 50px;
     background-color: #f2f2f7;
     transform-style: preserve-3d;
@@ -26,17 +27,17 @@
     filter: brightness(0.85);
 }
 
-/* .buy:hover, .sell:hover, .trade:hover {
-    /* transform: scale(1.05); 
+.buy:hover, .sell:hover, .trade:hover, .analytics:hover {
+     transform: scale(1.05); 
     box-shadow: rgba(0, 0, 0, 0.2) 0px 25px 50px -5px, 
-                rgba(0, 0, 0, 0.3) 0px 10px 20px -5px; 
-} */
+                rgba(0, 0, 0, 0.3) 0px 10px 20px -5px;  
+}
 
 
 body {
-    display: grid;
+    display: flex;
     height: 100%;
-    place-items: center;
+    justify-content: center;
 }
 
 .slogan {
