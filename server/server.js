@@ -3,8 +3,10 @@ const db = require('./db');
 const app = express();
 const port = 8080;
 const bodyParser = require("body-parser");
+const cors = require('cors');
 require("dotenv").config();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -21,13 +23,9 @@ app.get('/', async (req, res) => {
 });
 
 //POST
-app.post('/test', async (req, res) =>{
-    const {table, data} = req.body;
-    console.log("Table: ", table); //test
+app.post('/register', async (req, res) =>{
+    const data = req.body;
     console.log("Data: ", data); //test
-
-    if(!tables.includes(table))
-      return res.status(400).send({message: "Tables does not exist"});
 
     const columns = Object.keys(data).join(', ');
     const value = Object.values(data);
@@ -36,8 +34,18 @@ app.post('/test', async (req, res) =>{
     let con; 
     try{
         con = await db.getConnection();
-        const query = `insert into ${table} (${columns}) values (${question})`;
-        const result = await con.query(query, value);
+        //check the database for same email
+        let query = "select * from ulogin where email=?";
+        let result = await con.query(query, data.email);
+        console.log(result);
+        if (result != 0){
+            return res.status(400).json({message: "A User is already registered with this email"});
+        }
+        console.log("pass if check");
+        query = `insert into ulogin (${columns}) values (${question})`;
+        console.log("creating new query");
+        result = await con.query(query, value);
+        console.log("inserting new query");
         result.insertId = result.insertId.toString();
         res.status(200).json({ message: 'Task Inserted Successfully', result});
     }catch (err){
@@ -71,6 +79,6 @@ app.delete('/', async (req, res) => {
     }
 });
 
-app.listen(port, "127.0.0.1" , () => console.log(`Server running on ${port}`));
+app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
 
 

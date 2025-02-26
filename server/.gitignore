@@ -1,2 +1,2 @@
 ignore .env
-ignore node_*
+ignore node_modules/
