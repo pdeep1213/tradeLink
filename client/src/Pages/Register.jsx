@@ -6,7 +6,6 @@ import Navbar from "../comp/Navbar";
 const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
-    dob: "",
     email: "",
     password: "",
   });
@@ -16,10 +15,25 @@ const Register = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically handle the registration logic
-    console.log("User Data:", formData);
+    const outputdata = {
+      username: formData.name,
+      password: formData.password,
+      email: formData.email
+    };
+    try{
+     const response = await fetch('http://128.6.60.7:8080/register' , {
+         method: 'POST',
+         headers:{
+             'Content-Type': 'application/json',
+         },
+         body: JSON.stringify(outputdata),
+     });
+     if (!response.ok){throw new Error('server error');}
+     const result = await response.json();
+        console.log("Server Result: ", result);
+    } catch(error){ console.log("error: ", error);}
   };
 
   return (
