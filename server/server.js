@@ -57,12 +57,34 @@ app.post('/register', async (req, res) =>{
     }
 });
 
+// **Login Route (No Encryption)**
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+	console.log(email,password);
+    try {
+        const con = await db.getConnection();
+        const result = await con.query("SELECT * FROM ulogin WHERE email=? AND password=?", [email, password]);
+        // Fetch user from database
+	console.log(result);
+	const user = Array.isArray(result) ? result[0] : result;
+        if (user.length === 0 || !user) {
+            return res.status(400).json({ message: "Invalid email or password" });
+        }
+
+        res.status(200).json({ message: "Login Successful"});
+    } catch (err) {
+	console.log(err);
+        res.status(500).json({ error: 'Error During Login', details: err.message });
+    }
+});
+
+
 //TODO
 app.put('/', async (req, res) =>{
     let task = req.body;
     try{
-        const result = await db.pool.query("update tasks set description = ?, completed = ? where id = ?", [task.description, task.completed, task.id]);
-        res.send(result);
+        const result = await db.pool.query("update tasks set description = ?, completed = ? where id = ?", [task.description, task.completed, task.id]);        res.send(result);
     }catch (err){
         throw err;
     }
