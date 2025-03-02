@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import "./Register.css";
 import Navbar from "../comp/Navbar";
+import { useNavigate } from "react-router-dom";
+
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +11,7 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,6 +36,7 @@ const Register = () => {
      if (!response.ok){throw new Error('server error');}
      const result = await response.json();
         console.log("Server Result: ", result);
+        navigate("/login");
     } catch(error){ console.log("error: ", error);}
   };
 
