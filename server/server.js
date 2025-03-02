@@ -10,7 +10,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-tables = process.env.TABLES.split(','); //All database table are in the .env file
 
 //GET rquest TODO
 app.get('/', async (req, res) => {
