@@ -24,8 +24,8 @@ function Login() {
             const data = await response.json();
 
             if (response.ok) {
-                // Redirect to home page or dashboard upon successful login
-                navigate("/home"); // Change this to your desired route
+                
+                navigate("/Auth"); 
             } else {
                 setError(data.message || "Login failed. Please try again.");
             }
