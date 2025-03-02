@@ -11,7 +11,7 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent page reload
-
+        console.log("Attempting Login Post Request");
         try {
             const response = await fetch("http://128.6.60.7:8080/login", {
                 method: "POST",
@@ -20,7 +20,7 @@ function Login() {
                 },
                 body: JSON.stringify({ email, password }),
             });
-
+            console.log("Post Request Successful");
             const data = await response.json();
 
             if (response.ok) {
