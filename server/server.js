@@ -10,8 +10,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-tables = process.env.TABLES.split(','); //All database table are in the .env file
-
 //GET rquest TODO
 app.get('/', async (req, res) => {
     try {
@@ -100,6 +98,25 @@ app.delete('/', async (req, res) => {
         throw err;
     }
 });
+
+const SECOND = 1000; //this is seconds in millisecond
+const MINUTE = 60*1000; //this is minute in millisecond
+const HOUR = 60*60*1000; //this is the hour in millisecond
+
+//Delete unactivated account after sometime
+setInterval(delete_unact, 2*HOUR); //runs every 2 hour can change if needed
+
+function delete_unact(){
+    const con = db.getConnection();
+    const query = "delete from ulogin where activate = 0";
+    con.query(query, (error, result => {
+        if(error){
+            console.log("Error during query deletion");
+            return;
+        }
+        console.log(`Query Deletion Succesful, ${result.affectedRows} removed`);
+    });
+}
 
 app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
 
