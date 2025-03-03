@@ -212,7 +212,7 @@ function delete_unact(){
             return;
         }
         console.log(`Query Deletion Succesful, ${result.affectedRows} removed`);
-    });
+    }));
 }
 
 
