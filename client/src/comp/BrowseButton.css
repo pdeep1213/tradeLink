@@ -1,9 +1,9 @@
 .browse-container{
     display: flex; 
     justify-content: center; 
-    margin-top: 120px;
+    margin-top: 100px;
     margin-left: 800px;
-    padding-right: 80px;
+    padding-right: 40px;
 }
 
 .browse-button {

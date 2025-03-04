@@ -7,9 +7,9 @@ import BrowseButton from "../comp/BrowseButton.jsx";
 function Home() {
     return (
         <div>
-            <CenterBox/>
-            <BrowseButton/>
-            <Navbar/>
+            <Navbar />
+            <CenterBox />
+            <BrowseButton />
         </div>
     )
 }

@@ -2,8 +2,8 @@
     display: flex; 
     justify-content: space-around; 
     flex-wrap: nowrap; 
-    padding: 0px 70px;
-    gap: 50px; 
+    padding: 0px 40px;
+    gap: 40px; 
     width: 100%; 
     max-width: 1200px;
     
