@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Logo from "../comp/FINANCE.png";
+import Navbar from "../comp/Navbar.jsx";
 import "./UserDashboard.css";
 import { Link } from "react-router-dom";
-import Sidebar from "../comp/UDSidebar";  
-
-
-
-// NOT FINSIH
+import Sidebar from "../comp/UD-comp/UDSidebar.jsx";  
+import UDContentDisplay from "../comp/UD-comp/UDContentDisplay.jsx";
 
 const UserDashboard = () => {
   const [userRoles, setUserRoles] = useState(''); 
@@ -17,41 +14,33 @@ const UserDashboard = () => {
     return () => { document.body.style.backgroundColor = ""; };
   }, []);
 
+  const toggleRole = () => {
+    const newRole = userRoles === 'admin' ? 'regular' : 'admin';
+    setUserRoles(newRole);
+  
+    if (newRole === 'admin') {
+      setActivePage('adminProfile'); 
+    } else {
+      setActivePage('UserHome');
+    }
+  };
+
   return (
+  <>
+    {/* TESTING PURPOSE, need to delete later */}
+    <button className='test' onClick={toggleRole}>
+      Toggle Role
+    </button>
+
+    <Navbar/>
+    
     <div id="UserDashboard-body">
-      <header className="ud-header">
-        <Link to="/userdashboard" className="ud-heading">
-          <img src={Logo} className="ud-logo" alt="TradeLink Logo" />
-          <span className="ud-title">TradeLink</span>
-        </Link>
-      </header>
-
-      <button onClick={() => setUserRoles(userRoles === 'admin' ? 'regular' : 'admin')}>
-        Toggle Role
-      </button>
-
       <Sidebar userRoles={userRoles} setActivePage={setActivePage} />
-
+      <UDContentDisplay activeButton={activePage} />
       <div>
-        {userRoles === "admin" ? (
-          <div>
-            <h2>Admin Dashboard</h2>
-            {activePage === "adminProfile" && <p>Welcome to the Admin Dashboard. Here are your administrative features.</p>}
-            {activePage === "adminSettings" && <p>Admin can manage users here.</p>}
-          </div>
-        ) : (
-          <div>
-            <h2>User Dashboard</h2>
-            {activePage === "userProfile" && <p>Welcome to your User Dashboard. Here are your personal features.</p>}
-            {activePage === "settings" && <p>Settings</p>}
-            {activePage === "wishlist" && <p>Wishlist</p>}
-            {activePage === "earnings" && <p>Earnings</p>}
-            {activePage === "myListings" && <p>My Listings</p>}
-            {activePage === "userPayment" && <p>Payment Info</p>}
-          </div>
-        )}
       </div>
     </div>
+  </>
   );
 };
 

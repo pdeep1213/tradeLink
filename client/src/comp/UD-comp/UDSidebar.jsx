@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-
-
+import "./UDSidebar.css"
 
 // not finish still working on it
 
-
-
 const Sidebar = ({ userRoles, setActivePage }) => {
-  const [activeButton, setActiveButton] = useState(""); // Track active button
+  const [activeButton, setActiveButton] = useState(""); 
 
   const handleButtonClick = (page) => {
     setActiveButton(page);
@@ -49,6 +46,15 @@ const Sidebar = ({ userRoles, setActivePage }) => {
           </div>
         ) : (
           <div className="ud-user-button">
+            <li>
+              <button
+                className={activeButton === "UserHome" ? "active" : ""}
+                onClick={() => handleButtonClick("UserHome")}
+              >
+                <span class="material-symbols-outlined">overview_key</span>
+                Overview
+              </button>
+            </li>
             <li>
               <button
                 className={activeButton === "userProfile" ? "active" : ""}
@@ -103,9 +109,6 @@ const Sidebar = ({ userRoles, setActivePage }) => {
                 Payment Info
               </button>
             </li>
-            <div className="ud-extra1">
-                {/* EXTRA FEATURE */}
-            </div>
           </div>
         )}
       </ul>
@@ -114,4 +117,5 @@ const Sidebar = ({ userRoles, setActivePage }) => {
 };
 
 export default Sidebar;
+
 

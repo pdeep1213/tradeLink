@@ -9,6 +9,10 @@
     
 }
 
+.box-info span{
+    font-size: 50px;
+}
+
 .shopping-icon, .trade-icon, .sell-icon, .analy-icon {
     font-size: 70px; 
     color: black; 
