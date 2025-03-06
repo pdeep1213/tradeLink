@@ -4,15 +4,20 @@
   "description": "TradeLink Project",
   "main": "db.js",
   "scripts": {
-    "test": "../client/vite"
+    "start": "concurrently \" npm run start:frontend\" \"npm run start:backend\"",
+    "start:frontend": "cd ../client && npm run dev",
+    "start:backend": "node server"
   },
   "author": "Angel Vargas, Danny Lin, Deep Patel, Manan Patel, Oscar Lin",
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^8.1.4",
+    "concurrently": "^9.1.2",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
     "mariadb": "^3.4.0"
   },
   "repository": {

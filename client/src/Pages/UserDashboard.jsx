@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../comp/Navbar.jsx";
 import "./UserDashboard.css";
-import { Link } from "react-router-dom";
 import Sidebar from "../comp/UD-comp/UDSidebar.jsx";  
 import UDContentDisplay from "../comp/UD-comp/UDContentDisplay.jsx";
 
 const UserDashboard = () => {
-  const [userRoles, setUserRoles] = useState(''); 
-  const [activePage, setActivePage] = useState(''); 
+  const [userRole, setUserRole] = useState('user'); 
+  const [activePage, setActivePage] = useState('userHome'); 
 
   useEffect(() => {
     document.body.style.backgroundColor = "#e1e1e1";
@@ -15,32 +14,26 @@ const UserDashboard = () => {
   }, []);
 
   const toggleRole = () => {
-    const newRole = userRoles === 'admin' ? 'regular' : 'admin';
-    setUserRoles(newRole);
-  
-    if (newRole === 'admin') {
-      setActivePage('adminProfile'); 
-    } else {
-      setActivePage('UserHome');
-    }
+    const newRole = userRole === 'admin' ? 'user' : 'admin';
+    setUserRole(newRole);
+    setActivePage(newRole === 'admin' ? 'adminProfile' : 'userHome'); 
   };
 
   return (
-  <>
-    {/* TESTING PURPOSE, need to delete later */}
-    <button className='test' onClick={toggleRole}>
-      Toggle Role
-    </button>
+    // temp button needs to be remove (just for testing pruposes)
+    <>
 
-    <Navbar/>
-    
-    <div id="UserDashboard-body">
-      <Sidebar userRoles={userRoles} setActivePage={setActivePage} />
-      <UDContentDisplay activeButton={activePage} />
-      <div>
+      <button className='test' onClick={toggleRole}> 
+        Toggle Role
+      </button>
+      
+      <Navbar />
+      
+      <div id="UserDashboard-body">
+        <Sidebar userRole={userRole} setActivePage={setActivePage} />
+        <UDContentDisplay userRole={userRole} activeButton={activePage} />
       </div>
-    </div>
-  </>
+    </>
   );
 };
 

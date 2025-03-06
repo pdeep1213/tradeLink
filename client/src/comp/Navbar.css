@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    padding: 15px 5% 10px 10px;
+    padding: 5px 5% 7px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -17,12 +17,12 @@
     display: flex;
     align-items: center;
     text-decoration: none;
-    margin-left: 0;
+    margin-left: 15px;
 }
 
 .logo {
 
-    height: 50px; 
+    height: 40px; 
     width: auto;
     margin-right: 10px; 
     border-radius: 50%;
@@ -30,18 +30,35 @@
 }
 
 .title {
-    font-size: 28px;
+    font-size: 25px;
     color: white;
     font-weight: 600;
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
 }
 
 
+.navbar-items {
+    display: flex; 
+    justify-content: flex-end; 
+    align-items: center;
+    
+}
+
 .navbar-items a {
-    position: relative;
     color: black;
-    font-weight: 500;
+    font-weight: 600;
     margin-left: 30px;
+    text-decoration: none; 
 }
 
 
+.lb {
+    padding: 5px 10px; 
+    background-color: #007BFF;
+    border-radius: 5px;
+    border: 2px solid black;
+}
+
+.lb:hover {
+    background-color: #0056b3; 
+}

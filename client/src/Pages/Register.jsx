@@ -33,6 +33,7 @@ const Register = () => {
          },
          body: JSON.stringify(outputdata),
      });
+     console.log(response);
      if (!response.ok){throw new Error('server error');}
      const result = await response.json();
         console.log("Server Result: ", result);

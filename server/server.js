@@ -2,33 +2,44 @@ const express = require('express');
 const db = require('./db');
 const app = express();
 const port = 8080;
+//Stuff relating to cookies
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+//end of stuff relating to cookies
 const bodyParser = require("body-parser");
 const cors = require('cors');
+const corsOption = {
+    origin: 'http://128.6.60.7:4173',
+    credentials: true,
+};
 const sgMail = require('@sendgrid/mail');
 require("dotenv").config();
 
 
-app.use(cors());
+app.use(cors(corsOption));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-
+app.use(cookieParser());
 
 sgMail.setApiKey("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");
 
-
-tables = process.env.TABLES.split(','); //All database table are in the .env file
-
+const jwt_token = process.env.JWTOKEN;
 
 
 
-//GET rquest TODO
-app.get('/', async (req, res) => {
-    try {
-        const result = await db.query("select * from ulogin");
-        res.send(result);
-    }catch(err){
-        throw err;
+
+app.get('/send_token', async (req, res) => {
+    const token = req.cookies.tradelink;
+    if(!token){
+        return res.status(401).json({message: "no token"})
     }
+    
+    jwt.verify(token, jwt_token, (err, decoded) =>{
+        if(err){
+           return res.status(401).json({message: "invalid token"});
+        }
+        res.status(200).json({message: "valid token"});
+    });
 });
 
 
@@ -51,16 +62,18 @@ app.post('/register', async (req, res) =>{
         //check the database for same email
         let query = "select * from ulogin where email=?";
         let result = await con.query(query, data.email);
-        console.log(result);
         if (result != 0){
             return res.status(400).json({message: "A User is already registered with this email"});
         }
-        console.log("pass if check");
-        query = `insert into ulogin (${columns}) values (${question})`;
-        console.log("creating new query");
+        query = `insert into ulogin (${columns}) values (${question}) returning *`;
         result = await con.query(query, value);
-        console.log("inserting new query");
-        result.insertId = result.insertId.toString();
+        //const insertId = result.insertId;
+        const sign = jwt.sign({uid: result.uid}, jwt_token, {expiresIn: '30d'});
+        res.cookie('tradelink', sign, {
+            httpOnly:true,
+            maxAge: 30 * 24 * 60 * 60 *100, //day (?), hour(24), minute (60), second (60), millisecond (1000)
+            sameSite: 'Lax',
+        });
         res.status(200).json({ message: 'Task Inserted Successfully', result});
     }catch (err){
         res.status(500).json({error: 'Error During Post', details: err.message});
@@ -76,9 +89,6 @@ app.post('/register', async (req, res) =>{
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
-
-
-
     try {
         const con = await db.getConnection();
         const result = await con.query("SELECT * FROM ulogin WHERE email=? AND password=?", [email, password]);
@@ -88,10 +98,15 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Invalid email or password" });
         }
 
+        console.log("sending cookie");
+        const sign = jwt.sign({uid: result.uid}, jwt_token, {expiresIn: '30d'});
+        res.cookie('tradelink', sign, {
+            httpOnly:true,
+            maxAge: 30 * 24 * 60 * 60 *100, //day (?), hour(24), minute (60), second (60), millisecond (1000)
+            sameSite: 'Lax',
+        });
 
 
-
-        currentUser = user.email;
         res.status(200).json({ message: "Login Successful"});
 
 

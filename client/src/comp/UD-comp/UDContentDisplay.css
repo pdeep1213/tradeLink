@@ -1,0 +1,45 @@
+
+.UD-contentDisplay-container {
+    position: fixed; 
+    top: 90px;
+    left: 19vw; 
+    width: calc(85vw - 15px); 
+    max-width: 1150px; 
+    height: 90vh; 
+    padding: 1vw;
+    max-height: 670px; 
+    overflow: auto; 
+}
+
+.UD-contentDisplay {
+    display: flex;
+    width: 100%; 
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.static-name{
+    padding: 20px;
+    font-size: 25px;
+    font-weight: 600px;
+}
+
+
+
+ /* Using this for reference 
+  position: fixed;  
+    left: 30px;
+    top: 100px; 
+    width: 250px; 
+    height: 80vh;  
+    background-color: #fff; 
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; 

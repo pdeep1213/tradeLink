@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // For redirection
 import "./Login.css";
 import Navbar from "../comp/Navbar";
 
 function Login() {
+    useEffect( () => {
+        fetch('http://128.6.60.7:8080/send_token', {
+            method: 'GET',
+            headers:{
+             'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        }).then(response => {
+            if(response.ok){
+                navigate("/UserDashboard"); 
+            }
+        });
+    }, []);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -18,14 +31,16 @@ function Login() {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: 'include',
                 body: JSON.stringify({ email, password }),
             });
             console.log("Post Request Successful");
             const data = await response.json();
 
             if (response.ok) {
-                
-                navigate("/Auth"); 
+               console.log(document.cookie); 
+                navigate("/UserDashboard"); 
+                //navigate("/Auth"); 
             } else {
                 setError(data.message || "Login failed. Please try again.");
             }

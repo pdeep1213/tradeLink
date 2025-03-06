@@ -1,10 +1,16 @@
-import React, { useState } from "react";
-import "./UDSidebar.css"
+import React, { useState, useEffect } from "react";
+import "./UDSidebar.css";
 
-// not finish still working on it
+// may need a bit of reworking, just trying to getfeature down.
 
-const Sidebar = ({ userRoles, setActivePage }) => {
-  const [activeButton, setActiveButton] = useState(""); 
+const Sidebar = ({ userRole, setActivePage }) => {
+  const [activeButton, setActiveButton] = useState("");
+
+  useEffect(() => {
+    
+    setActiveButton(userRole === "admin" ? "adminProfile" : "userHome");
+    setActivePage(userRole === "admin" ? "adminProfile" : "userHome");
+  }, [userRole, setActivePage]);
 
   const handleButtonClick = (page) => {
     setActiveButton(page);
@@ -14,7 +20,7 @@ const Sidebar = ({ userRoles, setActivePage }) => {
   return (
     <div className="ud-sidebar">
       <ul className="ud-ul">
-        {userRoles === "admin" ? (
+        {userRole === "admin" ? (
           <div className="ud-admin-button">
             <li>
               <button
@@ -27,8 +33,8 @@ const Sidebar = ({ userRoles, setActivePage }) => {
             </li>
             <li>
               <button
-                className={activeButton === "report" ? "active" : ""}
-                onClick={() => handleButtonClick("report")}
+                className={activeButton === "adminReport" ? "active" : ""}
+                onClick={() => handleButtonClick("adminReport")}
               >
                 <span className="material-symbols-outlined">receipt_long</span>
                 Reports
@@ -48,10 +54,10 @@ const Sidebar = ({ userRoles, setActivePage }) => {
           <div className="ud-user-button">
             <li>
               <button
-                className={activeButton === "UserHome" ? "active" : ""}
-                onClick={() => handleButtonClick("UserHome")}
+                className={activeButton === "userHome" ? "active" : ""}
+                onClick={() => handleButtonClick("userHome")}
               >
-                <span class="material-symbols-outlined">overview_key</span>
+                <span className="material-symbols-outlined">overview_key</span>
                 Overview
               </button>
             </li>
@@ -66,8 +72,8 @@ const Sidebar = ({ userRoles, setActivePage }) => {
             </li>
             <li>
               <button
-                className={activeButton === "settings" ? "active" : ""}
-                onClick={() => handleButtonClick("settings")}
+                className={activeButton === "userSettings" ? "active" : ""}
+                onClick={() => handleButtonClick("userSettings")}
               >
                 <span className="material-symbols-outlined">settings</span>
                 Settings
@@ -75,8 +81,8 @@ const Sidebar = ({ userRoles, setActivePage }) => {
             </li>
             <li>
               <button
-                className={activeButton === "wishlist" ? "active" : ""}
-                onClick={() => handleButtonClick("wishlist")}
+                className={activeButton === "userWishlist" ? "active" : ""}
+                onClick={() => handleButtonClick("userWishlist")}
               >
                 <span className="material-symbols-outlined">redeem</span>
                 Wishlist
@@ -84,8 +90,8 @@ const Sidebar = ({ userRoles, setActivePage }) => {
             </li>
             <li>
               <button
-                className={activeButton === "earnings" ? "active" : ""}
-                onClick={() => handleButtonClick("earnings")}
+                className={activeButton === "userEarnings" ? "active" : ""}
+                onClick={() => handleButtonClick("userEarnings")}
               >
                 <span className="material-symbols-outlined">local_atm</span>
                 Earnings
@@ -93,8 +99,8 @@ const Sidebar = ({ userRoles, setActivePage }) => {
             </li>
             <li>
               <button
-                className={activeButton === "myListings" ? "active" : ""}
-                onClick={() => handleButtonClick("myListings")}
+                className={activeButton === "userListings" ? "active" : ""}
+                onClick={() => handleButtonClick("userListings")}
               >
                 <span className="material-symbols-outlined">list_alt</span>
                 My Listings
@@ -105,7 +111,7 @@ const Sidebar = ({ userRoles, setActivePage }) => {
                 className={activeButton === "userPayment" ? "active" : ""}
                 onClick={() => handleButtonClick("userPayment")}
               >
-                <span class="material-symbols-outlined"> credit_card </span>
+                <span className="material-symbols-outlined">credit_card</span>
                 Payment Info
               </button>
             </li>
@@ -117,5 +123,4 @@ const Sidebar = ({ userRoles, setActivePage }) => {
 };
 
 export default Sidebar;
-
 

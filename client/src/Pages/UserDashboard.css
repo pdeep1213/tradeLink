@@ -6,8 +6,7 @@
 }
 
 .test{
-    position: relative; 
-    top: 40px;
+    position: fixed; 
+    top: 60px;
     background-color: aqua;
 }
-
