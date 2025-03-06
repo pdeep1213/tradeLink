@@ -1,5 +1,5 @@
 // Register.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Register.css";
 import Navbar from "../comp/Navbar";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +40,14 @@ const Register = () => {
         navigate("/login");
     } catch(error){ console.log("error: ", error);}
   };
+
+   useEffect(() => {
+    document.body.style.background = "linear-gradient(to right bottom, #4c7cc4, #aeaddc, #baceeb)";
+    return () => { 
+        document.body.style.background = ""; 
+    };
+}, []);
+
 
   return (
     <>

@@ -9,7 +9,7 @@ const UserDashboard = () => {
   const [activePage, setActivePage] = useState('userHome'); 
 
   useEffect(() => {
-    document.body.style.backgroundColor = "#e1e1e1";
+    document.body.style.backgroundColor = "#080f25";
     return () => { document.body.style.backgroundColor = ""; };
   }, []);
 
@@ -22,7 +22,6 @@ const UserDashboard = () => {
   return (
     // temp button needs to be remove (just for testing pruposes)
     <>
-
       <button className='test' onClick={toggleRole}> 
         Toggle Role
       </button>

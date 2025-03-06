@@ -1,8 +1,8 @@
 
 .UD-contentDisplay-container {
     position: fixed; 
-    top: 90px;
-    left: 19vw; 
+    top: 80px;
+    left: 16.5vw; 
     width: calc(85vw - 15px); 
     max-width: 1150px; 
     height: 90vh; 
@@ -18,12 +18,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #fff;
+    background: linear-gradient(to bottom right, #4a5c82, #37446b);
     border-radius: 10px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+
 }
 
-.static-name{
+.static-name {
     padding: 20px;
     font-size: 25px;
     font-weight: 600px;

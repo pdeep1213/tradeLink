@@ -10,6 +10,15 @@ const Auth = () => {
   const [serverCode, setServerCode] = useState(null);
   const navigate = useNavigate();
 
+// color background
+    useEffect(() => {
+        document.body.style.background = "linear-gradient(to right bottom, #4c7cc4, #aeaddc, #baceeb)";
+        return () => { 
+            document.body.style.background = ""; 
+        };
+    }, []); 
+
+
   // Fetch current user email from server
   useEffect(() => {
     const fetchUserEmail = async () => {

@@ -186,6 +186,7 @@ app.post('/verify', (req, res) => {
 app.get('/auth', (req, res) => {
   res.status(200).json({ message: 'Authenticated', email : currentUser });
 })
+
 //TODO
 app.put('/', async (req, res) =>{
     let task = req.body;
@@ -196,22 +197,9 @@ app.put('/', async (req, res) =>{
     }
 });
 
-
-//delete TODO
-app.delete('/', async (req, res) => {
-    let id = req.query.id;
-    try{
-        const result = await db.pool.query("delete from tasks where id = ?", [id]);
-        res.send(result);
-    }catch(err){
-        throw err;
-    }
-});
-
-
 const SECOND = 1000; //this is seconds in millisecond
-const MINUTE = 60*1000; //this is minute in millisecond
-const HOUR = 60*60*1000; //this is the hour in millisecond
+const MINUTE = 60*SECOND; //this is minute in millisecond
+const HOUR = 60*MINUTE; //this is the hour in millisecond
 
 
 //Delete unactivated account after sometime

@@ -4,6 +4,15 @@ import "./Login.css";
 import Navbar from "../comp/Navbar";
 
 function Login() {
+
+    useEffect(() => {
+        document.body.style.background = "linear-gradient(to right bottom, #4c7cc4, #aeaddc, #baceeb)";
+        return () => { 
+            document.body.style.background = ""; 
+        };
+    }, []); 
+
+
     useEffect( () => {
         fetch('http://128.6.60.7:8080/send_token', {
             method: 'GET',
