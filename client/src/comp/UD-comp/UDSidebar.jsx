@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "./UDSidebar.css";
 
-// may need a bit of reworking, just trying to getfeature down.
+const Sidebar = ({ profile, setActivePage }) => {
+  const [activeButton, setActiveButton] = useState("user");
 
-const Sidebar = ({ userRole, setActivePage }) => {
-  const [activeButton, setActiveButton] = useState("");
-
-  useEffect(() => {
-    
-    setActiveButton(userRole === "admin" ? "adminProfile" : "userHome");
-    setActivePage(userRole === "admin" ? "adminProfile" : "userHome");
-  }, [userRole, setActivePage]);
+useEffect(() => {
+  if (!profile) return;
+  console.log("Profile Loaded:", profile);
+  const role = profile.perm === 1 ? "adminProfile" : "userHome";
+  setActiveButton(role);
+  setActivePage(role);
+}, [profile, setActivePage]);
 
   const handleButtonClick = (page) => {
-    setActiveButton(page);
-    setActivePage(page);
+    console.log("Button clicked:", page);
+    setActiveButton(page); 
+    setActivePage(page); 
   };
 
   return (
     <div className="ud-sidebar">
       <ul className="ud-ul">
-        {userRole === "admin" ? (
+        {profile && profile.perm === 1 ? (
           <div className="ud-admin-button">
             <li>
               <button
@@ -123,4 +124,3 @@ const Sidebar = ({ userRole, setActivePage }) => {
 };
 
 export default Sidebar;
-

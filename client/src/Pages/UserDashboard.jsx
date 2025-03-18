@@ -1,40 +1,81 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../comp/Navbar.jsx";
 import "./UserDashboard.css";
 import Sidebar from "../comp/UD-comp/UDSidebar.jsx";  
 import UDContentDisplay from "../comp/UD-comp/UDContentDisplay.jsx";
 
 const UserDashboard = () => {
-  const [userRole, setUserRole] = useState('user'); 
-  const [activePage, setActivePage] = useState('userHome'); 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(location.state?.userRole || null);
+  const [activePage, setActivePage] = useState("user");
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#080f25";
     return () => { document.body.style.backgroundColor = ""; };
   }, []);
 
-  const toggleRole = () => {
-    const newRole = userRole === 'admin' ? 'user' : 'admin';
-    setUserRole(newRole);
-    setActivePage(newRole === 'admin' ? 'adminProfile' : 'userHome'); 
-  };
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch("http://128.6.60.7:8080/profile", {
+          credentials: "include",
+        });
+
+        console.log("Response Status:", response.status);
+        if (!response.ok) {
+          console.error("Failed to fetch profile:", response.status, response.statusText);
+          return;
+        }
+
+        const data = await response.json();
+        console.log("Profile data fetched:", data);
+
+        if (!data || !data.username || !data.email || data.perm === undefined) {
+          console.error("Invalid profile data format:", data);
+          return;
+        }
+
+        setProfile(data);
+
+        const role = data.perm === 1 ? "admin" : "user";
+        setUserRole(role); 
+
+        setActivePage(data.perm === 1 ? "adminProfile" : "userHome");
+
+
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   return (
-    // temp button needs to be remove (just for testing pruposes)
     <>
-      <button className='test' onClick={toggleRole}> 
-        Toggle Role
-      </button>
-      
       <Navbar />
-      
+
       <div id="UserDashboard-body">
-        <Sidebar userRole={userRole} setActivePage={setActivePage} />
-        <UDContentDisplay userRole={userRole} activeButton={activePage} />
-      </div>
+        {profile && (
+          <>
+            <Sidebar profile={profile} setActivePage={setActivePage} />
+            {/*                        <UDContentDisplay activeButton={activePage} profile={profile} /> */}
+          </>
+        )}
+      </div>    
+
+      {profile && (
+        <div className="profile-info">
+          <h2>User Profile</h2>
+          <p>Username: {profile.username}</p>
+          <p>Email: {profile.email}</p>
+        </div>
+      )}
     </>
   );
 };
 
 export default UserDashboard;
-

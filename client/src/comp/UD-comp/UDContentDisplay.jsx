@@ -1,20 +1,26 @@
 import React from 'react';
 import "./UDContentDisplay.css";
-import UserHome from './UserHome'; 
+import UserHome from './UserHome';
 import AdminProfile from './AdminProfile';
 
 
+function UDContentDisplay({ activeButton, profile }) {
+  if (!profile) {
+    return <h3>Loading profile...</h3>; 
+  }
 
-// temp button to test features, remove later
-function UDContentDisplay({ userRole, activeButton }) {
+    console.log("Profile:", profile);
+  console.log("Active Button:", activeButton);
+  const isAdmin = profile.perm === 1; // 1 = admin, 0 = user
+
   const adminPages = {
-    adminProfile: <AdminProfile />,
+    adminProfile: <AdminProfile profile={profile} />,
     adminReport: <h3>Reports Content</h3>,
     adminSettings: <h3>Settings</h3>,
   };
 
   const userPages = {
-    userHome: <UserHome />,
+    userHome: <UserHome profile={profile} />,
     userProfile: <h3>User Profile Content</h3>,
     userSettings: <h3>User Settings Content</h3>,
     userWishlist: <h3>User Wishlist Content</h3>,
@@ -23,8 +29,8 @@ function UDContentDisplay({ userRole, activeButton }) {
     userPayment: <h3>User Payment Info Content</h3>,
   };
 
-  const content = userRole === 'admin' 
-    ? adminPages[activeButton] || <h3>Admin Dashboard</h3> 
+  const content = isAdmin
+    ? adminPages[activeButton] || <h3>Admin Dashboard</h3>
     : userPages[activeButton] || <h3>User Dashboard</h3>;
 
   return (
@@ -37,4 +43,3 @@ function UDContentDisplay({ userRole, activeButton }) {
 }
 
 export default UDContentDisplay;
-

@@ -1,14 +1,13 @@
-import React from 'react'
-import "./AdminProfile.css"
+import React from "react";
+import AdminProfile from "./AdminProfile";
 
-function AdminProfile() {
-  return (
-    <div className="adminProfile">
-      <h3 className='static-name'>Admin Profile</h3>
+function AdminDashboard({ profile }) {
+  if (!profile) {
+    return <h3>Loading profile...</h3>;
+  }
 
-    </div>
-  )
+  return <AdminProfile profile={profile} />;
 }
 
-export default AdminProfile
+export default AdminDashboard;
 

@@ -5,6 +5,7 @@ import Navbar from "../comp/Navbar";
 
 function Login() {
 
+
     useEffect(() => {
         document.body.style.background = "linear-gradient(to right bottom, #4c7cc4, #aeaddc, #baceeb)";
         return () => { 
@@ -28,6 +29,7 @@ function Login() {
     }, []);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [userRole, setUserRole] = useState(null);
     const [error, setError] = useState(null);
     const navigate = useNavigate(); // Hook for redirection
 
@@ -46,10 +48,16 @@ function Login() {
             console.log("Post Request Successful");
             const data = await response.json();
 
-            if (response.ok) {
-               console.log(document.cookie); 
-                navigate("/UserDashboard"); 
-                //navigate("/Auth"); 
+        if (response.ok) {
+           console.log(document.cookie);
+           console.log(data);
+
+           const role = data.perm === 1 ? "admin" : "user";
+           setUserRole(role);
+           console.log("User role set:", role);
+
+            navigate("/UserDashboard", { state: { userRole: role } }); 
+           //navigate("/Auth"); 
             } else {
                 setError(data.message || "Login failed. Please try again.");
             }

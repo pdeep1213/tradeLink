@@ -42,8 +42,46 @@ app.get('/send_token', async (req, res) => {
     });
 });
 
+// get user info for user dashboard
+app.get('/profile', async (req, res) => {
+    const token = req.cookies.tradelink;
+    if (!token) {
+        return res.status(400).json({ message: "No token provided" });
+    }
+    try {
+        const decoded = jwt.verify(token, jwt_token);
+  //      console.log("Decoded JWT:", decoded);
 
+        const uid = decoded.uid;
+//        console.log("uid", uid);
+        
+        const con = await db.getConnection().catch(err => {
+            console.error("DB Connection Error:", err);
+            return null;
+        });
 
+        if (!con) {
+            return res.status(500).json({ message: "Database connection failed" });
+        }
+
+        const rows = await con.query(
+            "SELECT uid, username, email, perm, activate FROM ulogin WHERE uid = ?", [uid]
+        );
+        con.release();
+
+//        console.log("DB Query Result:", rows[0].perm); 
+
+        if (!rows || rows.length === 0) { 
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        res.status(200).json(rows[0]); 
+
+    } catch (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+});
 
 //POST
 app.post('/register', async (req, res) =>{
@@ -67,8 +105,9 @@ app.post('/register', async (req, res) =>{
         }
         query = `insert into ulogin (${columns}) values (${question}) returning *`;
         result = await con.query(query, value);
+        console.log("res",result[0].uid);
         //const insertId = result.insertId;
-        const sign = jwt.sign({uid: result.uid}, jwt_token, {expiresIn: '30d'});
+        const sign = jwt.sign({uid: result[0].uid}, jwt_token, {expiresIn: '30d'});
         res.cookie('tradelink', sign, {
             httpOnly:true,
             maxAge: 30 * 24 * 60 * 60 *100, //day (?), hour(24), minute (60), second (60), millisecond (1000)
@@ -97,9 +136,10 @@ app.post('/login', async (req, res) => {
         if (user.length === 0 || !user) {
             return res.status(400).json({ message: "Invalid email or password" });
         }
-
+        
+        console.log(user);
         console.log("sending cookie");
-        const sign = jwt.sign({uid: result.uid}, jwt_token, {expiresIn: '30d'});
+        const sign = jwt.sign({uid: result[0].uid}, jwt_token, {expiresIn: '30d'});
         res.cookie('tradelink', sign, {
             httpOnly:true,
             maxAge: 30 * 24 * 60 * 60 *100, //day (?), hour(24), minute (60), second (60), millisecond (1000)
@@ -107,8 +147,10 @@ app.post('/login', async (req, res) => {
         });
 
 
-        res.status(200).json({ message: "Login Successful"});
-
+            res.status(200).json({ 
+            message: "Login Successful",
+            perm: user.perm 
+        });
 
     } catch (err) {
         console.log(err);
