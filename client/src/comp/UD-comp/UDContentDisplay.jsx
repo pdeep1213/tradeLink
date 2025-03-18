@@ -10,7 +10,7 @@ function UDContentDisplay({ activeButton, profile }) {
   }
 
     console.log("Profile:", profile);
-  console.log("Active Button:", activeButton);
+ // console.log("Active Button:", activeButton);
   const isAdmin = profile.perm === 1; // 1 = admin, 0 = user
 
   const adminPages = {
@@ -28,7 +28,7 @@ function UDContentDisplay({ activeButton, profile }) {
     userListings: <h3>User My Listings Content</h3>,
     userPayment: <h3>User Payment Info Content</h3>,
   };
-
+    console.log("Admin? ", isAdmin);
   const content = isAdmin
     ? adminPages[activeButton] || <h3>Admin Dashboard</h3>
     : userPages[activeButton] || <h3>User Dashboard</h3>;

@@ -34,12 +34,35 @@ app.get('/send_token', async (req, res) => {
         return res.status(401).json({message: "no token"})
     }
     
-    jwt.verify(token, jwt_token, (err, decoded) =>{
+/*    const decode = jwt.verify(token, jwt_token, (err, decoded) =>{
         if(err){
            return res.status(401).json({message: "invalid token"});
         }
+
         res.status(200).json({message: "valid token"});
-    });
+    }); */
+    try {
+        const decoded = jwt.verify(token, jwt_token);
+        const uid = decoded.uid;
+        const con = await db.getConnection().catch(err => {
+            console.error("DB Connection Error:", err);
+            return null;
+        });
+        if (!con) {
+            return res.status(500).json({ message: "Database connection failed" });
+        }
+        const rows = await con.query(
+            "SELECT perm FROM ulogin WHERE uid = ?", [uid]
+        );
+        con.release();
+        if (!rows || rows.length === 0) { 
+            return res.status(400).json({ message: "User not found" });
+        }
+    } catch (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+
 });
 
 // get user info for user dashboard
@@ -65,7 +88,7 @@ app.get('/profile', async (req, res) => {
         }
 
         const rows = await con.query(
-            "SELECT uid, username, email, perm, activate FROM ulogin WHERE uid = ?", [uid]
+            "SELECT uid, username, email, perm FROM ulogin WHERE uid = ?", [uid]
         );
         con.release();
 

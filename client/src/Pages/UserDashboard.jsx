@@ -62,7 +62,7 @@ const UserDashboard = () => {
         {profile && (
           <>
             <Sidebar profile={profile} setActivePage={setActivePage} />
-            {/*                        <UDContentDisplay activeButton={activePage} profile={profile} /> */}
+                                 <UDContentDisplay activeButton={activePage} profile={profile} /> 
           </>
         )}
       </div>    

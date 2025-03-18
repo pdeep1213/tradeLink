@@ -15,17 +15,30 @@ function Login() {
 
 
     useEffect( () => {
-        fetch('http://128.6.60.7:8080/send_token', {
-            method: 'GET',
-            headers:{
-             'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-        }).then(response => {
-            if(response.ok){
-                navigate("/UserDashboard"); 
+        const a = async ( )=> {
+        try {
+            const respopnse = await fetch('http://128.6.60.7:8080/send_token', {
+                method: 'GET',
+                headers:{
+                'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+               if (response.ok) {
+                const role = data.perm === 1 ? "admin" : "user";
+                setUserRole(role);
+                console.log("In PreLogin, User role set:", role);
+
+                navigate("/UserDashboard", { state: { userRole: role } }); 
+            } else {
+                setError(data.message || "Login failed. Please try again.");
             }
-        });
+        } catch (err) {
+            setError("An error occurred. Please try again.");
+            }
+        };
+        a();
+     
     }, []);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -49,8 +62,6 @@ function Login() {
             const data = await response.json();
 
         if (response.ok) {
-           console.log(document.cookie);
-           console.log(data);
 
            const role = data.perm === 1 ? "admin" : "user";
            setUserRole(role);
