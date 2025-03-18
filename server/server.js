@@ -7,7 +7,9 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 //end of stuff relating to cookies
 const bodyParser = require("body-parser");
+const upload = require('./imgHandler.js');
 const cors = require('cors');
+const path = require('path');
 const corsOption = {
     origin: 'http://128.6.60.7:4173',
     credentials: true,
@@ -25,8 +27,64 @@ sgMail.setApiKey("SG.jPVjsSo_R1akWT8b5423wQ.LwuuJkWIklwRt3L7mUNwTbdk2CdQzSBwCFRM
 
 const jwt_token = process.env.JWTOKEN;
 
+app.post('/uploadImg', upload.array('files', 5), (req, res) =>{//handles img upload from client, change 5 depending on max amount of picture allow
+    if(!res.files || req.files.length == 0) {
+        return res.status(400).send("no img send");
+    }
+//the imgs should be send as form-data
+    const itemId = BigInt(req.body.item_id);
+
+    if(!itemId)
+        return res.status(400).send("please provide the item_id as well");
+    //storing of the img
+    const filepath = req.files.map(file => path.join(__dirname, 'img', file.filename));
+    console.log("img path: ", filepath);
+    //Populate the database here
+    //itemImg table {item_id, imgPath}
+    //item_id should be in itemId and provided during the post request
+    //imgPath should be filepath if everything works correctly
+    //TODO
+
+    return res.send("img upload successful");
+        
+});
+
+app.post('/uploadItem', async (req, res) => { //upload all the item info first, this will return the item_id which is needed for uploading item imgs
+    //items table {uid, item_id, categories, description, price)
+    //uid should be provided from the cookies [just include credentials during the post request]
+    //categories should be a int from 1-... [check the categories table for which number indicate which category]
+    //description should be txt [no more than 512 characters, can make longer if need to]
+    //price should be a decimal [9,999,999,999.99 should be the max, any larger and data is lost]
+   
+    const token = req.cookies.tradelink;
+    if(!token){
+        return res.status(401).json({message: "no token"})
+    }
+    try {
+        const decoded = jwt.verify(token, jwt_token);
+        const uid = decoded.uid; //uid for the table
+
+        const data = req.body;
+        console.log("Data: ", data); //test
+
+        const columns = Object.keys(data).join(', ');
+        const value = [uid, ...Object.values(data)];
+        const question = value.map(() => '?').join(', ');
+
+        const query = `insert into items (uid, ${columns}) values (${question})`;
+        let con = await db.getConnection();
+        var result = await con.query(query, value);
+        const item_id = result[0].item_id.toString();
+        console.log("res",result[0].item_id);
+        res.status(200).json({ message: 'Item Inserted Successfully', item_id});
+        
+    }
+    catch{
+        res.status(500).send("issue during item uploading");
+    }
 
 
+});
 
 app.get('/send_token', async (req, res) => {
     const token = req.cookies.tradelink;
@@ -34,13 +92,6 @@ app.get('/send_token', async (req, res) => {
         return res.status(401).json({message: "no token"})
     }
     
-/*    const decode = jwt.verify(token, jwt_token, (err, decoded) =>{
-        if(err){
-           return res.status(401).json({message: "invalid token"});
-        }
-
-        res.status(200).json({message: "valid token"});
-    }); */
     try {
         const decoded = jwt.verify(token, jwt_token);
         const uid = decoded.uid;
