@@ -1,27 +1,28 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 import "./Navbar.css";
 import Logo from "./FINANCE.png";
 import { Link, useLocation } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ userRole, userUsername }) => {
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(''); 
-
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
-  const isMain = location.pathname === "/dashboard"; // place holder need to remove later.
+  const isMain = location.pathname === "/dashboard"; // Placeholder to remove later
 
-  // making sure navbar corresponds to each page.
   const authLinks = !isAuthPage && (
     <>
-      {!isLoggedIn ? (
+      {!userUsername ? (
         <>
           <Link to="/register" className="login-button">Sign Up</Link>
           <Link to="/login" className="lb">Log In</Link>
         </>
       ) : (
         <>
-        {/* TODO: load user infomation if login in */}
-        </>
+          <div className="navbar-account-box">
+          <img src={Logo} alt="Profile PIC" className="navbar-pic" />
+           </div>
+          <span className="navbarUsername">{userUsername}</span>
+          <Link to="/" className="logoutButton">Log Out</Link>  
+          </>
       )}
     </>
   );
@@ -40,3 +41,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

@@ -56,7 +56,7 @@ const UserDashboard = () => {
 
   return (
     <>
-      <Navbar />
+       <Navbar userRole={userRole} userUsername={profile?.username} />
 
       <div id="UserDashboard-body">
         {profile && (
@@ -67,13 +67,14 @@ const UserDashboard = () => {
         )}
       </div>    
 
-      {profile && (
+      {/*      {profile && (
         <div className="profile-info">
           <h2>User Profile</h2>
           <p>Username: {profile.username}</p>
           <p>Email: {profile.email}</p>
         </div>
       )}
+      */}
     </>
   );
 };

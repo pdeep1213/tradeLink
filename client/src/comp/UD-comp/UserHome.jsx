@@ -25,7 +25,7 @@ function UserHome({ profile }) {
 
   return (
 <div className="adminDashboard">
-      <h3 className="static-name">Admin Profile Panel</h3>
+      <h3 className="static-name">User Profile Panel</h3>
 
       <div className="adminProfile">
         <div className="profile-container">

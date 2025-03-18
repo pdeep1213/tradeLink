@@ -8,10 +8,11 @@
     max-width: 230px; 
     height: 85vh;  
     background-color: transparent;
-    border-radius: 20px;
+    {/*border-radius: 20px;*/}
     padding: 2vw; 
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
+   border-right: 2px solid white; 
 }
 
 /* un-order list css */

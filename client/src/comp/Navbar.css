@@ -51,14 +51,33 @@
 }
 
 
-.lb {
+.lb, .logoutButton {
     padding: 5px 10px; 
     background-color: #007BFF;
     border-radius: 5px;
     border: 2px solid black;
 }
 
+.navbarUsername {
+    font-weight: bold;
+    color: white;
+    font-size: 1.3rem;
+}
+
 .lb:hover {
     background-color: #0056b3; 
+}
+
+.navbar-pic {
+  width: 2rem;        
+  height: 2rem;       
+  border-radius: 15%;  
+  margin-right: .5rem;
+}
+
+.navbar-account-box {
+  display: flex;           
+  align-items: center;     
+   margin-left: 2vw;     
 }
 
