@@ -2,6 +2,7 @@ import React from 'react';
 import "./UDContentDisplay.css";
 import UserHome from './UserHome';
 import AdminProfile from './AdminProfile';
+import UserListing from './UserListing';
 
 
 function UDContentDisplay({ activeButton, profile }) {
@@ -25,7 +26,7 @@ function UDContentDisplay({ activeButton, profile }) {
     userSettings: <h3>User Settings Content</h3>,
     userWishlist: <h3>User Wishlist Content</h3>,
     userEarnings: <h3>User Earnings Content</h3>,
-    userListings: <h3>User My Listings Content</h3>,
+    userListings: <UserListing></UserListing>,
     userPayment: <h3>User Payment Info Content</h3>,
   };
     console.log("Admin? ", isAdmin);

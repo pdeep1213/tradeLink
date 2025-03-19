@@ -18,10 +18,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    {/*  background: linear-gradient(to bottom right, #4a5c82, #37446b);
-    border-radius: 10px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
-    */}
+    
 }
 
 .static-name {
@@ -29,6 +26,7 @@
     font-size: 25px;
     font-weight: 600px;
 }
+
 
 
 

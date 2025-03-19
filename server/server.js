@@ -55,7 +55,7 @@ app.post('/uploadItem', async (req, res) => { //upload all the item info first, 
     //categories should be a int from 1-... [check the categories table for which number indicate which category]
     //description should be txt [no more than 512 characters, can make longer if need to]
     //price should be a decimal [9,999,999,999.99 should be the max, any larger and data is lost]
-   
+    
     const token = req.cookies.tradelink;
     if(!token){
         return res.status(401).json({message: "no token"})
@@ -70,16 +70,20 @@ app.post('/uploadItem', async (req, res) => { //upload all the item info first, 
         const columns = Object.keys(data).join(', ');
         const value = [uid, ...Object.values(data)];
         const question = value.map(() => '?').join(', ');
-
-        const query = `insert into items (uid, ${columns}) values (${question})`;
+        
+        let query = `insert into items (uid, ${columns}) values (${question})`;
         let con = await db.getConnection();
+        console.log(query,value);
         var result = await con.query(query, value);
-        const item_id = result[0].item_id.toString();
-        console.log("res",result[0].item_id);
+        
+        const item_id = result.item_id;
+        
+        
         res.status(200).json({ message: 'Item Inserted Successfully', item_id});
         
     }
-    catch{
+    catch (error){
+        console.log(error);
         res.status(500).send("issue during item uploading");
     }
 
@@ -184,7 +188,7 @@ app.post('/register', async (req, res) =>{
         const sign = jwt.sign({uid: result[0].uid}, jwt_token, {expiresIn: '30d'});
         res.cookie('tradelink', sign, {
             httpOnly:true,
-            maxAge: 30 * 24 * 60 * 60 *100, //day (?), hour(24), minute (60), second (60), millisecond (1000)
+            maxAge: 30 * 24 * 60 * 60 *1000, //day (?), hour(24), minute (60), second (60), millisecond (1000)
             sameSite: 'Lax',
         });
         res.status(200).json({ message: 'Task Inserted Successfully', result});
@@ -216,7 +220,7 @@ app.post('/login', async (req, res) => {
         const sign = jwt.sign({uid: result[0].uid}, jwt_token, {expiresIn: '30d'});
         res.cookie('tradelink', sign, {
             httpOnly:true,
-            maxAge: 30 * 24 * 60 * 60 *100, //day (?), hour(24), minute (60), second (60), millisecond (1000)
+            maxAge: 30 * 24 * 60 * 60 *1000, //day (?), hour(24), minute (60), second (60), millisecond (1000)
             sameSite: 'Lax',
         });
 

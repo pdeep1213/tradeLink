@@ -17,7 +17,7 @@ function Login() {
     useEffect( () => {
         const a = async ( )=> {
         try {
-            const respopnse = await fetch('http://128.6.60.7:8080/send_token', {
+            const response = await fetch('http://128.6.60.7:8080/send_token', {
                 method: 'GET',
                 headers:{
                 'Content-Type': 'application/json',
