@@ -58,6 +58,7 @@ app.post('/uploadItem', async (req, res) => { //upload all the item info first, 
     
     const token = req.cookies.tradelink;
     if(!token){
+        console.log("no token");
         return res.status(401).json({message: "no token"})
     }
     try {
@@ -73,12 +74,12 @@ app.post('/uploadItem', async (req, res) => { //upload all the item info first, 
         
         let query = `insert into items (uid, ${columns}) values (${question})`;
         let con = await db.getConnection();
-        console.log(query,value);
         var result = await con.query(query, value);
+        console.log("Itemlist result: ", result);
         
-        const item_id = result.item_id;
+        const item_id = Number(result.insertId);
         
-        
+        console.log("item id: ", item_id);
         res.status(200).json({ message: 'Item Inserted Successfully', item_id});
         
     }

@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './Listitem.css'; // Import the CSS file
 
 const ListItem = () => {
-  
+  const categories = {
+   Electronics:1,
+   Furnitures:2,
+   Clothings:3,
+   Other:4
+  };
+
   const [item, setItem] = useState({
     itemname: '',
     description: '',
@@ -91,10 +97,9 @@ const ListItem = () => {
             required
           >
             <option value="">Select a category</option>
-            <option value={1}>Electronics</option>
-            <option value={2}>Furniture</option>
-            <option value={3}>Clothing</option>
-            <option value={4}>Other</option>
+            {Object.keys(categories).map((cate) => (
+                <option key = {cate} value = {categories[cate]}> {cate} </option>
+            ))}
           </select>
         </div>
 
