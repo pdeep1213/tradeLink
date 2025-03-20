@@ -50,7 +50,27 @@ const ListItem = () => {
      console.log(response);
      if (!response.ok){throw new Error('server error');}
      const result = await response.json();
-        console.log("Server Result: ", result.item_id);
+    
+     let itemId = result.item_id;
+     
+     // Create FormData for image upload
+     const formData = new FormData();
+     formData.append("item_id", itemId); // Attach item ID
+     
+     for (let i = 0; i < images.length; i++) {
+         formData.append("files", images[i]); // Append each file
+     }
+     console.log("Server Result: ", itemId);
+
+     const imgresponse = await fetch('http://128.6.60.7:8080/uploadImg', {
+      method: 'POST',
+      body: formData
+     });
+     if (!imgresponse.ok){throw new Error('server error');}
+    result = await imgresponse.json();
+        console.log("Server Result: ", result);
+
+        
     } catch(error){ 
       console.log("error: ", error);
     }
