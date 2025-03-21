@@ -20,30 +20,47 @@ require("dotenv").config();
 
 app.use(cors(corsOption));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
 sgMail.setApiKey("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");
 
 const jwt_token = process.env.JWTOKEN;
 
-app.post('/uploadImg', upload.array('files', 5), (req, res) =>{//handles img upload from client, change 5 depending on max amount of picture allow
-    if(!res.files || req.files.length == 0) {
+app.post('/uploadImg', upload.array('files', 5), async (req, res) =>{//handles img upload from client, change 5 depending on max amount of picture allow
+    if(!req.files || req.files.length == 0) {
         return res.status(400).send("no img send");
     }
-//the imgs should be send as form-data
-    const itemId = BigInt(req.body.item_id);
 
+//the imgs should be send as form-data
+    const itemId = req.body.item_id; 
+    const img = req.files;
+    console.log("itemid: ", itemId);
+    console.log("img: ", img);
     if(!itemId)
         return res.status(400).send("please provide the item_id as well");
     //storing of the img
     const filepath = req.files.map(file => path.join(__dirname, 'img', file.filename));
     console.log("img path: ", filepath);
-    //Populate the database here
-    //itemImg table {item_id, imgPath}
-    //item_id should be in itemId and provided during the post request
-    //imgPath should be filepath if everything works correctly
-    //TODO
+    try{
+        const con = await db.getConnection().catch(err => {
+            console.error("DB Connection Error:", err);
+            return null;
+        });
+        const queries = filepath.map(path => {
+            const query = `insert into itemsImg (item_id, imgpath) values (?, ?)`; 
+            con.execute(query, [itemId, path], (err, results) => {
+                if (err) {
+                    console.log("error inserting filepath into imgPathdb");
+                }
+                else{
+                    console.log("img uploaded successfully");
+                }
+            });
+        });
+    }catch (err){
+        return res.send("error during img upload");
+    }
 
     return res.send("img upload successful");
         
@@ -67,7 +84,7 @@ app.post('/uploadItem', async (req, res) => { //upload all the item info first, 
 
         const data = req.body;
         console.log("Data: ", data); //test
-
+        //might need to modify with the new column stuff
         const columns = Object.keys(data).join(', ');
         const value = [uid, ...Object.values(data)];
         const question = value.map(() => '?').join(', ');
