@@ -50,27 +50,20 @@ const ListItem = () => {
      console.log(response);
      if (!response.ok){throw new Error('server error');}
      const result = await response.json();
-    
-     let itemId = result.item_id;
-     
-     // Create FormData for image upload
-     const formData = new FormData();
-     formData.append("item_id", itemId); // Attach item ID
-     
-     for (let i = 0; i < images.length; i++) {
-         formData.append("files", images[i]); // Append each file
-     }
-     console.log("Server Result: ", itemId);
 
-     const imgresponse = await fetch('http://128.6.60.7:8080/uploadImg', {
-      method: 'POST',
-      body: formData
+     var formdata = new FormData();
+     formdata.append('item_id', result.item_id);
+     const imgArray = Array.from(images);
+     imgArray.forEach((image) => {
+        formdata.append('img', image);
      });
-     if (!imgresponse.ok){throw new Error('server error');}
-    result = await imgresponse.json();
-        console.log("Server Result: ", result);
-
-        
+     const response2 = await fetch('http://128.6.60.7:8080/uploadImg', {
+        method: 'POST',
+        body: formdata,
+     });
+      if(!response2.ok){
+        console.log("issue uplaoding img");
+      }
     } catch(error){ 
       console.log("error: ", error);
     }
