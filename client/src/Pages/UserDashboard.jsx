@@ -8,7 +8,8 @@ import UDContentDisplay from "../comp/UD-comp/UDContentDisplay.jsx";
 const UserDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState(location.state?.userRole || null);
+  const [userRole, setUserRole] = useState(null); 
+  const [userUsername, setUserUsername] = useState(null);
   const [activePage, setActivePage] = useState("user");
   const [profile, setProfile] = useState(null);
 
@@ -43,9 +44,9 @@ const UserDashboard = () => {
         const role = data.perm === 1 ? "admin" : "user";
         setUserRole(role); 
 
+        setUserUsername(data.username); 
+
         setActivePage(data.perm === 1 ? "adminProfile" : "userHome");
-
-
       } catch (error) {
         console.error("Error fetching profile:", error);
       }
@@ -56,27 +57,20 @@ const UserDashboard = () => {
 
   return (
     <>
-       <Navbar userRole={userRole} userUsername={profile?.username} />
+      <Navbar userRole={userRole} userUsername={userUsername} />
 
       <div id="UserDashboard-body">
         {profile && (
           <>
             <Sidebar profile={profile} setActivePage={setActivePage} />
-                                 <UDContentDisplay activeButton={activePage} profile={profile} /> 
+            <UDContentDisplay activeButton={activePage} profile={profile} /> 
           </>
         )}
       </div>    
 
-      {/*      {profile && (
-        <div className="profile-info">
-          <h2>User Profile</h2>
-          <p>Username: {profile.username}</p>
-          <p>Email: {profile.email}</p>
-        </div>
-      )}
-      */}
     </>
   );
 };
 
 export default UserDashboard;
+

@@ -6,7 +6,7 @@ import Register from "./Pages/Register.jsx";
 import Auth from "./Pages/Auth.jsx";
 import UserDashboard from "./Pages/UserDashboard.jsx";
 import ListItem from "./Pages/ListItem.jsx";
-
+import MainPage from "./Pages/MainPage.jsx";
 const App = () => {
   return (
     <div className="App">
@@ -17,6 +17,7 @@ const App = () => {
           <Route path="/register" exact Component={Register}/>
           <Route path="/Auth" exact Component={Auth}/>
           <Route path="/userDashboard" exact Component={UserDashboard}/>
+          <Route path="/MainPage" exact Component={MainPage}/>
           <Route path="/listItem" exact Component={ListItem}/>
         </Routes>
       </Router>

@@ -3,7 +3,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    padding: 5px 5% 7px 10px;
+    height: 50px;
+    padding: 5px 2% 7px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -11,6 +12,7 @@
     backdrop-filter: blur(25px); 
     border-bottom: 2px solid rgba(255, 255, 255, 0.4); 
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    z-index: 1;
 }
 
 .heading {
@@ -18,8 +20,8 @@
     align-items: center;
     text-decoration: none;
     margin-left: 15px;
-    
 }
+
 .logo {
     height: 40px; 
     width: auto;
@@ -35,12 +37,10 @@
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
 }
 
-
 .navbar-items {
     display: flex; 
     justify-content: flex-end; 
     align-items: center;
-    
 }
 
 .navbar-items a {
@@ -50,34 +50,92 @@
     text-decoration: none; 
 }
 
-
-.lb, .logoutButton {
+.lb {
     padding: 5px 10px; 
     background-color: #007BFF;
     border-radius: 5px;
     border: 2px solid black;
 }
 
-.navbarUsername {
-    font-weight: bold;
-    color: white;
-    font-size: 1.3rem;
-}
-
 .lb:hover {
     background-color: #0056b3; 
 }
 
-.navbar-pic {
-  width: 2rem;        
-  height: 2rem;       
-  border-radius: 15%;  
-  margin-right: .5rem;
+.dropdown {
+  position: relative;
+  display: inline-block;
 }
 
-.navbar-account-box {
-  display: flex;           
-  align-items: center;     
-   margin-left: 2vw;     
+.dropdown-trigger {
+  cursor: pointer;
+  width: 40px; 
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-top: 7px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 3rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  min-width: 12rem; 
+  border-radius: 7%;  
+}
+
+.dropdown-item {
+  display: block;
+  padding: 8px .2rem;
+  text-decoration: none;
+  color: #333;
+}
+
+.dropdown-item:hover {
+  background-color: #f4f4f4;
+}
+
+.Uname {
+   color: white;
+   padding: 0 .7rem;
+   font-weight: 700; 
+}
+
+.mydash-menu {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.mydash-menu:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.mydash-menu .dashboard-icon {
+  color: #007BFF;
+}
+
+.logout-menu {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-menu:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.logout-menu .logout-icon {
+  color: #D9534F;
+}
+
+.material-symbols-outlined.shopping-icon {
+    color: white;
+transform: scaleX(-1);
 }
 
