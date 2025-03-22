@@ -91,6 +91,38 @@ app.post('/uploadItem', async (req, res) => { //upload all the item info first, 
 
 });
 
+//Sending listed items
+app.get('/send_listings', async (req, res) => {
+    const token = req.cookies.tradelink;
+    if(!token){
+        return res.status(401).json({message: "no token"})
+    }
+
+    try{
+        const decoded = jwt.verify(token, jwt_token);
+        const uid = decoded.uid;
+        const con = await db.getConnection().catch(err => {
+            console.error("DB Connection Error:", err);
+            return null;
+        });
+        if (!con) {
+            return res.status(500).json({ message: "Database connection failed" });
+        }
+        const rows = await con.query(
+            "SELECT * FROM items WHERE uid = ?", [uid]
+        );
+        con.release();
+        if (!rows || rows.length === 0) { 
+            return res.status(400).json({ message: "No Items Found" });
+        }
+
+        res.status(200).json(rows);
+    } catch (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+});
+
 app.get('/send_token', async (req, res) => {
     const token = req.cookies.tradelink;
     if(!token){
