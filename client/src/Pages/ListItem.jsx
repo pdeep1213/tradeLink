@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './Listitem.css'; // Import the CSS file
+import { useNavigate } from 'react-router-dom';
 
 const ListItem = () => {
+  const navigate = useNavigate();
   const categories = {
    Electronics:1,
    Furnitures:2,
@@ -63,7 +65,8 @@ const ListItem = () => {
      });
       if(!response2.ok){
         console.log("issue uplaoding img");
-      }
+      } 
+      navigate("/UserDashboard");
     } catch(error){ 
       console.log("error: ", error);
     }

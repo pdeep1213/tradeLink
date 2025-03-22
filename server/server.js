@@ -108,6 +108,10 @@ app.post('/uploadItem', async (req, res) => { //upload all the item info first, 
 
 });
 
+app.set('json replacer', (key, value) => 
+    typeof value === 'bigint' ? value.toString() : value
+);
+
 //Sending listed items
 app.get('/send_listings', async (req, res) => {
     const token = req.cookies.tradelink;
@@ -132,13 +136,35 @@ app.get('/send_listings', async (req, res) => {
         if (!rows || rows.length === 0) { 
             return res.status(400).json({ message: "No Items Found" });
         }
-
+        console.log("Success sending items");
         res.status(200).json(rows);
     } catch (err) {
         console.error("Error:", err);
         return res.status(500).json({ message: "Internal server error", error: err.message });
     }
 });
+
+app.post('/remove_item', async (req, res)=> {
+    const {item_id} = req.body;
+    console.log(item_id);
+
+    try {
+        const con = await db.getConnection();
+        const query = "DELETE from items WHERE item_id = ?";
+        const result = await con.query(query, item_id);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+
+        res.status(200).json({ message: "Item removed successfully" });
+        con.release();
+    } catch (error) {
+        console.error("Error removing item:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+
+})
 
 app.get('/send_token', async (req, res) => {
     const token = req.cookies.tradelink;
