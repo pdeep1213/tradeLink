@@ -116,8 +116,10 @@ app.set('json replacer', (key, value) =>
 app.get('/send_listings', async (req, res) => {
     const token = req.cookies.tradelink;
     if(!token){
-        return res.status(401).json({message: "no token"})
+        return res.status(401).json({message: "no token"});
     }
+    
+    const {type} = req.query;
 
     try{
         const decoded = jwt.verify(token, jwt_token);
@@ -129,8 +131,7 @@ app.get('/send_listings', async (req, res) => {
         if (!con) {
             return res.status(500).json({ message: "Database connection failed" });
         }
-        const rows = await con.query(
-            "SELECT * FROM items WHERE uid = ?", [uid]
+        const rows = await con.query( (type == 'main') ?  "SELECT * FROM items" : "SELECT * FROM items WHERE uid = ?", [uid]
         );
         con.release();
         if (!rows || rows.length === 0) { 

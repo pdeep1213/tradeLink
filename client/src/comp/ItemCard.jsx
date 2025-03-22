@@ -53,7 +53,7 @@ function ItemCard({ item_id, title, description, price, category, images, user, 
           <span className="item-price">${price}</span>
           <span className="item-category" style={{ backgroundColor: categories[category].color}}>{categories[category].name}</span>
         </div>
-        {user ? buttons['user'] : buttons[buy]}
+        {user ? buttons['user'] : buttons['buy']}
       </div>
     </div>
   );
