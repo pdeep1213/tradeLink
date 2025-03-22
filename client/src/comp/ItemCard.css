@@ -1,13 +1,13 @@
-.item-card {
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out;
-  }
-  
+  .item-card {
+  width: 100%; 
+  max-width: 300px; 
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
   .item-card:hover {
     transform: scale(1.02);
   }

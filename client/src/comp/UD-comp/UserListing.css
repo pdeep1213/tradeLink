@@ -18,14 +18,14 @@
     margin-bottom: 20px;
   }
   
-  .items-box {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
- 
-  }
-
+.items-box {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); 
+  gap: 20px; 
+  width: 100%; 
+  max-width: 1200px;
+  padding-bottom: 20px; 
+}
   .add-listing {
     margin: 20px auto;
     padding: 12px 24px;

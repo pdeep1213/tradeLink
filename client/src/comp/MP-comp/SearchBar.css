@@ -6,6 +6,7 @@
   max-width: 80rem;
   margin: 1rem auto;
   padding: 0 2vw;
+margin-top: 15rem;
 }
 
 .search-form {
@@ -49,4 +50,6 @@
 .search-input::placeholder {
   color: #888;
 }
-
+.tune-icon{
+background-color: white;
+}

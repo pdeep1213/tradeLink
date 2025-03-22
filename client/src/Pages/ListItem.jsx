@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Listitem.css'; // Import the CSS file
+import './ListItem.css'; // Import the CSS file
 import { useNavigate } from 'react-router-dom';
 
 const ListItem = () => {

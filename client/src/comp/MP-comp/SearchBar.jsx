@@ -23,7 +23,8 @@ function SearchBar({ onSearch }) {
           value={searchTerm}
           onChange={handleInputChange}
         />
-        <button type="submit" className="search-button">Search</button>
+      <span class="material-symbols-outlined tune-icon"> tune </span>
+      <button type="submit" className="search-button">Search</button>
       </form>
     </div>
   );

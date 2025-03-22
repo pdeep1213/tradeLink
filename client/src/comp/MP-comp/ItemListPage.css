@@ -1,0 +1,17 @@
+.all-item-wrapper {
+  position: relative;
+  height: 100vh;
+}
+
+.all-item-container {
+  position: absolute;
+  top: 5%; 
+  left: 50%;
+  width: calc(85vw - 15px);
+  max-width: 100vw;
+  height: auto;
+  padding: 1vw;
+  max-height: none;
+  transform: translateX(-50%);
+}
+
