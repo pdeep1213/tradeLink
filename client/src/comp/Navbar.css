@@ -100,7 +100,7 @@
 
 .Uname {
    color: white;
-   padding: 0 .7rem;
+   padding: 0 .5rem;
    font-weight: 700; 
 }
 
@@ -134,8 +134,13 @@
   color: #D9534F;
 }
 
-.material-symbols-outlined.shopping-icon {
-    color: white;
+.shopping-cart-icon {
+color: white;
 transform: scaleX(-1);
 }
-
+.vertical-line {
+  width: 2px;          
+  height: 20px;        
+  background-color: white;  
+  margin-left: 10px;    
+}

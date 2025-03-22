@@ -29,7 +29,8 @@ function Login() {
                 const role = data.perm === 1 ? "admin" : "user";
                 setUserRole(role);
                 console.log("In PreLogin, User role set:", role);
-                navigate("/UserDashboard", { state: { userRole: role } });
+               navigate("/Mainpage", { state: { userRole: role, userUsername: data.username, uid: data.uid } });
+                  // navigate("/UserDashboard", { state: { userRole: role } });
 
             } else {
                 setError(data.message || "Login failed. Please try again.");
@@ -67,7 +68,9 @@ function Login() {
            const role = data.perm === 1 ? "admin" : "user";
            setUserRole(role);
            console.log("User role set:", role);
-           navigate("/UserDashboard", { state: { userRole: role } });
+          
+navigate("/Mainpage", { state: { userRole: role, userUsername: data.username, uid: data.uid } });
+            // navigate("/UserDashboard", { state: { userRole: role } });
  
            //navigate("/Auth"); 
             } else {

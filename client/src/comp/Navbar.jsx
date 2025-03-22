@@ -23,7 +23,8 @@ const Navbar = ({ userRole, userUsername }) => {
         </>            
       ) : (            
         <>             
-         <span className="material-symbols-outlined shopping-icon">shopping_cart</span>
+          <span className="shopping-cart-icon material-symbols-outlined">shopping_cart</span>
+         <div className="vertical-line"></div>
           <span className="Uname">{userUsername}</span>
           <div className="dropdown">
             <img
@@ -53,10 +54,10 @@ const Navbar = ({ userRole, userUsername }) => {
 
   return (             
     <header className="header">
-      <Link to={isMain ? "/dashboard" : "/"} className="heading">
-        <img src={Logo} className="logo" alt="TradeLink Logo" />
-        <span className="title">TradeLink</span>
-      </Link>         
+      <Link to={userUsername ? "/MainPage" : "/"} className="heading">
+  <img src={Logo} className="logo" alt="TradeLink Logo" />
+  <span className="title">TradeLink</span>
+        </Link>
       <nav className="navbar-items">
         {authLinks}   
       </nav>          
