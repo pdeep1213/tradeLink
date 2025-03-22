@@ -1,44 +1,67 @@
-import React, { useState } from "react";
-import "./Navbar.css";
-import Logo from "./FINANCE.png";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";     
+import "./Navbar.css"; 
+import Logo from "./FINANCE.png";            
+import { Link, useLocation } from "react-router-dom";        
 
 const Navbar = ({ userRole, userUsername }) => {
-  const location = useLocation();
+  const location = useLocation();            
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
   const isMain = location.pathname === "/dashboard"; // Placeholder to remove later
 
-  const authLinks = !isAuthPage && (
-    <>
-      {!userUsername ? (
-        <>
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const authLinks = !isAuthPage && (         
+    <>                 
+      {!userUsername ? (  
+        <>             
           <Link to="/register" className="login-button">Sign Up</Link>
           <Link to="/login" className="lb">Log In</Link>
-        </>
-      ) : (
-        <>
-          <div className="navbar-account-box">
-          <img src={Logo} alt="Profile PIC" className="navbar-pic" />
-           </div>
-          <span className="navbarUsername">{userUsername}</span>
-          <Link to="/" className="logoutButton">Log Out</Link>  
-          </>
-      )}
-    </>
-  );
+        </>            
+      ) : (            
+        <>             
+         <span className="material-symbols-outlined shopping-icon">shopping_cart</span>
+          <span className="Uname">{userUsername}</span>
+          <div className="dropdown">
+            <img
+              src={Logo} 
+              alt="PIC"
+              className="dropdown-trigger"
+              onClick={toggleDropdown}
+            />
+            {isDropdownOpen && (
+              <div className="dropdown-menu">
+               <div className="mydash-menu">
+                <span class="material-symbols-outlined dashboard-icon">dashboard</span>
+                <Link to="/userDashboard" className="dropdown-item">My Dashboard</Link>
+                </div>
 
-  return (
+                <div className="logout-menu">
+                <span class="material-symbols-outlined logout-icon"> logout </span>
+                <Link to="/" className="dropdown-item">Log Out</Link>
+              </div>
+            </div>
+            )}
+          </div>
+        </>
+      )}
+    </>                
+  );                   
+
+  return (             
     <header className="header">
       <Link to={isMain ? "/dashboard" : "/"} className="heading">
         <img src={Logo} className="logo" alt="TradeLink Logo" />
         <span className="title">TradeLink</span>
-      </Link>
+      </Link>         
       <nav className="navbar-items">
-        {authLinks}
-      </nav>
-    </header>
-  );
-};
+        {authLinks}   
+      </nav>          
+    </header>         
+  );                  
+};                    
 
 export default Navbar;
-
