@@ -11,7 +11,35 @@ const ItemListPage = ({ userRole, profile }) => {
         if (!response.ok) {
             throw new Error("Failed to fetch items");
         }
-        return response.json();
+        const items = await response.json();
+
+        const update = await Promise.all(items.map(async (item) => {
+            try{
+                const img = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, {
+                    method: 'POST',
+                });
+                if(img.ok){
+                    const imgData = await img.json();
+                    if(imgData.length != 0){
+                        console.log(imgData[0].imgpath);
+                        return {
+                            ...item,
+                            img: imgData[0].imgpath,
+                        };
+                    }
+                    else{
+                        return {
+                            ...item,
+                            img: null,
+                        };
+                    }
+                }
+            }
+            catch (err) {
+                console.log("no good");
+            }
+        }));
+        return update;
     };
 
     const { data: items, isLoading, isError, error } = useQuery({
@@ -28,7 +56,7 @@ const ItemListPage = ({ userRole, profile }) => {
                 ) : isError ? (
                     <p>Error fetching items: {error.message}</p>
                 ) : items && items.length > 0 ? (
-                    items.map(({ itemname, description, price, category, item_id }) => (
+                    items.map(({ itemname, description, price, category, item_id, img }) => (
                         <ItemCard
                             key={item_id}
                             item_id={item_id}
@@ -36,6 +64,7 @@ const ItemListPage = ({ userRole, profile }) => {
                             description={description}
                             price={price}
                             category={category}
+                            images ={img}
                             user={userRole === "admin"} 
                         />
                     ))

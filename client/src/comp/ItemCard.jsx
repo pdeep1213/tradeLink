@@ -80,7 +80,7 @@ function ItemCard({ item_id, title, description, price, category, images, user, 
   return (
     <div className="item-card">
       <img 
-        src={images?.[0] || Logo} 
+        src={images || Logo} 
         alt={title} 
         className="item-image"
       />
