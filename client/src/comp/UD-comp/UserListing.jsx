@@ -38,7 +38,7 @@ function UserListing() {
       <h1 className='listing-title'>My Listing</h1>
        <div className='items-box'>
        {items.length > 0 ? (
-          items.map(({ itemname, description, price, category , item_id}, index) => (
+          items.map(({ itemname, description, price, category , item_id, instock}, index) => (
             <ItemCard
               key={index}
               item_id={item_id}
@@ -47,6 +47,7 @@ function UserListing() {
               price={price}
               category={category}
               user={true}
+              instock={instock}
               refreshItems={refreshItems}
             />
           ))

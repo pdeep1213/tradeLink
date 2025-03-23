@@ -167,6 +167,28 @@ app.post('/remove_item', async (req, res)=> {
 
 })
 
+app.post('/listing_item', async (req, res)=> {
+    const {item_id, listed} = req.body;
+    console.log("In Listing item");
+    try {
+        const con = await db.getConnection();
+        let instock = (listed) ? 0 : 1;
+        const query = "UPDATE items SET instock = ?  WHERE item_id = ?";
+        const result = await con.query(query, [instock,item_id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+
+        res.status(200).json({ message: "Item removed successfully" });
+        con.release();
+    } catch (error) {
+        console.error("Error removing item:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+
+});
+
 app.get('/send_token', async (req, res) => {
     const token = req.cookies.tradelink;
     if(!token){

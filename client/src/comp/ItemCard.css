@@ -71,7 +71,7 @@
     display: flex;
     justify-content: space-between;
   }
-  .remove, .unlist {
+  .remove, .unlist, .list {
     width: 40%;
     padding: 10px;
     color: white;
@@ -89,7 +89,9 @@
   .unlist{
     background-color: #A0A3A8 ;
   }
-  
+  .list{
+    background-color: #1a6d2d;
+  }
   button:hover {
     background: #0056b3;
   }
