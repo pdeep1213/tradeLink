@@ -156,7 +156,7 @@ app.post('/uploadImg', upload.array('files', 5), async (req, res) =>{//handles i
             if (!con) {
                 return res.status(500).json({ message: "Database connection failed" });
             }
-            const rows = await con.query( (type == 'main') ?  "SELECT * FROM items" : "SELECT * FROM items WHERE uid = ?", [uid]
+            const rows = await con.query( (type == 'main') ?  "SELECT * FROM items" : (type == 'admin') ? "SELECT * FROM items WHERE report = 1" :"SELECT * FROM items WHERE uid = ?", [uid]
             );
             con.release();
             if (!rows || rows.length === 0) { 
@@ -169,6 +169,28 @@ app.post('/uploadImg', upload.array('files', 5), async (req, res) =>{//handles i
             return res.status(500).json({ message: "Internal server error", error: err.message });
         }
     });
+
+    app.post('/report_item', async (req, res)=> {
+        const {item_id} = req.body;
+        console.log(item_id);
+
+        try {
+            const con = await db.getConnection();
+            const query = "UPDATE items SET report = 1  WHERE item_id = ?";
+            const result = await con.query(query, item_id);
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: "Item not found" });
+            }
+
+            res.status(200).json({ message: "Item report successfully" });
+            con.release();
+        } catch (error) {
+            console.error("Error reporting item:", error);
+            res.status(500).json({ message: "Internal reporting error" });
+        }
+
+    })
 
     app.post('/remove_item', async (req, res)=> {
         const {item_id} = req.body;
@@ -213,6 +235,8 @@ app.post('/uploadImg', upload.array('files', 5), async (req, res) =>{//handles i
         }
 
     });
+
+    
 
     app.get('/send_token', async (req, res) => {
         const token = req.cookies.tradelink;

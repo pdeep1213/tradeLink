@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import './ItemCard.css';
 import Logo from "./FINANCE.png";
 
+
 function ItemCard({ item_id, title, description, price, category, images, user, instock, refreshItems }) {
   
   const [listed, setListed] = useState(instock === 1); // Initialize based on instock prop
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const remove_btn = async () => {
     try {
@@ -50,6 +52,27 @@ function ItemCard({ item_id, title, description, price, category, images, user, 
     }
   };
 
+  const report_req = async () => {
+    try {
+      const response = await fetch('http://128.6.60.7:8080/report_item', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ item_id }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Item report successfully:', data);
+      } else {
+        console.error('Failed to report item:', data.message);
+      }
+    } catch (error) {
+      console.error("Error reporting item:", error);
+  }
+}
+
   const toggleListing = () => {
     setListed((prevListed) => {
       const newListedStatus = !prevListed;
@@ -57,6 +80,7 @@ function ItemCard({ item_id, title, description, price, category, images, user, 
       return newListedStatus;
     });
   };
+
 
   const categories = {
     1: { name: 'Electronics', color: '#007BFF' },
@@ -84,6 +108,13 @@ function ItemCard({ item_id, title, description, price, category, images, user, 
         alt={title} 
         className="item-image"
       />
+      {(!user && <div className="menu-container">
+            <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>&#x22EE;</div>
+            {menuOpen && (
+              <div className="dropdown-menu">
+                <button className='report' onClick={report_req}>Report</button>
+              </div>)}
+      </div>)}
       <div className="item-content">
         <h2 className="item-title">{title}</h2>
         <p className="item-description">{description}</p>

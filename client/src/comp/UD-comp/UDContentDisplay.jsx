@@ -3,6 +3,7 @@ import "./UDContentDisplay.css";
 import UserHome from './UserHome';
 import AdminProfile from './AdminProfile';
 import UserListing from './UserListing';
+import AdminReport from './AdminReport';
 
 
 function UDContentDisplay({ activeButton, profile }) {
@@ -16,7 +17,7 @@ function UDContentDisplay({ activeButton, profile }) {
 
   const adminPages = {
     adminProfile: <AdminProfile profile={profile} />,
-    adminReport: <h3>Reports Content</h3>,
+    adminReport: <AdminReport/>,
     adminSettings: <h3>Settings</h3>
   };
 
