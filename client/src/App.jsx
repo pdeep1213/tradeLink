@@ -9,6 +9,7 @@ import Auth from "./Pages/Auth.jsx";
 import UserDashboard from "./Pages/UserDashboard.jsx";
 import ListItem from "./Pages/ListItem.jsx";
 import MainPage from "./Pages/MainPage.jsx";
+import Wishlist from "./Pages/Wishlist.jsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,6 +34,7 @@ const App = () => {
             <Route path="/userDashboard" exact Component={UserDashboard} />
             <Route path="/MainPage" exact Component={MainPage} />
             <Route path="/listItem" exact Component={ListItem} />
+            <Route path="/wishlist" element={<Wishlist />} />
           </Routes>
         </Router>
       </div>
