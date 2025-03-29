@@ -3,8 +3,8 @@ import "./UDContentDisplay.css";
 import UserHome from './UserHome';
 import AdminProfile from './AdminProfile';
 import UserListing from './UserListing';
+import Wishlist from '../../Pages/Wishlist';
 import AdminReport from './AdminReport';
-
 
 function UDContentDisplay({ activeButton, profile }) {
   if (!profile) {
@@ -25,7 +25,7 @@ function UDContentDisplay({ activeButton, profile }) {
     userHome: <h3>Overview</h3>,
     userProfile: <UserHome profile={profile} />,
     userSettings: <h3>User Settings Content</h3>,
-    userWishlist: <h3>User Wishlist Content</h3>,
+    userWishlist: <Wishlist />,
     userEarnings: <h3>User Earnings Content</h3>,
     userListings: <UserListing></UserListing>,
     userPayment: <h3>User Payment Info Content</h3>,
