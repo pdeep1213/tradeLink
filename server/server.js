@@ -137,38 +137,76 @@ app.post('/uploadImg', upload.array('files', 5), async (req, res) =>{//handles i
         typeof value === 'bigint' ? value.toString() : value
     );
 
-    //Sending listed items
-    app.get('/send_listings', async (req, res) => {
-        const token = req.cookies.tradelink;
-        if(!token){
-            return res.status(401).json({message: "no token"});
-        }
-        
-        const {type} = req.query;
+    // 📁 Filename: server.js (backend) — update send_listings
 
-        try{
-            const decoded = jwt.verify(token, jwt_token);
-            const uid = decoded.uid;
-            const con = await db.getConnection().catch(err => {
-                console.error("DB Connection Error:", err);
-                return null;
-            });
-            if (!con) {
-                return res.status(500).json({ message: "Database connection failed" });
-            }
-            const rows = await con.query( (type == 'main') ?  "SELECT * FROM items" : (type == 'admin') ? "SELECT * FROM items WHERE report = 1" :"SELECT * FROM items WHERE uid = ?", [uid]
-            );
-            con.release();
-            if (!rows || rows.length === 0) { 
-                return res.status(400).json({ message: "No Items Found" });
-            }
-            console.log("Success sending items");
-            res.status(200).json(rows);
-        } catch (err) {
-            console.error("Error:", err);
-            return res.status(500).json({ message: "Internal server error", error: err.message });
+app.get('/send_listings', async (req, res) => {
+    const token = req.cookies.tradelink;
+    if (!token) {
+        return res.status(401).json({ message: "no token" });
+    }
+
+    const { type } = req.query;
+
+    try {
+        const decoded = jwt.verify(token, jwt_token);
+        const uid = decoded.uid;
+        const con = await db.getConnection().catch(err => {
+            console.error("DB Connection Error:", err);
+            return null;
+        });
+        if (!con) {
+            return res.status(500).json({ message: "Database connection failed" });
         }
-    });
+
+        let query = '';
+        let params = [];
+
+        if (type === 'main') {
+            query = `
+                SELECT i.*, 
+                       CASE WHEN w.item_id IS NOT NULL THEN 1 ELSE 0 END AS wished,
+                       img.imgpath AS image
+                FROM items i
+                LEFT JOIN wishlist w ON i.item_id = w.item_id AND w.uid = ?
+                LEFT JOIN itemsImg img ON img.item_id = i.item_id`;
+            params = [uid];
+        } else if (type === 'admin') {
+            query = `
+                SELECT i.*, 
+                       CASE WHEN w.item_id IS NOT NULL THEN 1 ELSE 0 END AS wished,
+                       img.imgpath AS image
+                FROM items i
+                LEFT JOIN wishlist w ON i.item_id = w.item_id AND w.uid = ?
+                LEFT JOIN itemsImg img ON img.item_id = i.item_id
+                WHERE i.report = 1`;
+            params = [uid];
+        } else {
+            query = `
+                SELECT i.*, 
+                       CASE WHEN w.item_id IS NOT NULL THEN 1 ELSE 0 END AS wished,
+                       img.imgpath AS image
+                FROM items i
+                LEFT JOIN wishlist w ON i.item_id = w.item_id AND w.uid = ?
+                LEFT JOIN itemsImg img ON img.item_id = i.item_id
+                WHERE i.uid = ?`;
+            params = [uid, uid];
+        }
+
+        const rows = await con.query(query, params);
+        con.release();
+
+        con.release();
+        if (!rows || rows.length === 0) {
+            return res.status(400).json({ message: "No Items Found" });
+        }
+
+        console.log("Success sending items");
+        res.status(200).json(rows);
+    } catch (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+});
 
     app.post('/report_item', async (req, res)=> {
         const {item_id} = req.body;
@@ -235,8 +273,6 @@ app.post('/uploadImg', upload.array('files', 5), async (req, res) =>{//handles i
         }
 
     });
-
-    
 
     app.get('/send_token', async (req, res) => {
         const token = req.cookies.tradelink;
@@ -486,5 +522,65 @@ app.post('/uploadImg', upload.array('files', 5), async (req, res) =>{//handles i
         }));
     }
 
+    app.get('/wishlist/:uid', async (req, res) => {
+        const { uid } = req.params;
+      
+        try {
+          const [wishlistItems] = await db.query(`
+            SELECT 
+              i.item_id, 
+              i.itemname AS title, 
+              i.description, 
+              i.price, 
+              i.category, 
+              MIN(img.imgpath) AS image
+            FROM wishlist w
+            JOIN items i ON w.item_id = i.item_id
+            LEFT JOIN itemsImg img ON img.item_id = i.item_id
+            WHERE w.uid = ?
+            GROUP BY i.item_id
+          `, [uid]);
+      
+          res.json(wishlistItems);
+        } catch (err) {
+          console.error('🔥 SQL ERROR:', err.message);
+          res.status(500).json({ message: 'Server error', error: err.message });
+        }
+      });
+      
+    
+      
+      app.post('/wishlist/add', async (req, res) => {
+        const { uid, item_id } = req.body;
+      
+        if (!uid || !item_id) {
+          return res.status(400).json({ message: 'Missing uid or item_id' });
+        }
+      
+        try {
+          await db.query('INSERT IGNORE INTO wishlist (uid, item_id) VALUES (?, ?)', [uid, item_id]);
+          res.status(200).json({ message: 'Item added to wishlist (or already existed)' });
+        } catch (err) {
+          console.error('❌ Error inserting into wishlist:', err.message);
+          res.status(500).json({ message: 'Server error', error: err.message });
+        }
+      });              
 
+    app.post('/wishlist/remove', async (req, res) => {
+        const { uid, item_id } = req.body;
+        if (!uid || !item_id) {
+          return res.status(400).send("Missing uid or item_id");
+        }
+      
+        try {
+          const con = await db.getConnection();
+          await con.query("DELETE FROM wishlist WHERE uid = ? AND item_id = ?", [uid, item_id]);
+          con.release();
+          res.send({ message: "Item removed from wishlist" });
+        } catch (err) {
+          console.error("❌ Error removing wishlist item:", err);
+          res.status(500).send("Could not remove item");
+        }
+    });
+      
     app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
