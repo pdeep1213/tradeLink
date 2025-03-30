@@ -7,7 +7,8 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 //end of stuff relating to cookies
 const bodyParser = require("body-parser");
-const upload = require('./imgHandler.js');
+const {upload, imgFetch, imgupload} = require('./imgHandler.js');
+const {uploadLogic, removeItem, listItem, sendlist} = require('./itemHandler.js');
 const cors = require('cors');
 const path = require('path');
 const corsOption = {
@@ -28,191 +29,28 @@ sgMail.setApiKey("SG.jPVjsSo_R1akWT8b5423wQ.LwuuJkWIklwRt3L7mUNwTbdk2CdQzSBwCFRM
 
 const jwt_token = process.env.JWTOKEN;
 
-app.post('/fetchImg', async (req, res) => {
-    //acquire itemid
-    const id = req.query.item_id;
-    //console.log(id);
-    //query database for all img path of that id
-    try {
-        const con = await db.getConnection().catch(err => {
-            console.error("DB Connection Error:", err);
-            return null;
-        });
-       const query = `select imgpath from itemsImg where item_id = ?`;
-       const result = await con.execute(query, [id]);
-       //console.log(result[0].imgpath);
-       con.release();
-       res.send(result);
-    }
-    catch (err){
-        console.log("error retreving imgs");
-    }
+//in imgHandler get img to send to client
+app.post('/fetchImg', imgFetch);
 
-});
+//in imgHandler saves the img on the server's device see /img/ for images
+app.post('/uploadImg', upload.array('files', 5), imgupload); 
 
+//in itemHandler uploads item to db
+app.post('/uploadItem', uploaditem);
 
-app.post('/uploadImg', upload.array('files', 5), async (req, res) =>{//handles img upload from client, change 5 depending on max amount of picture allow
-    if(!req.files || req.files.length == 0) {
-        return res.status(400).send("no img send");
-    }
+app.set('json replacer', (key, value) => 
+   typeof value === 'bigint' ? value.toString() : value
+);
 
-//the imgs should be send as form-data
-    const itemId = req.body.item_id; 
-    const img = req.files;
-    console.log("itemid: ", itemId);
-    console.log("img: ", img);
-    if(!itemId)
-        return res.status(400).send("please provide the item_id as well");
-    //storing of the img
-    const filepath = req.files.map(file => 'http://128.6.60.7:8080/img/' + file.filename);
-    console.log("img path: ", filepath);
-    try{
-        const con = await db.getConnection().catch(err => {
-            console.error("DB Connection Error:", err);
-            return null;
-        });
-        const queries = filepath.map(path => {
-            const query = `insert into itemsImg (item_id, imgpath) values (?, ?)`; 
-            con.execute(query, [itemId, path], (err, results) => {
-                if (err) {
-                    console.log("error inserting filepath into imgPathdb");
-                }
-                else{
-                    console.log("img uploaded successfully");
-                }
-            });
-        });
-        con.release();
-    }catch (err){
-        return res.send("error during img upload");
-    }
+//in itemHandler (this might not be used someone please check for me) sends items to the client
+app.get('/send_listings', sendlist);
 
-    return res.send("img upload successful");
-        
-});
+//in itemHandler delete item from the db can probably be rework to just take the item_id 
+//as part of the access port with /remove_item/:item_id if anyone wants to try
+app.post('/remove_item', removeItem);
 
-    app.post('/uploadItem', async (req, res) => { //upload all the item info first, this will return the item_id which is needed for uploading item imgs
-        //items table {uid, item_id, categories, description, price)
-        //uid should be provided from the cookies [just include credentials during the post request]
-        //categories should be a int from 1-... [check the categories table for which number indicate which category]
-        //description should be txt [no more than 512 characters, can make longer if need to]
-        //price should be a decimal [9,999,999,999.99 should be the max, any larger and data is lost]
-        
-        const token = req.cookies.tradelink;
-        if(!token){
-            console.log("no token");
-            return res.status(401).json({message: "no token"})
-        }
-        try {
-            const decoded = jwt.verify(token, jwt_token);
-            const uid = decoded.uid; //uid for the table
-
-            const data = req.body;
-            console.log("Data: ", data); //test
-            //might need to modify with the new column stuff
-            const columns = Object.keys(data).join(', ');
-            const value = [uid, ...Object.values(data)];
-            const question = value.map(() => '?').join(', ');
-            
-            let query = `insert into items (uid, ${columns}) values (${question})`;
-            let con = await db.getConnection();
-            var result = await con.query(query, value);
-            console.log("Itemlist result: ", result);
-            
-            const item_id = Number(result.insertId);
-            
-            console.log("item id: ", item_id);
-            res.status(200).json({ message: 'Item Inserted Successfully', item_id});
-            
-        }
-        catch (error){
-            console.log(error);
-            res.status(500).send("issue during item uploading");
-        }
-
-
-    });
-
-    app.set('json replacer', (key, value) => 
-        typeof value === 'bigint' ? value.toString() : value
-    );
-
-    //Sending listed items
-    app.get('/send_listings', async (req, res) => {
-        const token = req.cookies.tradelink;
-        if(!token){
-            return res.status(401).json({message: "no token"});
-        }
-        
-        const {type} = req.query;
-
-        try{
-            const decoded = jwt.verify(token, jwt_token);
-            const uid = decoded.uid;
-            const con = await db.getConnection().catch(err => {
-                console.error("DB Connection Error:", err);
-                return null;
-            });
-            if (!con) {
-                return res.status(500).json({ message: "Database connection failed" });
-            }
-            const rows = await con.query( (type == 'main') ?  "SELECT * FROM items" : "SELECT * FROM items WHERE uid = ?", [uid]
-            );
-            con.release();
-            if (!rows || rows.length === 0) { 
-                return res.status(400).json({ message: "No Items Found" });
-            }
-            console.log("Success sending items");
-            res.status(200).json(rows);
-        } catch (err) {
-            console.error("Error:", err);
-            return res.status(500).json({ message: "Internal server error", error: err.message });
-        }
-    });
-
-    app.post('/remove_item', async (req, res)=> {
-        const {item_id} = req.body;
-        console.log(item_id);
-
-        try {
-            const con = await db.getConnection();
-            const query = "DELETE from items WHERE item_id = ?";
-            const result = await con.query(query, item_id);
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ message: "Item not found" });
-            }
-
-            res.status(200).json({ message: "Item removed successfully" });
-            con.release();
-        } catch (error) {
-            console.error("Error removing item:", error);
-            res.status(500).json({ message: "Internal server error" });
-        }
-
-    })
-
-    app.post('/listing_item', async (req, res)=> {
-        const {item_id, listed} = req.body;
-        console.log("In Listing item");
-        try {
-            const con = await db.getConnection();
-            let instock = (listed) ? 0 : 1;
-            const query = "UPDATE items SET instock = ?  WHERE item_id = ?";
-            const result = await con.query(query, [instock,item_id]);
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ message: "Item not found" });
-            }
-
-            res.status(200).json({ message: "Item removed successfully" });
-            con.release();
-        } catch (error) {
-            console.error("Error removing item:", error);
-            res.status(500).json({ message: "Internal server error" });
-        }
-
-    });
+//in itemHandler this is competing with send_listing i think. if anyone wants to confirm go ahead
+app.post('/listing_item', listItem);
 
     app.get('/send_token', async (req, res) => {
         const token = req.cookies.tradelink;
@@ -430,16 +268,6 @@ app.post('/uploadImg', upload.array('files', 5), async (req, res) =>{//handles i
     app.get('/auth', (req, res) => {
       res.status(200).json({ message: 'Authenticated', email : currentUser });
     })
-
-    //TODO
-    app.put('/', async (req, res) =>{
-        let task = req.body;
-        try{
-            const result = await db.pool.query("update tasks set description = ?, completed = ? where id = ?", [task.description, task.completed, task.id]);        res.send(result);
-        }catch (err){
-            throw err;
-        }
-    });
 
     const SECOND = 1000; //this is seconds in millisecond
     const MINUTE = 60*SECOND; //this is minute in millisecond
