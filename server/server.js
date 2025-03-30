@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 //end of stuff relating to cookies
 const bodyParser = require("body-parser");
 const {upload, imgFetch, imgupload} = require('./imgHandler.js');
-const {uploadLogic, removeItem, listItem, sendlist} = require('./itemHandler.js');
+const {uploadLogic, removeItem, listItem, sendlist, reportitem} = require('./itemHandler.js');
 const cors = require('cors');
 const path = require('path');
 const corsOption = {
@@ -51,6 +51,12 @@ app.post('/remove_item', removeItem);
 
 //in itemHandler this is competing with send_listing i think. if anyone wants to confirm go ahead
 app.post('/listing_item', listItem);
+
+app.set('json replacer', (key, value) => 
+    typeof value === 'bigint' ? value.toString() : value
+);
+
+app.post('/report_item', reportitem);
 
     app.get('/send_token', async (req, res) => {
         const token = req.cookies.tradelink;
@@ -290,5 +296,65 @@ app.post('/listing_item', listItem);
         }));
     }
 
+    app.get('/wishlist/:uid', async (req, res) => {
+        const { uid } = req.params;
+      
+        try {
+          const [wishlistItems] = await db.query(`
+            SELECT 
+              i.item_id, 
+              i.itemname AS title, 
+              i.description, 
+              i.price, 
+              i.category, 
+              MIN(img.imgpath) AS image
+            FROM wishlist w
+            JOIN items i ON w.item_id = i.item_id
+            LEFT JOIN itemsImg img ON img.item_id = i.item_id
+            WHERE w.uid = ?
+            GROUP BY i.item_id
+          `, [uid]);
+      
+          res.json(wishlistItems);
+        } catch (err) {
+          console.error('🔥 SQL ERROR:', err.message);
+          res.status(500).json({ message: 'Server error', error: err.message });
+        }
+      });
+      
+    
+      
+      app.post('/wishlist/add', async (req, res) => {
+        const { uid, item_id } = req.body;
+      
+        if (!uid || !item_id) {
+          return res.status(400).json({ message: 'Missing uid or item_id' });
+        }
+      
+        try {
+          await db.query('INSERT IGNORE INTO wishlist (uid, item_id) VALUES (?, ?)', [uid, item_id]);
+          res.status(200).json({ message: 'Item added to wishlist (or already existed)' });
+        } catch (err) {
+          console.error('❌ Error inserting into wishlist:', err.message);
+          res.status(500).json({ message: 'Server error', error: err.message });
+        }
+      });              
 
+    app.post('/wishlist/remove', async (req, res) => {
+        const { uid, item_id } = req.body;
+        if (!uid || !item_id) {
+          return res.status(400).send("Missing uid or item_id");
+        }
+      
+        try {
+          const con = await db.getConnection();
+          await con.query("DELETE FROM wishlist WHERE uid = ? AND item_id = ?", [uid, item_id]);
+          con.release();
+          res.send({ message: "Item removed from wishlist" });
+        } catch (err) {
+          console.error("❌ Error removing wishlist item:", err);
+          res.status(500).send("Could not remove item");
+        }
+    });
+      
     app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
