@@ -1,0 +1,17 @@
+.chat-icon{
+
+position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  padding: 10px;
+  color: black;
+font-size: 2rem;
+z-index: 3;
+border-radius: 15%;
+background-color: white;
+
+}
+
+.chat-icon:hover{
+  transform: scale(1.05);
+}

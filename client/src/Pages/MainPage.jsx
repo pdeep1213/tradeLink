@@ -4,12 +4,14 @@ import Navbar from "../comp/Navbar.jsx";
 import ItemListPage from '../comp/MP-comp/ItemListPage.jsx';
 import SearchBar from '../comp/MP-comp/SearchBar.jsx';
 import "./MainPage.css";
+import Chat from "../comp/Chat.jsx";
 
 const MainPage = () => {
     const location = useLocation();
     const [userRole, setUserRole] = useState(location.state?.userRole || null);
     const [profile, setProfile] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [isChatOpen, setIsChatOpen] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -52,6 +54,9 @@ const MainPage = () => {
         <Navbar userRole={userRole} userUsername={profile?.username} />
         <SearchBar onSearch={handleSearch} />
         <ItemListPage userRole={userRole} profile={profile} /> 
+        <span className="material-symbols-outlined chat-icon" onClick={() => setIsChatOpen(true)} role="button" tabIndex="0">chat
+        </span>
+       <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
         </>
     );
 };
