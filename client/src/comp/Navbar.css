@@ -111,11 +111,18 @@
   transition: background-color 0.3s;
 }
 
-.mydash-menu:hover {
+.mydash-menu:hover, .chat-menu:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.mydash-menu .dashboard-icon {
+.chat-menu{
+display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.mydash-menu .dashboard-icon{
   color: #007BFF;
 }
 

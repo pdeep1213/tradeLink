@@ -40,6 +40,11 @@ const Navbar = ({ userRole, userUsername }) => {
                 <Link to="/userDashboard" className="dropdown-item">My Dashboard</Link>
                 </div>
 
+              <div className="chat-menu">
+                <span class="material-symbols-outlined chatmenu-icon"> forum </span>
+              <Link to="/" className="dropdown-item">Messages</Link>
+                </div>  
+
                 <div className="logout-menu">
                 <span class="material-symbols-outlined logout-icon"> logout </span>
                 <Link to="/" className="dropdown-item">Log Out</Link>
