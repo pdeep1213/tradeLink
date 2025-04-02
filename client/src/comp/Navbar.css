@@ -75,7 +75,7 @@
   margin-top: 7px;
 }
 
-.dropdown-menu {
+.dropdown-menu-navbar, .dropdown-menu {
   position: absolute;
   right: 0;
   top: 3rem;

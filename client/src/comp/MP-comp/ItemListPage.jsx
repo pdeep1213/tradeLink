@@ -1,9 +1,9 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import ItemCard from '../../comp/ItemCard.jsx';
-import './ItemListPage.css'; 
+import './ItemListPage.css';
 
-const ItemListPage = ({ userRole, profile }) => {
+const ItemListPage = ({ userRole, profile, searchTerm, selectedCategory }) => {
     const fetchItems = async () => {
         const response = await fetch("http://128.6.60.7:8080/send_listings?type=main", {
             credentials: "include",
@@ -23,7 +23,7 @@ const ItemListPage = ({ userRole, profile }) => {
                     return {
                         ...item,
                         img: imgData.length > 0 ? imgData[0].imgpath : null,
-                        wished: item.wished === 1, // Fix: Ensure `wished` is boolean
+                        wished: item.wished === 1,
                     };
                 } else {
                     return {
@@ -50,6 +50,12 @@ const ItemListPage = ({ userRole, profile }) => {
         queryFn: fetchItems,
     });
 
+    const filteredItems = items?.filter(item => {
+        const matchesSearchTerm = item.itemname.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
+        return matchesSearchTerm && matchesCategory;
+    });
+
     return (
         <div className="all-item-wrapper">
             <div className='all-item-container'>
@@ -58,8 +64,8 @@ const ItemListPage = ({ userRole, profile }) => {
                         <p>Loading items...</p>
                     ) : isError ? (
                         <p>Error fetching items: {error.message}</p>
-                    ) : items && items.length > 0 ? (
-                        items.map(({ itemname, description, price, category, item_id, img, wished }) => (
+                    ) : filteredItems && filteredItems.length > 0 ? (    
+                        filteredItems.map(({ itemname, description, price, category, item_id, img, wished }) => (
                             <ItemCard
                                 key={item_id}
                                 item_id={item_id}
@@ -69,7 +75,7 @@ const ItemListPage = ({ userRole, profile }) => {
                                 category={category}
                                 images={img}
                                 user={userRole === "admin"}
-                                wished={wished} // Pass wishlist status to ItemCard
+                                wished={wished} 
                             />
                         ))
                     ) : (
@@ -82,3 +88,4 @@ const ItemListPage = ({ userRole, profile }) => {
 };
 
 export default ItemListPage;
+

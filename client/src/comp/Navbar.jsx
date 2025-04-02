@@ -34,7 +34,7 @@ const Navbar = ({ userRole, userUsername }) => {
               onClick={toggleDropdown}
             />
             {isDropdownOpen && (
-              <div className="dropdown-menu">
+              <div className="dropdown-menu-navbar">
                <div className="mydash-menu">
                 <span class="material-symbols-outlined dashboard-icon">dashboard</span>
                 <Link to="/userDashboard" className="dropdown-item">My Dashboard</Link>

@@ -8,8 +8,9 @@ const cookieParser = require('cookie-parser');
 //end of stuff relating to cookies
 const bodyParser = require("body-parser");
 const {upload, imgFetch, imgupload} = require('./imgHandler.js');
-const {uploadLogic, removeItem, listItem, sendlist, reportitem} = require('./itemHandler.js');
+const {uploaditem, removeItem, listItem, sendlist, reportitem, getAllCategory} = require('./itemHandler.js');
 const {profile, wishlist_uid, wishlist_add, wishlist_remove} = require('./profileHandler.js');
+const {filteritem} = require('./returnHandler.js');
 const cors = require('cors');
 const path = require('path');
 const corsOption = {
@@ -30,6 +31,10 @@ sgMail.setApiKey("SG.jPVjsSo_R1akWT8b5423wQ.LwuuJkWIklwRt3L7mUNwTbdk2CdQzSBwCFRM
 
 const jwt_token = process.env.JWTOKEN;
 
+//in returnHandler should return a list of filter item
+app.post('/filter', filteritem);
+
+
 //in imgHandler get img to send to client
 app.post('/fetchImg', imgFetch);
 
@@ -42,6 +47,8 @@ app.post('/uploadItem', uploaditem);
 app.set('json replacer', (key, value) => 
    typeof value === 'bigint' ? value.toString() : value
 );
+
+app.get('/allCategory', getAllCategory);
 
 //in itemHandler (this might not be used someone please check for me) sends items to the client
 app.get('/send_listings', sendlist);
@@ -60,35 +67,35 @@ app.set('json replacer', (key, value) =>
 //in itemhandler should increase an item report count by 1
 app.post('/report_item', reportitem);
 
-    app.get('/send_token', async (req, res) => {
-        const token = req.cookies.tradelink;
-        if(!token){
-            return res.status(401).json({message: "no token"})
-        }
-        
-        try {
-            const decoded = jwt.verify(token, jwt_token);
-            const uid = decoded.uid;
-            const con = await db.getConnection().catch(err => {
-                console.error("DB Connection Error:", err);
-                return null;
-            });
-            if (!con) {
-                return res.status(500).json({ message: "Database connection failed" });
-            }
-            const rows = await con.query(
-                "SELECT perm FROM ulogin WHERE uid = ?", [uid]
-            );
-            con.release();
-            if (!rows || rows.length === 0) { 
-                return res.status(400).json({ message: "User not found" });
-            }
-        } catch (err) {
-            console.error("Error:", err);
-            return res.status(500).json({ message: "Internal server error", error: err.message });
-        }
+app.get('/send_token', async (req, res) => {
+    const token = req.cookies.tradelink;
+    if(!token){
+        return res.status(401).json({message: "no token"})
+    }
 
-    });
+    try {
+        const decoded = jwt.verify(token, jwt_token);
+        const uid = decoded.uid;
+        const con = await db.getConnection().catch(err => {
+            console.error("DB Connection Error:", err);
+            return null;
+        });
+        if (!con) {
+            return res.status(500).json({ message: "Database connection failed" });
+        }
+        const rows = await con.query(
+            "SELECT perm FROM ulogin WHERE uid = ?", [uid]
+        );
+        con.release();
+        if (!rows || rows.length === 0) { 
+            return res.status(400).json({ message: "User not found" });
+        }
+    } catch (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+
+});
 
 //in profileHandler retrieve profile information
 app.get('/profile', profile);
@@ -103,100 +110,92 @@ app.post('/wishlist/add', wishlist_add);
 app.post('/wishlist/remove', wishlist_remove);
 
     //POST
-    app.post('/register', async (req, res) =>{
-        const data = req.body;
-        console.log("Data: ", data); //test
+app.post('/register', async (req, res) =>{
+    const data = req.body;
+    console.log("Data: ", data); //test
 
+    const columns = Object.keys(data).join(', ');
+    const value = Object.values(data);
+    const question = value.map(() => '?').join(', '); //this is to prevent sql injection attack
 
-        const columns = Object.keys(data).join(', ');
-        const value = Object.values(data);
-        const question = value.map(() => '?').join(', '); //this is to prevent sql injection attack
-
-
-        let con;
-        try{
-            con = await db.getConnection();
-            //check the database for same email
-            let query = "select * from ulogin where email=?";
-            let result = await con.query(query, data.email);
-            if (result != 0){
-                return res.status(400).json({message: "A User is already registered with this email"});
-            }
-            query = `insert into ulogin (${columns}) values (${question}) returning *`;
-            result = await con.query(query, value);
-            console.log("res",result[0].uid);
-            //const insertId = result.insertId;
-            const sign = jwt.sign({uid: result[0].uid}, jwt_token, {expiresIn: '30d'});
+    let con;
+    try{
+        con = await db.getConnection();
+        //check the database for same email
+        let query = "select * from ulogin where email=?";
+        let result = await con.query(query, data.email);
+        if (result != 0){
+            return res.status(400).json({message: "A User is already registered with this email"});
+        }
+        query = `insert into ulogin (${columns}) values (${question}) returning *`;
+        result = await con.query(query, value);
+        console.log("res",result[0].uid);
+        //const insertId = result.insertId;
+        const sign = jwt.sign({uid: result[0].uid}, jwt_token, {expiresIn: '30d'});
             res.cookie('tradelink', sign, {
                 httpOnly:true,
                 maxAge: 30 * 24 * 60 * 60 *1000, //day (?), hour(24), minute (60), second (60), millisecond (1000)
                 sameSite: 'Lax',
             });
-            res.status(200).json({ message: 'Task Inserted Successfully', result});
-        }catch (err){
-            res.status(500).json({error: 'Error During Post', details: err.message});
+        res.status(200).json({ message: 'Task Inserted Successfully', result});
+    }catch (err){
+        res.status(500).json({error: 'Error During Post', details: err.message});
+    }
+    finally{
+        if(con)
+            con.release();
+    }
+});
+
+
+// **Login Route (No Encryption)**
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const con = await db.getConnection();
+        const result = await con.query("SELECT * FROM ulogin WHERE email=? AND password=?", [email, password]);
+        // Fetch user from database
+        const user = Array.isArray(result) ? result[0] : result;
+        if (user.length === 0 || !user) {
+            return res.status(400).json({ message: "Invalid email or password" });
         }
-        finally{
-            if(con)
-                con.release();
-        }
-    });
-
-
-    // **Login Route (No Encryption)**
-    app.post('/login', async (req, res) => {
-        const { email, password } = req.body;
-
-        try {
-            const con = await db.getConnection();
-            const result = await con.query("SELECT * FROM ulogin WHERE email=? AND password=?", [email, password]);
-            // Fetch user from database
-            const user = Array.isArray(result) ? result[0] : result;
-            if (user.length === 0 || !user) {
-                return res.status(400).json({ message: "Invalid email or password" });
-            }
             
-            console.log(user);
-            console.log("sending cookie");
-            const sign = jwt.sign({uid: result[0].uid}, jwt_token, {expiresIn: '30d'});
-            res.cookie('tradelink', sign, {
-                httpOnly:true,
-                maxAge: 30 * 24 * 60 * 60 *1000, //day (?), hour(24), minute (60), second (60), millisecond (1000)
-                sameSite: 'Lax',
-            });
+        console.log(user);
+        console.log("sending cookie");
+        const sign = jwt.sign({uid: result[0].uid}, jwt_token, {expiresIn: '30d'});
+        res.cookie('tradelink', sign, {
+            httpOnly:true,
+            maxAge: 30 * 24 * 60 * 60 *1000, //day (?), hour(24), minute (60), second (60), millisecond (1000)
+            sameSite: 'Lax',
+        });
 
 
-                res.status(200).json({ 
-                message: "Login Successful",
-                perm: user.perm 
-            });
+        res.status(200).json({ 
+            message: "Login Successful",
+            perm: user.perm 
+        });
 
-        } catch (err) {
-            console.log(err);
-            res.status(500).json({ error: 'Error During Login', details: err.message });
-        }
-    });
-
-
-    //Post Auth
-    // Store verification codes temporarily (Replace with a database for production)
-    const verificationCodes = {};
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error During Login', details: err.message });
+    }
+});
 
 
-    // **Send Verification Code Route**
-    app.post('/auth', async (req, res) => {
-        const { email } = req.body;
+//Post Auth
+// Store verification codes temporarily (Replace with a database for production)
+const verificationCodes = {};
 
 
-        if (!email) {
-            return res.status(400).json({ error: "Email is required" });
-        }
-
-
-        // Generate a random 6-digit verification code
-        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-
+// **Send Verification Code Route**
+app.post('/auth', async (req, res) => {
+const { email } = req.body;
+if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+}
+// Generate a random 6-digit verification code
+const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         // Store code in memory (for demo purposes)
         verificationCodes[email] = verificationCode;
 

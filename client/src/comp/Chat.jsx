@@ -11,7 +11,7 @@ export default function Chat({ isOpen, onClose }) {
           className="chat-close-button"
           onClick={onClose}
         >
-          ✖
+        <span class="material-symbols-outlined"> close </span>
         </button>
         <h2>Chat Window</h2>
       </div>

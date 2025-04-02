@@ -31,11 +31,11 @@ const imgFetch = async (req, res) => {
             console.error("DB Connection Error:", err);
             return null;
         });
-       const query = `select imgpath from itemsImg where item_id = ?`;
-       const result = await con.execute(query, [id]);
-       //console.log(result[0].imgpath);
-       con.release();
-       res.send(result);
+        const query = `select imgpath from itemsImg where item_id = ?`;
+        const result = await con.execute(query, [id]);
+        //console.log(result[0].imgpath);
+        con.release();
+        res.send(result);
     }
     catch (err){
         console.log("error retreving imgs");
@@ -47,8 +47,7 @@ const imgupload = async (req, res) =>{//handles img upload from client, change 5
     if(!req.files || req.files.length == 0) {
         return res.status(400).send("no img send");
     }
-
-//the imgs should be send as form-data
+    //the imgs should be send as form-data
     const itemId = req.body.item_id; 
     const img = req.files;
     console.log("itemid: ", itemId);
@@ -78,9 +77,7 @@ const imgupload = async (req, res) =>{//handles img upload from client, change 5
     }catch (err){
         return res.send("error during img upload");
     }
-
-    return res.send("img upload successful");
-        
+    return res.send("img upload successful");   
 };
 
 

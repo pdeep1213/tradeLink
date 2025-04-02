@@ -12,6 +12,9 @@ const MainPage = () => {
     const [profile, setProfile] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [isChatOpen, setIsChatOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [categories, setCategories] = useState([]);
+
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -39,6 +42,29 @@ const MainPage = () => {
         };
         fetchProfile();
     }, []);
+    
+    useEffect(() => {
+        const fetchCat = async () => {
+            try {
+                const response = await fetch("http://128.6.60.7:8080/allCategory");
+                if (!response.ok) {
+                    console.error("Failed to fetch profile:", response.status, response.statusText);
+                    return;
+                }
+                const data = await response.json();
+            const validCategories = data.filter(category => category.info !== null).map(category => category.info);
+
+            setCategories(validCategories); 
+
+
+            } catch (error) {
+                console.error("Error fetching profile:", error);
+            }
+        };
+        console.log('testing');
+        fetchCat();
+    }, []);
+
 
     useEffect(() => {
         document.body.style.backgroundColor = "#02071d";
@@ -47,13 +73,18 @@ const MainPage = () => {
 
     const handleSearch = (term) => {
         setSearchTerm(term);
+    setSelectedCategory(category);
+    };
+
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category); 
     };
 
     return (
         <>
         <Navbar userRole={userRole} userUsername={profile?.username} />
-        <SearchBar onSearch={handleSearch} />
-        <ItemListPage userRole={userRole} profile={profile} /> 
+        <SearchBar onSearch={handleSearch} categories={categories} onCategoryChange={handleCategoryChange} />
+        <ItemListPage userRole={userRole} profile={profile} searchTerm={searchTerm} selectedCategory={selectedCategory} /> 
         <span className="material-symbols-outlined chat-icon" onClick={() => setIsChatOpen(true)} role="button" tabIndex="0">chat
         </span>
        <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
