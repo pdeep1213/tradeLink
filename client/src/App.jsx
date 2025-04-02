@@ -10,6 +10,7 @@ import UserDashboard from "./Pages/UserDashboard.jsx";
 import ListItem from "./Pages/ListItem.jsx";
 import MainPage from "./Pages/MainPage.jsx";
 import Wishlist from "./Pages/Wishlist.jsx";
+import PurchasePage from "./Pages/PurschasePage.jsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +36,7 @@ const App = () => {
             <Route path="/MainPage" exact Component={MainPage} />
             <Route path="/listItem" exact Component={ListItem} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/purchase/:itemId" element={<PurchasePage />} />
           </Routes>
         </Router>
       </div>
