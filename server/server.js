@@ -8,11 +8,11 @@ const cookieParser = require('cookie-parser');
 //end of stuff relating to cookies
 const bodyParser = require("body-parser");
 const {upload, imgFetch, imgupload} = require('./imgHandler.js');
-const {uploaditem, removeItem, listItem, sendlist, reportitem, sellerID, getAllCategory} = require('./itemHandler.js');
 const {profile, wishlist_uid, wishlist_add, wishlist_remove, info} = require('./profileHandler.js');
+const {sendMessage, getMessages, emitMessage} = require('./MessageHandler.js');
+const {transaction} = require('./transaction.js')
+const {uploaditem, removeItem, listItem, sendlist, reportitem, sellerID, getAllCategory} = require('./itemHandler.js');
 const {filteritem} = require('./returnHandler.js');
-const {sendMessage, getMessage, emitMessage} = require('./MessageHandler.js');
-const {transaction} = require('./transaction.js');
 const cors = require('cors');
 const path = require('path');
 const corsOption = {
@@ -34,35 +34,28 @@ sgMail.setApiKey("SG.jPVjsSo_R1akWT8b5423wQ.LwuuJkWIklwRt3L7mUNwTbdk2CdQzSBwCFRM
 
 const jwt_token = process.env.JWTOKEN;
 
-//------------------------------------------------------------
-//in transaction.js for buying item
+//for buying item
 app.post('/transaction', transaction);
-//------------------------------------------------------------
-
-//------------------------------------------------------------
 //in returnHandler should return a list of filter item
 app.post('/filter', filteritem);
-//------------------------------------------------------------
 
-//------------------------------------------------------------
+
 //in imgHandler get img to send to client
 app.post('/fetchImg', imgFetch);
 
 //in imgHandler saves the img on the server's device see /img/ for images
 app.post('/uploadImg', upload.array('files', 5), imgupload); 
-//------------------------------------------------------------
 
+//in itemHandler uploads item to db
+app.post('/uploadItem', uploaditem);
+
+//in itemHandler to get uid of seller
+app.post('/sellerID', sellerID);
 
 app.set('json replacer', (key, value) => 
    typeof value === 'bigint' ? value.toString() : value
 );
 
-
-//------------------------------------------------------------
-//in itemHandler uploads item to db
-app.post('/uploadItem', uploaditem);
-
-//in itemHandler get all the category
 app.get('/allCategory', getAllCategory);
 
 //in itemHandler (this might not be used someone please check for me) sends items to the client
@@ -75,43 +68,16 @@ app.post('/remove_item', removeItem);
 //in itemHandler this is competing with send_listing i think. if anyone wants to confirm go ahead
 app.post('/listing_item', listItem);
 
-//in itemHandler to get the uid of the seller
-app.post('/sellerID', sellerID);
-
-//in itemhandler should increase an item report count by 1
-app.post('/report_item', reportitem);
-//------------------------------------------------------------
-
-//------------------------------------------------------------
-//in profileHandler retrieve profile information
-app.get('/profile', profile);
-
-//in profileHandler not quite sure what this is doing, it might be grabbing a person's wishlist
-app.get('/wishlist/:uid', wishlist_uid);
-      
-//in profileHandler probably adding to a users wishlist
-app.post('/wishlist/add', wishlist_add);
-
-//in profileHandler probably remove an item from a user's wishlist
-app.post('/wishlist/remove', wishlist_remove);
-//------------------------------------------------------------
+//in profileHandler to get info of a user given UID
+app.get('/info/:uid', info);
 
 //send message 
 app.post('/sendMessage', async (req, res) => {
-    const {receiverId, content } = req.body;
-    
-    token = req.cookies.tradelink;
-    if(!token){
-            console.log("no token");
-            return res.status(401).json({message: "no token"})
-    }
-
-    try {
-      const decoded = jwt.verify(token, jwt_token);
-      const senderID = decoded.uid;
-
-      const message = await sendMessage(senderId, receiverId, content);  // Call messageHandler.sendMessage
-      emitMessage(io, receiverId, message);  // Emit real-time message via WebSocket
+    const {receiver_id, sender_id ,content } = req.body;
+    try {  
+      const message = await sendMessage(sender_id, receiver_id, content);  // Call messageHandler.sendMessage
+      
+      emitMessage(io, receiver_id, message);  // Emit real-time message via WebSocket 
       res.status(200).json({ success: true, message });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
@@ -129,10 +95,13 @@ app.get('/getMessages/:receiverId/:senderID', async (req, res) => {
       res.status(500).json({ success: false, error: error.message });
     }
   });  
+
 app.set('json replacer', (key, value) => 
     typeof value === 'bigint' ? value.toString() : value
 );
 
+//in itemhandler should increase an item report count by 1
+app.post('/report_item', reportitem);
 
 app.get('/send_token', async (req, res) => {
     const token = req.cookies.tradelink;
@@ -164,9 +133,21 @@ app.get('/send_token', async (req, res) => {
 
 });
 
+//in profileHandler retrieve profile information
+app.get('/profile', profile);
+
+//in profileHandler not quite sure what this is doing, it might be grabbing a person's wishlist
+app.get('/wishlist/:uid', wishlist_uid);
+      
+//in profileHandler probably adding to a users wishlist
+app.post('/wishlist/add', wishlist_add);
+
+//in profileHandler probably remove an item from a user's wishlist
+app.post('/wishlist/remove', wishlist_remove);
+
 app.get('/info/:uid', info);
 
-//POST
+    //POST
 app.post('/register', async (req, res) =>{
     const data = req.body;
     console.log("Data: ", data); //test
@@ -326,13 +307,13 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
     }
 
       
-app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
-const io = socketIo(server, {cors: corsOption});
+const server = app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
+const io = socketIo(server, { cors: corsOption }); 
 
-//Handle socket connection
+// Handling socket connections
 io.on('connection', (socket) => {
-    console.log("new client connected");
-
+    console.log('New client connected',socket.id);
+    
     socket.on('disconnect', () => {
         console.log('Client disconnected');
     });

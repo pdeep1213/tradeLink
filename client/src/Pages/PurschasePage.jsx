@@ -103,6 +103,7 @@ const { data: items, isLoading, isError, error } = useQuery({
 const handleTradeClick = async () => {
     const id = await fetchSellerID();
     SetID(id); // Asynchronous update
+    setIsChatOpen(true);
 };
 
 useEffect(() => {
@@ -125,7 +126,7 @@ useEffect(() => {
             <button className="buy-now" onClick={() =>setConfirmWin(true)}>Buy Now</button>
             <button className="trade-start" onClick={handleTradeClick}>Initiate Trade</button>
         </div>
-        <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} seller_id={sellerID} buyer_id={myuid}></Chat>
+        <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} receiver_id={sellerID}></Chat>
         <Confirm isOpen={confirm_win} onClose={() => setConfirmWin(false)} title={title} price={price} item_id={item_id}></Confirm>
       </div>
       <div className='other-item'>
