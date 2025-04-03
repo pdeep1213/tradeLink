@@ -82,6 +82,53 @@ app.post('/sellerID', sellerID);
 app.post('/report_item', reportitem);
 //------------------------------------------------------------
 
+//------------------------------------------------------------
+//in profileHandler retrieve profile information
+app.get('/profile', profile);
+
+//in profileHandler not quite sure what this is doing, it might be grabbing a person's wishlist
+app.get('/wishlist/:uid', wishlist_uid);
+      
+//in profileHandler probably adding to a users wishlist
+app.post('/wishlist/add', wishlist_add);
+
+//in profileHandler probably remove an item from a user's wishlist
+app.post('/wishlist/remove', wishlist_remove);
+//------------------------------------------------------------
+
+//send message 
+app.post('/sendMessage', async (req, res) => {
+    const {receiverId, content } = req.body;
+    
+    token = req.cookies.tradelink;
+    if(!token){
+            console.log("no token");
+            return res.status(401).json({message: "no token"})
+    }
+
+    try {
+      const decoded = jwt.verify(token, jwt_token);
+      const senderID = decoded.uid;
+
+      const message = await sendMessage(senderId, receiverId, content);  // Call messageHandler.sendMessage
+      emitMessage(io, receiverId, message);  // Emit real-time message via WebSocket
+      res.status(200).json({ success: true, message });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+//get message
+app.get('/getMessages/:receiverId/:senderID', async (req, res) => {
+    const { receiverId,senderID } = req.params;
+    try {
+         
+      const messages = await getMessages(senderID, receiverId);  // Call messageHandler.getMessages
+      res.status(200).json({ success: true, messages });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });  
 app.set('json replacer', (key, value) => 
     typeof value === 'bigint' ? value.toString() : value
 );
@@ -117,19 +164,9 @@ app.get('/send_token', async (req, res) => {
 
 });
 
-//in profileHandler retrieve profile information
-app.get('/profile', profile);
+app.get('/info/:uid', info);
 
-//in profileHandler not quite sure what this is doing, it might be grabbing a person's wishlist
-app.get('/wishlist/:uid', wishlist_uid);
-      
-//in profileHandler probably adding to a users wishlist
-app.post('/wishlist/add', wishlist_add);
-
-//in profileHandler probably remove an item from a user's wishlist
-app.post('/wishlist/remove', wishlist_remove);
-
-    //POST
+//POST
 app.post('/register', async (req, res) =>{
     const data = req.body;
     console.log("Data: ", data); //test
@@ -290,3 +327,13 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
       
 app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
+const io = socketIo(server, {cors: corsOption});
+
+//Handle socket connection
+io.on('connection', (socket) => {
+    console.log("new client connected");
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
