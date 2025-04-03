@@ -249,6 +249,7 @@ const updateitemrating = async (req, res) => {
             await con.query(query3, [rate, item_id]);
         }
         con.release();
+        res.status(200).json({message: "Rating updated Successfully"});
     }
     catch (err){
         console.log("error in itemrating");
