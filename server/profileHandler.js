@@ -95,10 +95,27 @@ const wishlist_remove =  async (req, res) => {
     }
 };
       
+const info = async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const [profile] = await db.query(`SELECT username FROM ulogin WHERE uid = ?`, [uid]);
+
+    if (!profile) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(profile);
+  } catch (err) {
+    console.error('🔥 SQL ERROR:', err.message);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+}
 
 module.exports = {
     profile,
     wishlist_uid,
     wishlist_add,
-    wishlist_remove
+    wishlist_remove,
+    info,
 };

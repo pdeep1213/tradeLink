@@ -8,9 +8,11 @@ const cookieParser = require('cookie-parser');
 //end of stuff relating to cookies
 const bodyParser = require("body-parser");
 const {upload, imgFetch, imgupload} = require('./imgHandler.js');
-const {uploaditem, removeItem, listItem, sendlist, reportitem, getAllCategory} = require('./itemHandler.js');
-const {profile, wishlist_uid, wishlist_add, wishlist_remove} = require('./profileHandler.js');
+const {uploaditem, removeItem, listItem, sendlist, reportitem, sellerID, getAllCategory} = require('./itemHandler.js');
+const {profile, wishlist_uid, wishlist_add, wishlist_remove, info} = require('./profileHandler.js');
 const {filteritem} = require('./returnHandler.js');
+const {sendMessage, getMessage, emitMessage} = require('./MessageHandler.js');
+const {transaction} = require('./transaction.js');
 const cors = require('cors');
 const path = require('path');
 const corsOption = {
@@ -18,6 +20,7 @@ const corsOption = {
     credentials: true,
 };
 const sgMail = require('@sendgrid/mail');
+const socketIo = require('socket.io');
 require("dotenv").config();
 
 
@@ -31,23 +34,35 @@ sgMail.setApiKey("SG.jPVjsSo_R1akWT8b5423wQ.LwuuJkWIklwRt3L7mUNwTbdk2CdQzSBwCFRM
 
 const jwt_token = process.env.JWTOKEN;
 
+//------------------------------------------------------------
+//in transaction.js for buying item
+app.post('/transaction', transaction);
+//------------------------------------------------------------
+
+//------------------------------------------------------------
 //in returnHandler should return a list of filter item
 app.post('/filter', filteritem);
+//------------------------------------------------------------
 
-
+//------------------------------------------------------------
 //in imgHandler get img to send to client
 app.post('/fetchImg', imgFetch);
 
 //in imgHandler saves the img on the server's device see /img/ for images
 app.post('/uploadImg', upload.array('files', 5), imgupload); 
+//------------------------------------------------------------
 
-//in itemHandler uploads item to db
-app.post('/uploadItem', uploaditem);
 
 app.set('json replacer', (key, value) => 
    typeof value === 'bigint' ? value.toString() : value
 );
 
+
+//------------------------------------------------------------
+//in itemHandler uploads item to db
+app.post('/uploadItem', uploaditem);
+
+//in itemHandler get all the category
 app.get('/allCategory', getAllCategory);
 
 //in itemHandler (this might not be used someone please check for me) sends items to the client
@@ -60,12 +75,17 @@ app.post('/remove_item', removeItem);
 //in itemHandler this is competing with send_listing i think. if anyone wants to confirm go ahead
 app.post('/listing_item', listItem);
 
+//in itemHandler to get the uid of the seller
+app.post('/sellerID', sellerID);
+
+//in itemhandler should increase an item report count by 1
+app.post('/report_item', reportitem);
+//------------------------------------------------------------
+
 app.set('json replacer', (key, value) => 
     typeof value === 'bigint' ? value.toString() : value
 );
 
-//in itemhandler should increase an item report count by 1
-app.post('/report_item', reportitem);
 
 app.get('/send_token', async (req, res) => {
     const token = req.cookies.tradelink;
