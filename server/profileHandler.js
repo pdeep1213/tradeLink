@@ -3,6 +3,7 @@ const db = require('./db');
 const jwt = require('jsonwebtoken');
 
 const jwt_token = process.env.JWTOKEN;
+
 // get user info for user dashboard
 const profile = async (req, res) => {
    const token = req.cookies.tradelink
@@ -36,6 +37,7 @@ const profile = async (req, res) => {
     }
 };
 
+//I'm assuming this grabs a users wishlist
 const wishlist_uid = async (req, res) => {
     const { uid } = req.params;
       
@@ -62,6 +64,7 @@ const wishlist_uid = async (req, res) => {
     }
 };
 
+//This should add to the user's wishlist
 const wishlist_add = async (req, res) => {
     const { uid, item_id } = req.body;
       
@@ -78,6 +81,7 @@ const wishlist_add = async (req, res) => {
         }
 };              
 
+//this should remove an item from the user wishlist
 const wishlist_remove =  async (req, res) => {
     const { uid, item_id } = req.body;
     if (!uid || !item_id) {
@@ -95,6 +99,7 @@ const wishlist_remove =  async (req, res) => {
     }
 };
       
+//This grabs the user's username
 const info = async (req, res) => {
   const { uid } = req.params;
 

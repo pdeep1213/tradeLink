@@ -10,6 +10,8 @@ const uploaditem = async (req, res) => {
     //categories should be a int from 1-... [check the categories table for which number indicate which category]
     //description should be txt [no more than 512 characters, can make longer if need to]
     //price should be a decimal [9,999,999,999.99 should be the max, any larger and data is lost   
+    //country_code ISO country_code [should be 2 letters]
+    //township the town of the seller
     const token = req.cookies.tradelink;
     if(!token){
         console.log("no token");
@@ -30,7 +32,10 @@ const uploaditem = async (req, res) => {
         console.log("Itemlist result: ", result);
         const item_id = Number(result.insertId);
         console.log("item id: ", item_id);
+        let query = "insert into rating (item_id) values (?)";
+        var result = await con.query(query, item_id);
         res.status(200).json({ message: 'Item Inserted Successfully', item_id});
+        con.release();
         }
         catch (error){
             console.log(error);
@@ -38,6 +43,9 @@ const uploaditem = async (req, res) => {
         }
 };
 
+//This function will delete an item from the database. All references to the item img should be deleted.
+//I do not think the img itself will be deleted from the computer, but that's more of an optimization issue and
+//can be solved at a later date if it matters
 const removeItem =  async (req, res)=> {
     const {item_id} = req.body;
     console.log(item_id);
@@ -56,6 +64,7 @@ const removeItem =  async (req, res)=> {
     }
 };
 
+//This function acquires all the items that are in stock
 const listItem =  async (req, res)=> {
     const {item_id, listed} = req.body;
     console.log("In Listing item");
@@ -76,7 +85,7 @@ const listItem =  async (req, res)=> {
     }
 };
 
-//Sending listed items
+//This function gets all the item the user has listed
 const sendlist =  async (req, res) => {
     const token = req.cookies.tradelink;
     if (!token) {
@@ -126,7 +135,6 @@ const sendlist =  async (req, res) => {
             params = [uid, uid];
         }
         const rows = await con.query(query, params);
-        con.release();
         con.release();
         if (!rows || rows.length === 0) {
             return res.status(400).json({ message: "No Items Found" });
@@ -183,6 +191,7 @@ const reportitem = async (req, res)=> {
       }
 };
 
+//This get all the category for category filtering
 const getAllCategory = async (req, res) => {
     const query = "select info from categories";
     try{
@@ -197,6 +206,55 @@ const getAllCategory = async (req, res) => {
       }
 };
 
+
+//This function will handle the rating of an item.
+const updateitemrating = async (req, res) => {
+    try {
+        const item_id = req.body.item_id //the body should contain the item_id
+        const rate = req.body.rating; //the body should contain a number from 1-5
+        //Step 1 grab the object current rating and rate_count
+        const query1 = "select avg_rate from rating where item_id = ?";
+        const con = await db.getConnection();
+        const result = await con.query(query, item_id);
+        var tmp = result[0].avg_rate;
+        var query3;
+        switch(rate){ //updates how an items rating star count
+            case 1:
+                query3 = `update rating set \`1_start\` = \`1_start\` + 1, total = total+1 where item_id = ?`;
+                break;
+            case 2:
+                query3 = `update rating set \`2_start\` = \`2_start\` + 1, total = total+1 where item_id = ?`;
+                break;
+            case 3:
+                query3 = `update rating set \`3_start\` = \`3_start\` + 1, total = total+1 where item_id = ?`;
+                break;
+            case 4:
+                query3 = `update rating set \`4_start\` = \`4_start\` + 1 total = total+1 where item_id = ?`;
+                break;
+            case 5:
+                query3 = `update rating set \`5_start\` = \`5_start\` + 1 total = total+1 where item_id = ?`;
+                break;
+            default:
+                throw new Error("Error");
+                break;
+        }
+        await con.query(query3, item_id);
+
+        if(tmp == 0){ //runs only once per item
+            const query2 = `update rating set avg_rate = ? where item_id = ?`;
+            await con.query(query2, [rate, item_id]);
+        }
+        else{ //all other situation
+            query3 = `update rating set avg_rate = (avg_rate + ?)/2 where item_id = ?`;
+            await con.query(query3, [rate, item_id]);
+        }
+        con.release();
+    }
+    catch (err){
+        console.log("error in itemrating");
+    }
+};
+
 module.exports = {
     uploaditem,
     removeItem,
@@ -204,5 +262,6 @@ module.exports = {
     sendlist,
     reportitem,
     sellerID,
-    getAllCategory
+    getAllCategory,
+    updateitemrating
 };

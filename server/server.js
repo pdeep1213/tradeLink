@@ -8,7 +8,11 @@ const cookieParser = require('cookie-parser');
 //end of stuff relating to cookies
 const bodyParser = require("body-parser");
 const {upload, imgFetch, imgupload} = require('./imgHandler.js');
-const {uploaditem, removeItem, listItem, sendlist, reportitem, sellerID, getAllCategory} = require('./itemHandler.js');
+const {
+    uploaditem, removeItem, listItem, 
+    sendlist, reportitem, sellerID, 
+    getAllCategory, rateitem
+} = require('./itemHandler.js');
 const {profile, wishlist_uid, wishlist_add, wishlist_remove, info} = require('./profileHandler.js');
 const {filteritem} = require('./returnHandler.js');
 const {sendMessage, getMessage, emitMessage} = require('./MessageHandler.js');
@@ -61,6 +65,9 @@ app.set('json replacer', (key, value) =>
 //------------------------------------------------------------
 //in itemHandler uploads item to db
 app.post('/uploadItem', uploaditem);
+
+//in itemHandler uploads item to db
+app.post('/rateitem', rateitem);
 
 //in itemHandler get all the category
 app.get('/allCategory', getAllCategory);
