@@ -11,10 +11,10 @@ const {upload, imgFetch, imgupload} = require('./imgHandler.js');
 const {
     uploaditem, removeItem, listItem, 
     sendlist, reportitem, sellerID, 
-    getAllCategory, rateitem
+    getAllCategory, updateitemrating
 } = require('./itemHandler.js');
 const {profile, wishlist_uid, wishlist_add, wishlist_remove, info} = require('./profileHandler.js');
-const {sendMessage, getMessages, emitMessage} = require('./MessageHandler.js');
+const {sendMessage, getMessages, emitMessage, getChats} = require('./MessageHandler.js');
 const {transaction} = require('./transaction.js')
 const {filteritem} = require('./returnHandler.js');
 const cors = require('cors');
@@ -66,7 +66,7 @@ app.set('json replacer', (key, value) =>
 app.post('/uploadItem', uploaditem);
 
 //in itemHandler uploads item to db
-app.post('/rateitem', rateitem);
+app.post('/rateitem', updateitemrating);
 
 //in itemHandler get all the category
 app.get('/allCategory', getAllCategory);
@@ -107,7 +107,19 @@ app.get('/getMessages/:receiverId/:senderID', async (req, res) => {
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
-  });  
+  });
+
+//get user Chats
+app.get('/getChats/:sender_id', async (req, res) => {
+    const {sender_id} = req.params;
+
+    try{
+        const chats = await getChats(sender_id);
+        res.status(200).json({success: true, chats});
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+      }
+});
 
 app.set('json replacer', (key, value) => 
     typeof value === 'bigint' ? value.toString() : value

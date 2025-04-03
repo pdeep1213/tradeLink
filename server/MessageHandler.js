@@ -46,3 +46,24 @@
         io.emit(`message:${receiver_id}`, message);
       // Emit message to receiver
   };
+
+  //Function to get all user conversations
+  exports.getChats = async (sender_id) => {
+    try {
+      const con = await db.getConnection();
+
+      const rows = await con.query(
+        `SELECT DISTINCT u.uid, u.username
+          FROM ulogin u
+          JOIN Messages m ON u.uid = m.sender_id OR u.uid = m.receiver_id
+          WHERE (m.sender_id = ? OR m.receiver_id = ?)
+          AND u.uid != ? `,
+        [sender_id,sender_id,sender_id]
+      );
+
+      con.release();
+      return rows;
+    } catch(error) {
+      throw new Error ('Error fetching chats: ' + error.message);
+    }
+  }

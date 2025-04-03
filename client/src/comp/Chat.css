@@ -1,30 +1,28 @@
-/* Chat overlay background */
 .chat-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  left: 20.5vw; /* Positioned right next to the sidebar */
+  top: 8vh;
+  width: 100vw; /* Adjust based on available space */
+  height: 100vh;
   z-index: 1000;
 }
 
-/* Chat window box */
 .chat-window {
-  width: 400px;
-  max-width: 100%;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  width: 60vw; /* Adjust width as needed */
+  max-width: 100vw; /* Prevents excessive width */
+  height: 92vh;
+  background-color: white;
   display: flex;
   flex-direction: column;
+  padding: 15px;
   overflow: hidden;
 }
 
-/* Close button */
+.chat-window.large {
+  width: 80vw; /* Adjust for larger screens */
+}
+
 .chat-close-button {
   position: absolute;
   top: 10px;
@@ -32,68 +30,57 @@
   background: none;
   border: none;
   font-size: 20px;
-  color: #333;
   cursor: pointer;
-  transition: 0.3s;
+  color: #333;
+  transition: color 0.2s ease-in-out;
 }
 
 .chat-close-button:hover {
-  color: #f00; /* Change color on hover */
+  color: red;
 }
 
-/* Chat header */
 .chat-header {
-  background-color: #4c7cc4;
-  color: white;
+  font-size: 18px;
+  font-weight: bold;
   padding: 10px;
-  text-align: center;
+  border-bottom: 1px solid #ddd;
 }
 
-/* Chat title */
 .chat-title {
   margin: 0;
   font-size: 16px;
 }
 
-/* Chat messages area */
 .chat-box {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 10px;
-  max-height: 300px;
-  overflow-y: auto;
+  gap: 10px;
 }
 
 .message {
-  padding: 10px;
-  border-radius: 8px;
-  max-width: 70%;
+  padding: 8px;
+  border-radius: 5px;
+  max-width: 75%;
   word-wrap: break-word;
 }
 
-/* Sender's messages (align right) */
 .sender {
   align-self: flex-end;
-  background-color: #0084ff;
-  color: white;
-  border-top-right-radius: 0;
+  background-color: #d1e7dd;
 }
 
-/* Receiver's messages (align left) */
 .receiver {
   align-self: flex-start;
-  background-color: #e5e5ea;
-  color: black;
-  border-top-left-radius: 0;
+  background-color: #f8d7da;
 }
 
-/* Input box styling */
 .input-box {
   display: flex;
   padding: 10px;
-  background-color: #fff;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #ddd;
 }
 
 .input-box input {
@@ -101,21 +88,18 @@
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-right: 10px;
-  font-size: 14px;
 }
 
 .input-box button {
-  padding: 8px 15px;
-  background-color: #4c7cc4;
-  color: white;
+  margin-left: 10px;
+  padding: 8px 12px;
   border: none;
+  background-color: #007bff;
+  color: white;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
-  transition: 0.3s;
 }
 
 .input-box button:hover {
-  background-color: #3a6ca1;
+  background-color: #0056b3;
 }

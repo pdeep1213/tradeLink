@@ -42,7 +42,7 @@ const Navbar = ({ userRole, userUsername }) => {
 
               <div className="chat-menu">
                 <span class="material-symbols-outlined chatmenu-icon"> forum </span>
-              <Link to="/" className="dropdown-item">Messages</Link>
+              <Link to="/myMessages" className="dropdown-item">Messages</Link>
                 </div>  
 
                 <div className="logout-menu">

@@ -3,10 +3,9 @@ import "./Chat.css";
 import { useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
 
-// ✅ Maintain a single socket connection outside the component
 const socket = io("http://128.6.60.7:8080", { transports: ["websocket"] });
 
-export default function Chat({ isOpen, onClose, receiver_id }) {
+export default function Chat({ isOpen, onClose, receiver_id, fromMS = false }) {
   if (!isOpen) return null;
   const navigate = useNavigate();
 
@@ -136,14 +135,16 @@ export default function Chat({ isOpen, onClose, receiver_id }) {
     }
   };
 
+  const chatWindowClass = fromMS ? "chat-window large" : "chat-window";
+
   return (
     <div className="chat-overlay">
-      <div className="chat-window">
+      <div className={chatWindowClass}>
         <button className="chat-close-button" onClick={onClose}>
           <span className="material-symbols-outlined">close</span>
         </button>
         <div className="chat-header">
-          <div className="chat-title">Chat with {seller_Name}, You are {buyer_Name}</div>
+          <div className="chat-title">{seller_Name}</div>
         </div>
         <div className="chat-box">
           {messages.map((msg, index) => (

@@ -32,7 +32,7 @@ const uploaditem = async (req, res) => {
         console.log("Itemlist result: ", result);
         const item_id = Number(result.insertId);
         console.log("item id: ", item_id);
-        let query = "insert into rating (item_id) values (?)";
+        query = "insert into rating (item_id) values (?)";
         var result = await con.query(query, item_id);
         res.status(200).json({ message: 'Item Inserted Successfully', item_id});
         con.release();
