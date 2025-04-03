@@ -139,6 +139,31 @@ const sendlist =  async (req, res) => {
     }
 };
 
+//Get uid of the seller 
+const sellerID = async (req, res) => {
+    const {item_id} = req.body;
+    console.log("In sellerID");
+    if (!item_id) {
+        return res.status(400).json({ message: "Missing item_id" });
+    }
+
+    try {
+        const con = await db.getConnection();
+        const result = await con.query("SELECT uid FROM items WHERE item_id = ?", [item_id]);
+        con.release();
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+        const user = Array.isArray(result) ? result[0] : result;
+        res.status(200).json({ sellerID: user.uid });
+        
+    } catch (error) {
+        console.error("Error fetching ID:", error);
+        res.status(500).json({ message: "Internal reporting error" });
+        }
+};
+
 //todo redirect to itemreport table instead, requiring two paramter, item_id and reason [int, varchar(512)]
 const reportitem = async (req, res)=> {
     const {item_id} = req.body;
@@ -178,5 +203,6 @@ module.exports = {
     listItem,
     sendlist,
     reportitem,
+    sellerID,
     getAllCategory
 };
