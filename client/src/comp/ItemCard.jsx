@@ -139,8 +139,14 @@ function ItemCard({
     }
   };
 
+  const purchase_click = () => {
+    navigate(`/purchase/${item_id}`, {
+      state: { item_id, title, price, images, description, item_id }
+    });
+  };
+
   const categories = {
-    1: { name: 'Electronics', color: '#007BFF' },
+    1: { name: 'Electronics', color: '#00008B' },
     2: { name: 'Furniture', color: '#5D4037' },
     3: { name: 'Clothing', color: '#800020' },
     4: { name: 'Others', color: '#808080' },
@@ -149,7 +155,6 @@ function ItemCard({
   return (
     <div className="item-card">
       <img src={images || Logo} alt={title} className="item-image" />
-      
       {(!user && uid) && (
         <div className="menu-container">
           <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>&#x22EE;</div>
@@ -185,7 +190,9 @@ function ItemCard({
             </button>
           </div>
         ) : (
-          <button className="add-to-cart">Add to Cart</button>
+          <div className="btns-main">
+          <button className="add-to-cart" onClick={purchase_click}>Purchase</button>
+          </div>
         )}
       </div>
     </div>

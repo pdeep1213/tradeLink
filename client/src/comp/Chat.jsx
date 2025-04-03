@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Chat.css";
+import {io} from "socket.io-client";
 
-export default function Chat({ isOpen, onClose }) {
+
+export default function Chat({ isOpen, onClose, seller_id}) {
   if (!isOpen) return null; 
+  const [username, setUN] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [buyer_id, setBuyerID] = useState("");
 
   return (
     <div className="chat-overlay">
@@ -16,6 +22,5 @@ export default function Chat({ isOpen, onClose }) {
         <h2>Chat Window</h2>
       </div>
     </div>
-  );
+);
 }
-
