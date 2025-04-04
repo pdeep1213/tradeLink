@@ -5,6 +5,7 @@ import ItemListPage from '../comp/MP-comp/ItemListPage.jsx';
 import SearchBar from '../comp/MP-comp/SearchBar.jsx';
 import "./MainPage.css";
 import Chat from "../comp/Chat.jsx";
+import FilterSidebar from "../comp/MP-comp/FilterSidebar.jsx";
 
 const MainPage = () => {
     const location = useLocation();
@@ -14,7 +15,6 @@ const MainPage = () => {
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [categories, setCategories] = useState([]);
-
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -73,21 +73,23 @@ const MainPage = () => {
 
     const handleSearch = (term) => {
         setSearchTerm(term);
-    setSelectedCategory(category);
     };
 
-    const handleCategoryChange = (category) => {
-        setSelectedCategory(category); 
-    };
+const handleCategoryChange = (category) => {
+    console.log('Category Selected:', category);
+    setSelectedCategory(category); 
+};
+
 
     return (
         <>
         <Navbar userRole={userRole} userUsername={profile?.username} />
-        <SearchBar onSearch={handleSearch} categories={categories} onCategoryChange={handleCategoryChange} />
+        <SearchBar onSearch={handleSearch} categories={categories} onCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
         <ItemListPage userRole={userRole} profile={profile} searchTerm={searchTerm} selectedCategory={selectedCategory} /> 
         <span className="material-symbols-outlined chat-icon" onClick={() => setIsChatOpen(true)} role="button" tabIndex="0">chat
         </span>
-       <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+       <FilterSidebar onSearch={handleSearch} categories={categories}/>
+        <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
         </>
     );
 };

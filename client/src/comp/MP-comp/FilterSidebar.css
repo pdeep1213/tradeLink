@@ -1,0 +1,32 @@
+.mp-sidebar {
+  width: 250px;
+  transition: transform 0.3s ease-in-out;
+  background-color: #f2f2f2;
+  padding: 1rem;
+  position: fixed;
+  left: 0;
+  top: 3.2rem;
+  height: 100vh;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.mp-sidebar.collapsed {
+  transform: translateX(-200px);
+}
+
+.toggle-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: all 0.3s ease;
+  align-self: flex-end;
+  margin-right: -.75rem; 
+  z-index: 4;
+}
+

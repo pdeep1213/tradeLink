@@ -50,11 +50,26 @@ const ItemListPage = ({ userRole, profile, searchTerm, selectedCategory }) => {
         queryFn: fetchItems,
     });
 
-    const filteredItems = items?.filter(item => {
-        const matchesSearchTerm = item.itemname.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
-        return matchesSearchTerm && matchesCategory;
-    });
+
+const categoriesMap = {
+  electronics: 1,
+  furnitures: 2,
+  clothings: 3,
+  other: 4,
+};
+
+
+const filteredItems = items?.filter(item => {
+  const matchesSearchTerm = item.itemname.toLowerCase().includes(searchTerm.toLowerCase());
+
+  const categoryId = categoriesMap[selectedCategory] || "";
+  const matchesCategory = selectedCategory ? item.category === categoryId : true;
+
+  console.log("Item Category:", item.category, "Selected Category:", selectedCategory, "Category ID:", categoryId);
+
+  return matchesSearchTerm && matchesCategory;
+});
+
 
     return (
         <div className="all-item-wrapper">
@@ -88,4 +103,3 @@ const ItemListPage = ({ userRole, profile, searchTerm, selectedCategory }) => {
 };
 
 export default ItemListPage;
-
