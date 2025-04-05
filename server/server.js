@@ -13,7 +13,11 @@ const {
     sendlist, reportitem, sellerID, 
     getAllCategory, updateitemrating
 } = require('./itemHandler.js');
-const {profile, wishlist_uid, wishlist_add, wishlist_remove, info} = require('./profileHandler.js');
+const {
+    profile, wishlist_uid, wishlist_add, 
+    wishlist_remove, info, 
+    rateuser
+} = require('./profileHandler.js');
 const {sendMessage, getMessages, emitMessage, getChats} = require('./MessageHandler.js');
 const {transaction} = require('./transaction.js')
 const {filteritem} = require('./returnHandler.js');
@@ -38,23 +42,26 @@ sgMail.setApiKey("SG.jPVjsSo_R1akWT8b5423wQ.LwuuJkWIklwRt3L7mUNwTbdk2CdQzSBwCFRM
 
 const jwt_token = process.env.JWTOKEN;
 
+//------------------------------------------------------------
 //for buying item
 app.post('/transaction', transaction);
+//------------------------------------------------------------
+
+
+//------------------------------------------------------------
 //in returnHandler should return a list of filter item
 app.post('/filter', filteritem);
+//------------------------------------------------------------
 
 
+//------------------------------------------------------------
 //in imgHandler get img to send to client
 app.post('/fetchImg', imgFetch);
 
 //in imgHandler saves the img on the server's device see /img/ for images
 app.post('/uploadImg', upload.array('files', 5), imgupload); 
 
-//in itemHandler uploads item to db
-app.post('/uploadItem', uploaditem);
-
-//in itemHandler to get uid of seller
-app.post('/sellerID', sellerID);
+//------------------------------------------------------------
 
 app.set('json replacer', (key, value) => 
    typeof value === 'bigint' ? value.toString() : value
@@ -81,8 +88,32 @@ app.post('/remove_item', removeItem);
 //in itemHandler this is competing with send_listing i think. if anyone wants to confirm go ahead
 app.post('/listing_item', listItem);
 
+//in itemhandler should increase an item report count by 1
+app.post('/report_item', reportitem);
+
+//in itemHandler to get uid of seller
+app.post('/sellerID', sellerID);
+//------------------------------------------------------------
+
+//------------------------------------------------------------
 //in profileHandler to get info of a user given UID
 app.get('/info/:uid', info);
+
+//in profileHandler retrieve profile information
+app.get('/profile', profile);
+
+//in profileHandler not quite sure what this is doing, it might be grabbing a person's wishlist
+app.get('/wishlist/:uid', wishlist_uid);
+      
+//in profileHandler probably adding to a users wishlist
+app.post('/wishlist/add', wishlist_add);
+
+//in profileHandler probably remove an item from a user's wishlist
+app.post('/wishlist/remove', wishlist_remove);
+
+//in profileHandler rate the user after buying an item [see that method for more info]
+app.post('/rateuser', rateuser);
+//------------------------------------------------------------
 
 //send message 
 app.post('/sendMessage', async (req, res) => {
@@ -125,8 +156,6 @@ app.set('json replacer', (key, value) =>
     typeof value === 'bigint' ? value.toString() : value
 );
 
-//in itemhandler should increase an item report count by 1
-app.post('/report_item', reportitem);
 
 app.get('/send_token', async (req, res) => {
     const token = req.cookies.tradelink;
@@ -158,20 +187,6 @@ app.get('/send_token', async (req, res) => {
 
 });
 
-//in profileHandler retrieve profile information
-app.get('/profile', profile);
-
-//in profileHandler not quite sure what this is doing, it might be grabbing a person's wishlist
-app.get('/wishlist/:uid', wishlist_uid);
-      
-//in profileHandler probably adding to a users wishlist
-app.post('/wishlist/add', wishlist_add);
-
-//in profileHandler probably remove an item from a user's wishlist
-app.post('/wishlist/remove', wishlist_remove);
-
-app.get('/info/:uid', info);
-
     //POST
 app.post('/register', async (req, res) =>{
     const data = req.body;
@@ -200,6 +215,9 @@ app.post('/register', async (req, res) =>{
                 maxAge: 30 * 24 * 60 * 60 *1000, //day (?), hour(24), minute (60), second (60), millisecond (1000)
                 sameSite: 'Lax',
             });
+        //add uid to userrating
+        query = "insert into userrating (uid) values (?)";
+        await con.query(query, result[0].uid); //make a row for the user
         res.status(200).json({ message: 'Task Inserted Successfully', result});
     }catch (err){
         res.status(500).json({error: 'Error During Post', details: err.message});

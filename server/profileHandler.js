@@ -117,10 +117,58 @@ const info = async (req, res) => {
   }
 }
 
+//This will allow the a user to rate another user's profile after buying something from them
+const rateuser = async (req, res) => {
+    //The front end in the fetch request should provide both:
+    //rating of 0, 1, or 2.
+    //and the item_id of the product that was brought: we will be fetching the uid using the item_id
+    //please name these two field: rating and itemid
+    const rating = req.body.rating;
+
+    if (typeof rating !== 'number'){
+        throw new Error("rating is not a number");
+    } //error catching if somehow rating is not a number
+
+    var id = req.body.itemid;
+    var query = "select uid from items where item_id = ?";
+    try{
+        const con = await db.getConnection();
+        var result = await con.query(query, id);
+        id = result[0].uid;//rewrite the item_id with the sellers uid since item_id is no longer needed
+        query = "select avg from userrating where uid = ?";
+        result = await con.query(query, id); //this query search is to determine if this is the first time the
+        //user is being rated or not for avg calculation
+        var avg = result[0].avg;
+        if (avg === 0){
+            avg = rating;
+        }
+        else{
+            avg = (avg + rating)/2;
+        }
+        query = "update userrating set avg = ?"; //query to update avg
+        await con.query(query, avg);
+        if (rating === 0){
+            query = "update userrating set zero = zero + 1";    
+        }
+        else if (rating === 1){
+            query = "update userrating set one = one + 1";
+        }
+        else{
+            query = "update userrating set two = two +1";
+        }
+        await con.query(query); //increment the column that has the respective number
+    }
+    catch (err){
+        console.log("error when updaing user rating: ", err);
+    }
+
+};
+
 module.exports = {
     profile,
     wishlist_uid,
     wishlist_add,
     wishlist_remove,
     info,
+    rateuser
 };
