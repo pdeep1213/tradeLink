@@ -157,9 +157,11 @@ const rateuser = async (req, res) => {
             query = "update userrating set two = two +1";
         }
         await con.query(query); //increment the column that has the respective number
+        res.send(200).json({message: "user profile rated successfully"});
     }
     catch (err){
         console.log("error when updaing user rating: ", err);
+        res.send(500).json({message: "issue when rating user profile"});
     }
 
 };
