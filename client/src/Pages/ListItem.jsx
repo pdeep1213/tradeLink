@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 const ListItem = () => {
   const navigate = useNavigate();
   const categories = {
-   Electronics:1,
-   Furnitures:2,
-   Clothings:3,
-   Other:4
+   electronics:1,
+   furnitures:2,
+   clothings:3,
+   other:4
   };
 
   const [item, setItem] = useState({

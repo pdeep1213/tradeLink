@@ -10,18 +10,17 @@ function SearchBar({ onSearch, categories, onCategoryChange, selectedCategory })
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
-    onSearch(searchTerm); // 👈 only search term here
+    onSearch(searchTerm); 
   };
 
   const handleCategoryChange = (event) => {
     const selected = event.target.value;
-    onCategoryChange(selected); // 👈 this updates MainPage
+    onCategoryChange(selected);
   };
 
   return (
-    <div className="search-bar-container">
+ <div className="search-bar-container">
       <form onSubmit={handleSearchSubmit} className="search-form">
-
         <div className="nav-left">
           <select
             className="category-dropdown"
@@ -36,7 +35,6 @@ function SearchBar({ onSearch, categories, onCategoryChange, selectedCategory })
             ))}
           </select>
         </div>
-
         <div className="nav-cent">
           <input type="text" className="search-input" placeholder="Search..." value={searchTerm}  onChange={handleInputChange} />
         </div>

@@ -7,6 +7,13 @@ import "./MainPage.css";
 import Chat from "../comp/Chat.jsx";
 import FilterSidebar from "../comp/MP-comp/FilterSidebar.jsx";
 
+const CATEGORY_MAPPING = {
+  electronics: 1,
+  furnitures: 2,
+  clothings: 3,
+  other: 4
+};
+
 const MainPage = () => {
     const location = useLocation();
     const [userRole, setUserRole] = useState(location.state?.userRole || null);
@@ -22,11 +29,13 @@ const MainPage = () => {
                 const response = await fetch("http://128.6.60.7:8080/profile", {
                     credentials: "include",
                 });
+                console.log("Response status:", response.status);
                 if (!response.ok) {
                     console.error("Failed to fetch profile:", response.status, response.statusText);
                     return;
                 }
                 const data = await response.json();
+                console.log("Profile data:", data);
                 if (!data || !data.username || !data.email || data.perm === undefined) {
                     console.error("Invalid profile data format:", data);
                     setUserRole("guest");
@@ -44,27 +53,20 @@ const MainPage = () => {
     }, []);
     
     useEffect(() => {
-        const fetchCat = async () => {
-            try {
-                const response = await fetch("http://128.6.60.7:8080/allCategory");
-                if (!response.ok) {
-                    console.error("Failed to fetch profile:", response.status, response.statusText);
-                    return;
-                }
-                const data = await response.json();
-            const validCategories = data.filter(category => category.info !== null).map(category => category.info);
-
-            setCategories(validCategories); 
-
-
-            } catch (error) {
-                console.error("Error fetching profile:", error);
-            }
-        };
-        console.log('testing');
-        fetchCat();
-    }, []);
-
+    const fetchCat = async () => {
+      try {
+        const response = await fetch("http://128.6.60.7:8080/allCategory");
+        if (!response.ok) return;
+        const data = await response.json();
+        
+        setCategories(Object.keys(CATEGORY_MAPPING));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setCategories(Object.keys(CATEGORY_MAPPING));
+      }
+    };
+    fetchCat();
+  }, []);
 
     useEffect(() => {
         document.body.style.backgroundColor = "#02071d";
@@ -79,7 +81,6 @@ const handleCategoryChange = (category) => {
     console.log('Category Selected:', category);
     setSelectedCategory(category); 
 };
-
 
     return (
         <>

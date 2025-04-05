@@ -50,26 +50,31 @@ const ItemListPage = ({ userRole, profile, searchTerm, selectedCategory }) => {
         queryFn: fetchItems,
     });
 
+const CATEGORY_MAPPING = {
+    electronics: 1,
+    furnitures: 2,
+    clothings: 3,
+    other: 4
+  };
 
-const categoriesMap = {
-  electronics: 1,
-  furnitures: 2,
-  clothings: 3,
-  other: 4,
-};
 
+  const filteredItems = items?.filter(item => {
+    const matchesSearchTerm = item.itemname.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    if (!selectedCategory) return matchesSearchTerm;
+    
+    const categoryId = CATEGORY_MAPPING[selectedCategory.toLowerCase()];
+    const matchesCategory = item.category === categoryId;
 
-const filteredItems = items?.filter(item => {
-  const matchesSearchTerm = item.itemname.toLowerCase().includes(searchTerm.toLowerCase());
+    console.log("Filtering -", {
+      itemCategory: item.category,
+      selectedCategory,
+      categoryId,
+      matches: item.category === categoryId
+    });
 
-  const categoryId = categoriesMap[selectedCategory] || "";
-  const matchesCategory = selectedCategory ? item.category === categoryId : true;
-
-  console.log("Item Category:", item.category, "Selected Category:", selectedCategory, "Category ID:", categoryId);
-
-  return matchesSearchTerm && matchesCategory;
-});
-
+    return matchesSearchTerm && matchesCategory;
+  });
 
     return (
         <div className="all-item-wrapper">
@@ -103,3 +108,5 @@ const filteredItems = items?.filter(item => {
 };
 
 export default ItemListPage;
+
+
