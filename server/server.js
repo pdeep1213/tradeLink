@@ -156,15 +156,23 @@ app.set('json replacer', (key, value) =>
     typeof value === 'bigint' ? value.toString() : value
 );
 
+app.post('/logout', (req, res) =>{
+    res.cookie('tradelink', '', {
+        httpOnly:true,
+        expires: new Date(0),
+        sameSite: 'Strict'
+    });
+    res.send("deleting cookie");
+});
 
 app.get('/send_token', async (req, res) => {
     const token = req.cookies.tradelink;
     if(!token){
         return res.status(401).json({message: "no token"})
     }
-
     try {
         const decoded = jwt.verify(token, jwt_token);
+        console.log(decoded);
         const uid = decoded.uid;
         const con = await db.getConnection().catch(err => {
             console.error("DB Connection Error:", err);
@@ -180,6 +188,7 @@ app.get('/send_token', async (req, res) => {
         if (!rows || rows.length === 0) { 
             return res.status(400).json({ message: "User not found" });
         }
+        return res.status(200).json({message: "user exist"});
     } catch (err) {
         console.error("Error:", err);
         return res.status(500).json({ message: "Internal server error", error: err.message });
@@ -187,7 +196,7 @@ app.get('/send_token', async (req, res) => {
 
 });
 
-    //POST
+//POST
 app.post('/register', async (req, res) =>{
     const data = req.body;
     console.log("Data: ", data); //test
@@ -213,7 +222,7 @@ app.post('/register', async (req, res) =>{
             res.cookie('tradelink', sign, {
                 httpOnly:true,
                 maxAge: 30 * 24 * 60 * 60 *1000, //day (?), hour(24), minute (60), second (60), millisecond (1000)
-                sameSite: 'Lax',
+                sameSite: 'Strict',
             });
         //add uid to userrating
         query = "insert into userrating (uid) values (?)";
@@ -248,7 +257,7 @@ app.post('/login', async (req, res) => {
         res.cookie('tradelink', sign, {
             httpOnly:true,
             maxAge: 30 * 24 * 60 * 60 *1000, //day (?), hour(24), minute (60), second (60), millisecond (1000)
-            sameSite: 'Lax',
+            sameSite: 'Strict',
         });
 
 
