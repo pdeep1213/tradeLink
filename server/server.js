@@ -18,7 +18,7 @@ const {
     wishlist_remove, info, 
     rateuser
 } = require('./profileHandler.js');
-const {sendMessage, getMessages, emitMessage, getChats} = require('./MessageHandler.js');
+const {sendMessage, getMessages, emitMessage, getChats, updateStatus} = require('./MessageHandler.js');
 const {transaction} = require('./transaction.js')
 const {filteritem} = require('./returnHandler.js');
 const cors = require('cors');
@@ -115,6 +115,7 @@ app.post('/wishlist/remove', wishlist_remove);
 app.post('/rateuser', rateuser);
 //------------------------------------------------------------
 
+//Message Handling Start----------------------------------------------------------------------------------------
 //send message 
 app.post('/sendMessage', async (req, res) => {
     const {receiver_id, sender_id ,content } = req.body;
@@ -151,6 +152,24 @@ app.get('/getChats/:sender_id', async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
       }
 });
+
+//Update status
+app.post('/updateStatus', async (req, res) => {
+    const {receiver_id, sender_id} = req.body;
+
+    try {  
+        const response =  await updateStatus(receiver_id, sender_id); 
+        
+        res.status(200).json({ success: true});
+      } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+      }
+
+});
+
+//Message Handling End----------------------------------------------------------------------------------------
+
+
 
 app.set('json replacer', (key, value) => 
     typeof value === 'bigint' ? value.toString() : value
