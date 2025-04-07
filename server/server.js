@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
 const {upload, imgFetch, imgupload} = require('./imgHandler.js');
 const {
-    uploaditem, removeItem, listItem, 
+    uploaditem, removeItem, listItem, sendlistGuest, 
     sendlist, reportitem, sellerID, 
     getAllCategory, updateitemrating
 } = require('./itemHandler.js');
@@ -77,6 +77,9 @@ app.post('/rateitem', updateitemrating);
 
 //in itemHandler get all the category
 app.get('/allCategory', getAllCategory);
+
+//in itemHandler to get all item for guest
+app.get('/send_listings_guest', sendlistGuest)
 
 //in itemHandler (this might not be used someone please check for me) sends items to the client
 app.get('/send_listings', sendlist);
@@ -196,7 +199,7 @@ app.get('/send_token', async (req, res) => {
 
 });
 
-//POST
+////POST
 app.post('/register', async (req, res) =>{
     const data = req.body;
     console.log("Data: ", data); //test

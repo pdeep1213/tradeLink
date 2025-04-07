@@ -5,48 +5,91 @@ import './ItemListPage.css';
 
 const ItemListPage = ({ userRole, profile, searchTerm, selectedCategory }) => {
     const fetchItems = async () => {
-        const response = await fetch("http://128.6.60.7:8080/send_listings?type=main", {
-            credentials: "include",
-        });
-        if (!response.ok) {
-            throw new Error("Failed to fetch items");
-        }
-        const items = await response.json();
+        let url;
+        if (userRole === "guest") {
+            url = "http://128.6.60.7:8080/send_listings_guest";
+            const response = await fetch(url, {
+                credenitals: 'omit',
+            })
+            if (!response.ok) {
+                throw new Error("Failed to fetch items");
+            }
+            const items = await response.json();
 
-        const update = await Promise.all(items.map(async (item) => {
-            try {
-                const img = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, {
-                    method: 'POST',
-                });
-                if (img.ok) {
-                    const imgData = await img.json();
+            const update = await Promise.all(items.map(async (item) => {
+                try {
+                    const img = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, {
+                        method: 'POST',
+                    });
+                    if (img.ok) {
+                        const imgData = await img.json();
+                        return {
+                            ...item,
+                            img: imgData.length > 0 ? imgData[0].imgpath : null,
+                        };
+                    } else {
+                        return {
+                            ...item,
+                            img: null,
+                        };
+                    }
+                } catch (err) {
+                    console.error("Error fetching image:", err);
                     return {
                         ...item,
-                        img: imgData.length > 0 ? imgData[0].imgpath : null,
-                        wished: item.wished === 1,
+                        img: null,
                     };
-                } else {
+                }
+            }));
+
+            return update;
+        } else {
+            url = "http://128.6.60.7:8080/send_listings?type=main";
+       
+            const response = await fetch(url, {
+                credentials: "include",
+            });
+            if (!response.ok) {
+                throw new Error("Failed to fetch items");
+            }
+            const items = await response.json();
+
+            const update = await Promise.all(items.map(async (item) => {
+                try {
+                    const img = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, {
+                        method: 'POST',
+                    });
+                    if (img.ok) {
+                        const imgData = await img.json();
+                        return {
+                            ...item,
+                            img: imgData.length > 0 ? imgData[0].imgpath : null,
+                            wished: item.wished === 1,
+                        };
+                    } else {
+                        return {
+                            ...item,
+                            img: null,
+                            wished: item.wished === 1,
+                        };
+                    }
+                } catch (err) {
+                    console.error("Error fetching image:", err);
                     return {
                         ...item,
                         img: null,
                         wished: item.wished === 1,
                     };
                 }
-            } catch (err) {
-                console.error("Error fetching image:", err);
-                return {
-                    ...item,
-                    img: null,
-                    wished: item.wished === 1,
-                };
-            }
-        }));
+            }));
 
-        return update;
-    };
+            return update;
+        };
+    }
+
 
     const { data: items, isLoading, isError, error } = useQuery({
-        queryKey: ['items'],
+        queryKey: ['items', userRole], 
         queryFn: fetchItems,
     });
 

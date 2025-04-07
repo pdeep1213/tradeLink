@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate} from 'react-router-dom';
 import Navbar from "../comp/Navbar.jsx";
 import ItemListPage from '../comp/MP-comp/ItemListPage.jsx';
 import SearchBar from '../comp/MP-comp/SearchBar.jsx';
@@ -16,7 +16,7 @@ const CATEGORY_MAPPING = {
 
 const MainPage = () => {
     const location = useLocation();
-    const [userRole, setUserRole] = useState(location.state?.userRole || null);
+    const [userRole, setUserRole] = useState(location.state?.userRole || "guest");
     const [profile, setProfile] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [isChatOpen, setIsChatOpen] = useState(false);
@@ -30,26 +30,32 @@ const MainPage = () => {
                     credentials: "include",
                 });
                 console.log("Response status:", response.status);
+                console.log("Response:", response);
+
                 if (!response.ok) {
                     console.error("Failed to fetch profile:", response.status, response.statusText);
-                    return;
-                }
-                const data = await response.json();
-                console.log("Profile data:", data);
-                if (!data || !data.username || !data.email || data.perm === undefined) {
-                    console.error("Invalid profile data format:", data);
                     setUserRole("guest");
                     return;
                 }
-                setProfile(data);
-                const role = data.perm === 1 ? "admin" : "user";
-                setUserRole(role);
+                else { 
+                    const data = await response.json();
+                    console.log("Profile data:", data);
+                    if (!data || !data.username || !data.email || data.perm === undefined) {
+                        console.error("Invalid profile data format:", data);
+                        setUserRole("guest");
+                        return;
+                    }
+                    setProfile(data);
+                    const role = data.perm === 1 ? "admin" : "user";
+                    setUserRole(role);
+                }
             } catch (error) {
                 console.error("Error fetching profile:", error);
                 setUserRole("guest");
             }
         };
-        fetchProfile();
+        if(userRole !== "guest")
+            fetchProfile();
     }, []);
     
     useEffect(() => {
@@ -77,6 +83,20 @@ const MainPage = () => {
         setSearchTerm(term);
     };
 
+    const logout = async () => {
+        try{
+            await fetch("http://128.6.60.7:8080/logout", {
+                method: "POST",
+                credentials: 'include',
+            });
+            setUserRole(null);
+            window.history.foward(1);
+        }
+        catch (err){
+            console.log("error logging out");
+        }
+    };
+
 const handleCategoryChange = (category) => {
     console.log('Category Selected:', category);
     setSelectedCategory(category); 
@@ -84,9 +104,9 @@ const handleCategoryChange = (category) => {
 
     return (
         <>
-        <Navbar userRole={userRole} userUsername={profile?.username} />
+        <Navbar userRole={userRole} userUsername={profile?.username} onLogout={logout}/>
         <SearchBar onSearch={handleSearch} categories={categories} onCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
-        <ItemListPage userRole={userRole} profile={profile} searchTerm={searchTerm} selectedCategory={selectedCategory} /> 
+        <ItemListPage userRole={userRole || "guest"} profile={profile} searchTerm={searchTerm} selectedCategory={selectedCategory} /> 
         <span className="material-symbols-outlined chat-icon" onClick={() => setIsChatOpen(true)} role="button" tabIndex="0">chat
         </span>
        <FilterSidebar onSearch={handleSearch} categories={categories}/>

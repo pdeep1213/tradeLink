@@ -84,6 +84,25 @@ const listItem =  async (req, res)=> {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+// This function gets all the item for guest
+const sendlistGuest = async (req, res) => {
+  try {
+    const con = await db.getConnection(); 
+    const query = 'SELECT * FROM items WHERE instock = 1'; 
+    const rows = await con.query(query); 
+    con.release();
+
+    if (!rows || rows.length === 0) {
+      return res.status(400).json({ message: "Item not found" });
+    }
+
+    console.log("Success sending items");
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error("Error:", err);
+    return res.status(500).json({ message: "Internal server error", error: err.message });
+  }
+};
 
 //This function gets all the item the user has listed
 const sendlist =  async (req, res) => {
@@ -111,7 +130,9 @@ const sendlist =  async (req, res) => {
                        img.imgpath AS image
                 FROM items i
                 LEFT JOIN wishlist w ON i.item_id = w.item_id AND w.uid = ?
-                LEFT JOIN itemsImg img ON img.item_id = i.item_id`;
+                LEFT JOIN itemsImg img ON img.item_id = i.item_id
+                WHERE i.instock = 1;
+                `;
             params = [uid];
         } else if (type === 'admin') {
             query = `
@@ -146,7 +167,6 @@ const sendlist =  async (req, res) => {
         return res.status(500).json({ message: "Internal server error", error: err.message });
     }
 };
-
 //Get uid of the seller 
 const sellerID = async (req, res) => {
     const {item_id} = req.body;
@@ -260,6 +280,7 @@ module.exports = {
     uploaditem,
     removeItem,
     listItem,
+    sendlistGuest,
     sendlist,
     reportitem,
     sellerID,
