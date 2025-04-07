@@ -20,7 +20,7 @@ const {
 } = require('./profileHandler.js');
 const {sendMessage, getMessages, emitMessage, getChats, updateStatus} = require('./MessageHandler.js');
 const {transaction} = require('./transaction.js')
-const {filteritem} = require('./returnHandler.js');
+const {filteritem,filterLocation} = require('./returnHandler.js');
 const cors = require('cors');
 const path = require('path');
 const corsOption = {
@@ -51,6 +51,8 @@ app.post('/transaction', transaction);
 //------------------------------------------------------------
 //in returnHandler should return a list of filter item
 app.post('/filter', filteritem);
+
+app.post('/filterLocation', filterLocation);
 //------------------------------------------------------------
 
 
