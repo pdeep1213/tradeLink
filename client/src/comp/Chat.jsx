@@ -72,6 +72,18 @@ export default function Chat({ isOpen, onClose, receiver_id, fromMS = false }) {
         if (response.ok) {
           const data = await response.json();
           setMessages(data.messages);
+
+
+           // Call backend to mark as read
+          await fetch(`http://128.6.60.7:8080/updateStatus`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ receiver_id: sender_id, sender_id: receiver_id }), // reversed because receiver sees the message
+          credentials: "include",
+          });
+          
         }
       } catch (err) {
         console.error('Error fetching messages:', err.message);

@@ -67,11 +67,9 @@ const removeItem =  async (req, res)=> {
 //This function acquires all the items that are in stock
 const listItem =  async (req, res)=> {
     const {item_id, listed} = req.body;
-    console.log("In Listing item");
     try {
         const con = await db.getConnection();
         let instock = (listed) ? 1 : 0;
-        console.log("Setting it to ", instock);
         const query = "UPDATE items SET instock = ?  WHERE item_id = ?";
         const result = await con.query(query, [instock,item_id]);
         if (result.affectedRows === 0) {
