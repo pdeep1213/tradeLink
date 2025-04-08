@@ -7,7 +7,7 @@ import "./MainPage.css";
 import Chat from "../comp/Chat.jsx";
 import FilterSidebar from "../comp/MP-comp/FilterSidebar.jsx";
 
-const CATEGORY_MAPPING = {
+const CATEGORY_MAPPING = { 
   electronics: 1,
   furnitures: 2,
   clothings: 3,
@@ -18,9 +18,14 @@ const MainPage = () => {
     const location = useLocation();
     const [userRole, setUserRole] = useState(location.state?.userRole || null);
     const [profile, setProfile] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [filters, setFilters] = useState({
+        itemname: '',
+        category: -1,
+        township: '',
+        county_code: '',
+        price: { flag: -1, low: 0, high: 0 }
+    });
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState("");
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
@@ -58,7 +63,6 @@ const MainPage = () => {
         const response = await fetch("http://128.6.60.7:8080/allCategory");
         if (!response.ok) return;
         const data = await response.json();
-        
         setCategories(Object.keys(CATEGORY_MAPPING));
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -74,23 +78,39 @@ const MainPage = () => {
     }, []);
 
     const handleSearch = (term) => {
-        setSearchTerm(term);
+        setFilters(prev => ({ ...prev, itemname: term }));
     };
 
-const handleCategoryChange = (category) => {
-    console.log('Category Selected:', category);
-    setSelectedCategory(category); 
-};
+    const handleCategoryChange = (category) => {
+        const catId = CATEGORY_MAPPING[category.toLowerCase()] ?? -1;
+        setFilters(prev => ({ ...prev, category: catId }));
+    };
+
+    const handleLocationFilter = ({ location, countyCode }) => {
+        setFilters(prev => ({
+            ...prev,
+            township: location,
+            county_code: countyCode
+        }));
+    };
 
     return (
         <>
-        <Navbar userRole={userRole} userUsername={profile?.username} />
-        <SearchBar onSearch={handleSearch} categories={categories} onCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
-        <ItemListPage userRole={userRole} profile={profile} searchTerm={searchTerm} selectedCategory={selectedCategory} /> 
-        <span className="material-symbols-outlined chat-icon" onClick={() => setIsChatOpen(true)} role="button" tabIndex="0">chat
-        </span>
-       <FilterSidebar onSearch={handleSearch} categories={categories}/>
-        <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+            <Navbar userRole={userRole} userUsername={profile?.username} />
+            <SearchBar 
+                onSearch={handleSearch}
+                categories={categories}
+                onCategoryChange={handleCategoryChange}
+                selectedCategory={filters.category}
+            />
+            <ItemListPage 
+                userRole={userRole}
+                profile={profile}
+                filters={filters}
+            />
+            <span className="material-symbols-outlined chat-icon" onClick={() => setIsChatOpen(true)} role="button" tabIndex="0">chat</span>
+            <FilterSidebar onFilterChange={handleLocationFilter} categories={categories} />
+            <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
         </>
     );
 };

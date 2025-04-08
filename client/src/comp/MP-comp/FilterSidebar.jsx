@@ -1,79 +1,52 @@
 import React, { useState } from 'react';
 import './FilterSidebar.css';
 
-const FilterSidebar = ({ onSearch, categories }) => {
+const FilterSidebar = ({ onFilterChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [locationInput, setLocationInput] = useState('');
   const [countyCode, setCountyCode] = useState('');
   const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsOpen(prev => !prev);
-  };
-
-  const handleLocationClick = () => {
-    setIsLocationDropdownOpen(prev => !prev);
-  };
-
-  const handleLocationInputChange = (event) => {
-    setLocationInput(event.target.value);
-  };
-
-  const handleCountyCodeChange = (event) => {
-    setCountyCode(event.target.value);
-  };
-
   const handleFilterClick = () => {
-    // Call the onSearch function with location input and county code
-    onSearch({ location: locationInput, countyCode });
+    onFilterChange({ location: locationInput, countyCode });
   };
 
   return (
     <div className="sidebar-container">
       {!isOpen && (
-        <button className="toggle-btn outside" onClick={toggleSidebar}>
+        <button className="toggle-btn outside" onClick={() => setIsOpen(true)}>
           <span className="material-symbols-outlined outside-button">last_page</span>
         </button>
       )}
-
       <div className={`mp-sidebar ${isOpen ? 'open' : 'collapsed'}`}>
         {isOpen && (
-          <button className="toggle-btn inside" onClick={toggleSidebar}>
-            <span className="material-symbols-outlined inside-button">first_page</span>
-          </button>
-        )}
-
-        {isOpen && (
           <>
-            <div className="icon-text" onClick={handleLocationClick}>
+            <button className="toggle-btn inside" onClick={() => setIsOpen(false)}>
+              <span className="material-symbols-outlined inside-button">first_page</span>
+            </button>
+            <div className="icon-text" onClick={() => setIsLocationDropdownOpen(prev => !prev)}>
               <span className="material-symbols-outlined location-icon">map</span>
               <p className='word'>Locations</p>
             </div>
-
             {isLocationDropdownOpen && (
               <div className="location-dropdown">
                 <input 
                   type="text"
                   placeholder="Enter township"
                   value={locationInput}
-                  onChange={handleLocationInputChange}
+                  onChange={e => setLocationInput(e.target.value)}
                   className="location-input"
                 />
                 <input 
                   type="number"
                   placeholder="Enter county code"
                   value={countyCode}
-                  onChange={handleCountyCodeChange}
+                  onChange={e => setCountyCode(e.target.value)}
                   className="county-code-input"
                 />
                 <button className="filter-btn" onClick={handleFilterClick}>Filter</button>
               </div>
             )}
-
-            <div className="icon-text">
-              <span className="material-symbols-outlined star-icon">star</span>
-              <p className='word'>Ratings</p>
-            </div>
           </>
         )}
       </div>

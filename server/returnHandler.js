@@ -5,7 +5,7 @@ const db = require('./db');
 const filteritem = async (req, res) => {
     let con = await db.getConnection();
     const data = req.body;
-
+    console.log(data);
     // Filter by category if provided
     const categoryQuery = data.category !== -1 ? `AND category = ${data.category} ` : "";
 
@@ -32,11 +32,11 @@ const filteritem = async (req, res) => {
     
     // Combine all conditions into the final query
     const query = defaultQuery + categoryQuery + priceQuery + itemnameQuery + countyCodeQuery + townshipQuery;
-
+    console.log(query);
     try {
         // Execute the query
-        const [rows] = await con.execute(query);
-
+        const rows = await con.execute(query);
+        console.log(rows);
         // Return filtered items as response
         res.json({
             success: true,
