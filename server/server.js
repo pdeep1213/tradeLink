@@ -382,6 +382,37 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         }));
     }
 
+// Item Report
+app.get('/item-report', async (req, res) => {
+    try {
+        const con = await db.getConnection();
+        
+        const query = `
+            SELECT 
+                c.info AS category_name, 
+                COUNT(i.item_id) AS total_items,
+                SUM(CASE WHEN i.instock > 0 THEN 1 ELSE 0 END) AS active_items,
+                SUM(CASE WHEN i.instock = 0 THEN 1 ELSE 0 END) AS completed_items,
+                SUM(CASE WHEN i.report = 1 THEN 1 ELSE 0 END) AS reported_items
+            FROM categories c
+            RIGHT JOIN items i ON c.category = i.category
+            GROUP BY c.category, c.info;
+        `;
+        
+        const result = await con.query(query);
+        con.release();
+
+        if (!result || result.length === 0) {
+            return res.status(200).json([]);
+        }
+
+        res.status(200).json(result);
+    } catch (error) {
+        console.error("Error fetching categories:", error);
+        res.status(500).json({ error: "Error fetching categories" });
+    }
+});
+
       
 const server = app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
 const io = socketIo(server, { cors: corsOption }); 
