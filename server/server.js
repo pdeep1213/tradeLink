@@ -107,13 +107,13 @@ app.get('/info/:uid', info);
 //in profileHandler retrieve profile information
 app.get('/profile', profile);
 
-//in profileHandler not quite sure what this is doing, it might be grabbing a person's wishlist
+//in profileHandler it is grabbing a person's wishlist
 app.get('/wishlist/:uid', wishlist_uid);
       
-//in profileHandler probably adding to a users wishlist
+//in profileHandler adding to a users wishlist
 app.post('/wishlist/add', wishlist_add);
 
-//in profileHandler probably remove an item from a user's wishlist
+//in profileHandler remove an item from a user's wishlist
 app.post('/wishlist/remove', wishlist_remove);
 
 //in profileHandler rate the user after buying an item [see that method for more info]
@@ -382,37 +382,69 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         }));
     }
 
-// Item Report
-app.get('/item-report', async (req, res) => {
-    try {
-        const con = await db.getConnection();
-        
-        const query = `
-            SELECT 
-                c.info AS category_name, 
-                COUNT(i.item_id) AS total_items,
-                SUM(CASE WHEN i.instock > 0 THEN 1 ELSE 0 END) AS active_items,
-                SUM(CASE WHEN i.instock = 0 THEN 1 ELSE 0 END) AS completed_items,
-                SUM(CASE WHEN i.report = 1 THEN 1 ELSE 0 END) AS reported_items
-            FROM categories c
-            RIGHT JOIN items i ON c.category = i.category
-            GROUP BY c.category, c.info;
-        `;
-        
-        const result = await con.query(query);
-        con.release();
-
-        if (!result || result.length === 0) {
-            return res.status(200).json([]);
+    // Item Report
+    app.get('/item-report', async (req, res) => {
+        try {
+            const con = await db.getConnection();
+            
+            const query = `
+                SELECT 
+                    c.info AS category_name, 
+                    COUNT(i.item_id) AS total_items,
+                    SUM(CASE WHEN i.instock > 0 THEN 1 ELSE 0 END) AS active_items,
+                    SUM(CASE WHEN i.instock = 0 THEN 1 ELSE 0 END) AS completed_items,
+                    SUM(CASE WHEN i.report = 1 THEN 1 ELSE 0 END) AS reported_items
+                FROM categories c
+                RIGHT JOIN items i ON c.category = i.category
+                GROUP BY c.category, c.info;
+            `;
+            
+            const result = await con.query(query);
+            con.release();
+    
+            if (!result || result.length === 0) {
+                return res.status(200).json([]);
+            }
+    
+            res.status(200).json(result);
+        } catch (error) {
+            console.error("Error fetching categories:", error);
+            res.status(500).json({ error: "Error fetching categories" });
         }
-
-        res.status(200).json(result);
-    } catch (error) {
-        console.error("Error fetching categories:", error);
-        res.status(500).json({ error: "Error fetching categories" });
-    }
-});
-
+    });
+    
+    // UserReport
+    app.get('/user-report', async (req, res) => {
+        try {
+          const con = await db.getConnection();
+      
+          const query = `
+            SELECT 
+              u.uid,
+              COUNT(i.item_id) AS total_listings,
+              SUM(CASE WHEN i.instock > 0 THEN 1 ELSE 0 END) AS active_listings,
+              SUM(CASE WHEN i.instock = 0 THEN 1 ELSE 0 END) AS completed_listings,
+              SUM(CASE WHEN i.report = 1 THEN 1 ELSE 0 END) AS reported_listings
+            FROM ulogin u
+            LEFT JOIN items i ON u.uid = i.uid
+            WHERE u.perm = 0  -- Exclude admins (perm = 1)
+            GROUP BY u.uid;
+          `;
+      
+          const listingsResult = await con.query(query);
+      
+          con.release();
+      
+          if (!listingsResult || listingsResult.length === 0) {
+            return res.status(200).json([]);
+          }
+      
+          res.status(200).json(listingsResult);
+        } catch (error) {
+          console.error("Error fetching user reports:", error);
+          res.status(500).json({ error: "Error fetching user reports" });
+        }
+      }); 
       
 const server = app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
 const io = socketIo(server, { cors: corsOption }); 
