@@ -15,28 +15,24 @@ function Login() {
 
 
     useEffect( () => {
-        const a = async ( )=> {
-        try {
-            const response = await fetch('http://128.6.60.7:8080/send_token', {
-                method: 'GET',
-                headers:{
-                'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
-            const data = await reponse.jason();
-               if (response.ok) {
-                const role = data.perm === 1 ? "admin" : "user";
-                setUserRole(role);
-                console.log("In PreLogin, User role set:", role);
-               navigate("/Mainpage", { state: { userRole: role, userUsername: data.username, uid: data.uid } });
-                  // navigate("/UserDashboard", { state: { userRole: role } });
+        const a = async ()=> {
+            try {
+                const response = await fetch('http://128.6.60.7:8080/send_token', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const role = data.perm === 1 ? "admin" : "user";
+                    setUserRole(role);
+                    navigate("/Mainpage", { state: { userRole: role, userUsername: data.username, uid: data.uid } });
+                    // navigate("/UserDashboard", { state: { userRole: role } });
 
-            } else {
-                setError(data.message || "Login failed. Please try again.");
-            }
-        } catch (err) {
-            setError("An error occurred. Please try again.");
+                } else {
+                    setError(data.message || "Login failed. Please try again.");
+                }
+            } catch (error) {
+                setError("An error occurred. Please try again.");
             }
         };
         a();
@@ -112,7 +108,7 @@ navigate("/Mainpage", { state: { userRole: role, userUsername: data.username, ui
                             type="password"
                             id="password"
                             name="password"
-                            placeholder="Enter your password"
+                            placeholder="Enter password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required

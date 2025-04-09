@@ -15,7 +15,10 @@ const UserDashboard = () => {
 
   useEffect(() => {
     document.body.style.backgroundColor = "#080f25";
-    return () => { document.body.style.backgroundColor = ""; };
+   document.body.style.backgroundImage = "none";
+      return () => { document.body.style.backgroundColor = ""; 
+document.body.style.backgroundImage = "";
+      };
   }, []);
 
   useEffect(() => {

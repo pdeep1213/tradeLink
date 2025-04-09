@@ -18,16 +18,24 @@ function SearchBar({ onSearch, categories, onCategoryChange, selectedCategory })
     onCategoryChange(selected);
   };
 
+
+  const CATEGORY_MAPPING = { 
+    electronics: 1,
+    furnitures: 2,
+    clothings: 3,
+    other: 4
+  };
+  
   return (
  <div className="search-bar-container">
       <form onSubmit={handleSearchSubmit} className="search-form">
         <div className="nav-left">
-          <select
+        <select
             className="category-dropdown"
-            value={selectedCategory}
+            value={selectedCategory === -1 ? "all" : Object.keys(CATEGORY_MAPPING).find(key => CATEGORY_MAPPING[key] === selectedCategory)}
             onChange={handleCategoryChange}
           >
-            <option value="">All Categories</option>
+            <option key="all" value="all">All Categories</option>
             {categories.map((category) => (
               <option key={category} value={category}>
                 {category}

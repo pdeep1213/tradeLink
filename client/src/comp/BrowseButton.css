@@ -1,7 +1,7 @@
 .browse-container{
     display: flex; 
     justify-content: center; 
-    margin-top: 100px;
+    margin-top: 50px;
     margin-left: 800px;
     padding-right: 40px;
 }
