@@ -38,6 +38,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use('/img', express.static(path.join(__dirname, 'img')));
 
+//TODO : Remove the key from server.js
 sgMail.setApiKey("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");
 
 const jwt_token = process.env.JWTOKEN;
@@ -413,6 +414,44 @@ app.get('/item-report', async (req, res) => {
     }
 });
 
+// UserReport
+app.get('/user-report', async (req, res) => {
+    try {
+      const con = await db.getConnection();
+  
+      // Query to get all users with their listing details (total, active, completed, reported)
+      const query = `
+        SELECT 
+          u.uid,
+          COUNT(i.item_id) AS total_listings,
+          SUM(CASE WHEN i.instock > 0 THEN 1 ELSE 0 END) AS active_listings,
+          SUM(CASE WHEN i.instock = 0 THEN 1 ELSE 0 END) AS completed_listings,
+          SUM(CASE WHEN i.report = 1 THEN 1 ELSE 0 END) AS reported_listings
+        FROM ulogin u
+        LEFT JOIN items i ON u.uid = i.uid
+        WHERE u.perm = 0  -- Exclude admins (perm = 1)
+        GROUP BY u.uid;
+      `;
+  
+      // Execute the query to fetch listing data for all users
+      const listingsResult = await con.query(query);
+  
+      // Release the database connection
+      con.release();
+  
+      // If no users or listing data found, return an empty array
+      if (!listingsResult || listingsResult.length === 0) {
+        return res.status(200).json([]);
+      }
+  
+      // Send the result as the response
+      res.status(200).json(listingsResult);
+    } catch (error) {
+      console.error("Error fetching user reports:", error);
+      res.status(500).json({ error: "Error fetching user reports" });
+    }
+  });  
+  
       
 const server = app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
 const io = socketIo(server, { cors: corsOption }); 
