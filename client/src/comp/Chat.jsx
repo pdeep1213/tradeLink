@@ -108,6 +108,8 @@ export default function Chat({ isOpen, onClose, receiver_id, fromMS = false }) {
     };
   }, [sender_id, receiver_id]);
 
+
+
   // Handle sending messages
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !sender_id) return;

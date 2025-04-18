@@ -38,7 +38,25 @@ useEffect(() => {
                 onClick={() => handleButtonClick("adminReport")}
               >
                 <span className="material-symbols-outlined">receipt_long</span>
-                Reports
+                Reported Items
+              </button>
+            </li>
+            <li>
+              <button
+                className={activeButton === "userReport" ? "active" : ""}
+                onClick={() => handleButtonClick("userReport")}
+              >
+                <span className="material-symbols-outlined">assignment</span>
+                User Report
+              </button>
+            </li>
+            <li>
+              <button
+                className={activeButton === "itemReport" ? "active" : ""}
+                onClick={() => handleButtonClick("itemReport")}
+              >
+                <span className="material-symbols-outlined">receipt_long</span>
+                Item Report
               </button>
             </li>
             <li>

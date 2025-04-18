@@ -5,6 +5,8 @@ import AdminProfile from './AdminProfile';
 import UserListing from './UserListing';
 import Wishlist from '../../Pages/Wishlist';
 import AdminReport from './AdminReport';
+import UserReport from './UserReport';
+import ItemReport from './ItemReport'; 
 
 function UDContentDisplay({ activeButton, profile }) {
   if (!profile) {
@@ -17,9 +19,12 @@ function UDContentDisplay({ activeButton, profile }) {
 
   const adminPages = {
     adminProfile: <AdminProfile profile={profile} />,
-    adminReport: <AdminReport/>,
-    adminSettings: <h3>Settings</h3>
+    adminReport: <AdminReport />,
+    adminSettings: <h3>Settings</h3>,
+    userReport: <UserReport />,
+    itemReport: <ItemReport /> 
   };
+  
 
   const userPages = {
     userHome: <h3>Overview</h3>,

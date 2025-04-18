@@ -5,26 +5,66 @@ import './ItemListPage.css';
 
 const ItemListPage = ({ userRole, profile, filters }) => {
     const fetchFilteredItems = async () => {
-        const response = await fetch("http://128.6.60.7:8080/filter", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(filters),
-        });
-        const result = await response.json();
-        if (!result.success) throw new Error("Filtering failed");
-
-        const enrichedItems = await Promise.all(result.data.map(async (item) => {
-            try {
-                const imgRes = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, { method: "POST" });
-                const imgData = imgRes.ok ? await imgRes.json() : [];
-                return { ...item, img: imgData[0]?.imgpath || null, wished: item.wished === 1 };
-            } catch {
-                return { ...item, img: null, wished: item.wished === 1 };
+        let url;
+        if (userRole === "guest") {
+            url = "http://128.6.60.7:8080/send_listings_guest";
+            const response = await fetch(url, {
+                credenitals: 'omit',
+            })
+            if (!response.ok) {
+                throw new Error("Failed to fetch items");
             }
-        }));
+            const items = await response.json();
 
-        return enrichedItems;
+            const update = await Promise.all(items.map(async (item) => {
+                try {
+                    const img = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, {
+                        method: 'POST',
+                    });
+                    if (img.ok) {
+                        const imgData = await img.json();
+                        return {
+                            ...item,
+                            img: imgData.length > 0 ? imgData[0].imgpath : null,
+                        };
+                    } else {
+                        return {
+                            ...item,
+                            img: null,
+                        };
+                    }
+                } catch (err) {
+                    console.error("Error fetching image:", err);
+                    return {
+                        ...item,
+                        img: null,
+                    };
+                }
+            }));
+
+            return update;
+        }
+        else{
+            const response = await fetch("http://128.6.60.7:8080/filter", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(filters),
+            });
+            const result = await response.json();
+            if (!result.success) throw new Error("Filtering failed");
+
+            const enrichedItems = await Promise.all(result.data.map(async (item) => {
+                try {
+                    const imgRes = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, { method: "POST" });
+                    const imgData = imgRes.ok ? await imgRes.json() : [];
+                    return { ...item, img: imgData[0]?.imgpath || null, wished: item.wished === 1 };
+                } catch {
+                    return { ...item, img: null, wished: item.wished === 1 };
+                }
+            }));
+            return enrichedItems;
+        }
     };
 
     const { data: items, isLoading, isError, error } = useQuery({

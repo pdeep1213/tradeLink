@@ -33,22 +33,22 @@ function ItemCard({
           credentials: 'include'
         });
         if (!response.ok) {
-          navigate("/Login");
+     //     navigate("/Login");
           return;
         }
         const data = await response.json();
         setUid(data.uid);
       } catch (err) {
         console.error("Error fetching profile:", err);
-        navigate("/Login");
+//        navigate("/Login");
       }
     };
     getUID();
-  }, [navigate]);
+  }, []);
 
   const toggleWishlist = async () => {
     if (!uid) {
-      navigate("/Login");
+ //     navigate("/Login");
       return;
     }
 

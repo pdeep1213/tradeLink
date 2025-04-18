@@ -10,7 +10,7 @@ function Messages() {
     const [chats,setChats] = useState([]);
     const [userRole, setUserRole] = useState(location.state?.userRole || null);
     const navigate = useNavigate();
-
+    const [unread, setUnread] = useState(0);
 
     const [currentReceiverId, setCurrentReceiverId] = useState(null);
     const [isChatOpen, setIsChatOpen] = useState(false);
@@ -77,7 +77,7 @@ function Messages() {
 
     return (
     <div>
-      <Navbar userRole={userRole} userUsername={name}></Navbar>  
+      <Navbar userRole={userRole} userUsername={name} setUnreadCount={setUnreadCount}></Navbar>  
       <h1>My Chats</h1>
       <MS_SideBar chats={chats} onChatSelect={handleChatClick} />
             {isChatOpen && (
