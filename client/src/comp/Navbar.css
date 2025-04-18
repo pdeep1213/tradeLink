@@ -85,6 +85,7 @@
   padding: 10px;
   min-width: 12rem;
   border-radius: 7%;
+  z-index:10;
 }
 
 .dropdown-item {

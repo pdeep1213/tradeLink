@@ -77,13 +77,14 @@ function Messages() {
 
     return (
     <div>
-      <Navbar userRole={userRole} userUsername={name} setUnreadCount={setUnreadCount}></Navbar>  
+      <Navbar userRole={userRole} userUsername={name} setUnread={setUnread}></Navbar>  
       <h1>My Chats</h1>
       <MS_SideBar chats={chats} onChatSelect={handleChatClick} />
             {isChatOpen && (
                 <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} receiver_id={currentReceiverId} fromMS={true} />
             )}
-    </div>
+   
+        </div>
   )
 }
 

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import test from "../FINANCE.png";
 import "./UserHome.css";
 
@@ -6,17 +6,29 @@ function UserHome({ profile }) {
   const [valUsername, setValUsername] = useState(profile.username);
   const [valEmail, setvalEmail] = useState(profile.email);
   const [valUID, setvalUID] = useState(profile.uid);
-  const [valPass, setvalPass] = useState(profile.password);  
-  // place holder
-  const [profilePic, setProfilePic] = useState(test);
+ const [valDes, setvalDes] = useState(profile.pfdesc || "");
 
-  const click = () => {
-    alert(val)
-  }
+  const [profilePic, setProfilePic] = useState(profile.pfpic || null);
 
-   const handleChangePicture = () => {
-    const newPic = prompt("Enter the new image:");
-    setProfilePic(newPic);
+const click = () => {           
+  
+  const formData = new FormData();
+  formData.append('username', valUsername);
+  formData.append('description', valDes); 
+
+  fetch('http://128.6.60.7:8080/updateProfile', { 
+     credentials: "include",
+     method: 'POST',
+    body: formData
+  })
+  .catch(error => {
+    console.error('Error saving profile:', error);
+  });
+};
+
+
+   const handleChangePicture = (e) => {
+    setProfilePic(e.target.files);
   };  
 
   if (!profile) {
@@ -29,29 +41,29 @@ function UserHome({ profile }) {
 
       <div className="adminProfile">
         <div className="profile-container">
-          <div className="profile-picture-container" onClick={handleChangePicture} >
-          <img src={profilePic} alt="Profile" className="profile-picture" />
-        <span className="add_a_photo material-symbols-outlined">add_a_photo</span>  
+          <div className="profile-picture-container">
+      <img src={profilePic} alt="Profile" className="profile-picture" onClick={handleChangePicture}/>  
+      <span className="add_a_photo material-symbols-outlined">add_a_photo</span>  
         </div>
           <div className="input-container-right">
             <div className="input-container">
               <p className="input-text">UID:</p> 
-              <input className="UID-input" value={valUID} />         
+              <input className="UID-input" value={valUID} onChange={(e) => setvalUID(e.target.value)} />         
             </div>
 
             <div className="input-container">
               <p className="input-text">Username:</p>
-              <input className="NAME-input" value={valUsername} />
+              <input className="NAME-input" value={valUsername}  onChange={(e) => setValUsername(e.target.value)}/>
             </div>
 
             <div className="input-container">
               <p className="input-text">Email:</p>
-              <input className="EMAIL-input" value={valEmail} />
+              <input className="EMAIL-input" value={valEmail} onChange={(e) => setvalEmail(e.target.value)}/>
             </div>
 
             <div className="input-container">
-              <p className="input-text">Password:</p>
-              <input className="PASS-input" value={valPass} />
+              <p className="input-text">Description:</p>
+              <textarea className="PASS-input" maxLength={275}  onChange={(e) => setvalDes(e.target.value)} value={valDes} rows={4} />
             </div>  
 
             <button className="saveButton" onClick={click}> Save </button>
