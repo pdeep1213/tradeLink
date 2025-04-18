@@ -1,5 +1,9 @@
 const db = require('./db');
-
+const multer = require('multer');
+const path = require('path');
+const crypto = require('crypto');
+const file_name = require('sanitize-filename');
+const fs = require('fs');
 const jwt = require('jsonwebtoken');
 
 const jwt_token = process.env.JWTOKEN;
@@ -23,7 +27,7 @@ const profile = async (req, res) => {
             return res.status(500).json({ message: "Database connection failed" });
         }
         const rows = await con.query(
-            "SELECT uid, username, email, perm FROM ulogin WHERE uid = ?", [uid]
+            "SELECT uid, username, email, perm, pfpic, pfdesc FROM ulogin WHERE uid = ?", [uid]
         );
         con.release();
         //console.log("DB Query Result:", rows[0].perm); 
@@ -166,11 +170,124 @@ const rateuser = async (req, res) => {
 
 };
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './pfp/');
+    },
+    filename: (req, file, cb) => {
+        const suffix = crypto.randomBytes(6).toString('hex');
+        const sanitize = file_name(file.originalname);
+
+        const ext = path.extname(sanitize);
+        const name = `${suffix}${ext}`;
+
+        cb(null, name);
+    }
+});
+
+const uploadprofile = multer({storage: storage});
+
+const updateProfileInfo = async (req, res) =>{//handles img upload from client
+    const token = req.cookies.tradelink
+    if (!token) {
+        return res.status(400).json({ message: "No token provided" });
+    }
+    let con;
+    try{
+        const decoded = jwt.verify(token, jwt_token);
+        //console.log("Decoded JWT:", decoded);
+        const uid = decoded.uid;
+        //the imgs should be send as form-data
+        const img = req.files;
+        con = await db.getConnection().catch(err => {
+            console.error("DB Connection Error:", err);
+            return null;
+        });
+        console.log("testing imgs");
+        if (img){
+            console.log("img: ", img);
+            //storing of the img
+            const filepath = req.files.map(file => 'http://128.6.60.7:8080/pfp/' + file.filename);
+            console.log("img path: ", filepath);
+            const query = `update ulogin set pfpic=(?) where uid=(?)`; 
+            await con.execute(query, [img, uid], (err, results) => {
+                if (err) {
+                    console.log("error inserting filepath into user info");
+                }
+                else{
+                    console.log("img uploaded successfully");
+                }
+            });
+        }
+        const descrip = req.body.description;
+        if(descrip){
+            console.log("testing desc: ", descrip);
+            const query = `update ulogin set pfdesc=? where uid = ?`;
+            await con.execute(query, [descrip, uid]);//, (err, results) => {
+                /*if (err) {
+                    console.log("error changing description into user info");
+                }
+                else{
+                    console.log("description chagned successfully");
+                }
+            });*/
+        }
+        const name = req.body.username;
+        console.log("testing names");
+        if(name){
+            console.log("testing username: ", name);
+            const query = `update ulogin set username=? where uid = ?`;
+            await con.execute(query, [name, uid], (err, results) => {
+                if (err) {
+                    console.log("error chaing username into user info");
+                }
+                else{
+                    console.log("username uploaded successfully");
+                }
+            });
+        }
+    } catch(err) {
+        res.status(500).json({message: "issue updating profile"});
+       }
+    finally{
+        con.release();
+    }
+};
+
+//call this before deleteing the profile to help clear up residule img file in the backend
+const deleteProfileImage = async (req, res) => {
+    const token = req.cookies.tradelink
+    if (!token) {
+        return res.status(400).json({ message: "No token provided" });
+    }
+    try{
+        const decoded = jwt.verify(token, jwt_token);
+        //console.log("Decoded JWT:", decoded);
+        const uid = decoded.uid;
+        const con = await db.getConnection(); 
+        const query = 'SELECT pfpics FROM ulogin where uid = (?)'; 
+        const [rows] = await con.query(query, [uid]); 
+        var i = "./" + rows.pfpic;
+        fs.unlink(i, (err) => {
+            if(err)
+                return res.status(500).json({message: "Issue deleting account profile pic"});
+            else
+                return res.status(200).json({message: "profile pic deleted"});
+        });
+    } catch(err){
+        res.status(500).json({message: "error deleting accoutn profile pic"});
+    }
+
+};
+
 module.exports = {
     profile,
     wishlist_uid,
     wishlist_add,
     wishlist_remove,
     info,
-    rateuser
+    rateuser,
+    uploadprofile,
+    updateProfileInfo,
+    deleteProfileImage
 };
