@@ -1,0 +1,87 @@
+/* ItemReport.css */
+.item-report {
+  margin: 20px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: transparent; /* Transparent frame for the entire section */
+  color: #f1f1f1; /* Light text color for contrast */
+  padding: 20px;
+}
+
+.item-report h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #e1e1ff; /* Light color for heading */
+}
+
+.export-button {
+  padding: 10px 20px;
+  background-color: #2ecc71; /* Green button color */
+  color: #fff; /* White text color */
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s;
+}
+
+.export-button:hover {
+  background-color: #27ae60; /* Darker green on hover */
+}
+
+.categories-table {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.categories-table th,
+.categories-table td {
+  padding: 14px; /* Increased padding for better spacing */
+  border: 3px solid #444; /* Thicker dark border color for visibility */
+  text-align: left;
+}
+
+.categories-table th {
+  background-color: #2c3e50; /* Darker header background */
+  color: #ecf0f1; /* Lighter text color in header */
+}
+
+.categories-table tr:nth-child(even) {
+  background-color: #34495e; /* Dark grey background for even rows */
+}
+
+.categories-table tr:nth-child(odd) {
+  background-color: #2c3e50; /* Darker background for odd rows */
+}
+
+.categories-table td {
+  font-size: 1rem;
+  color: #bdc3c7; /* Lighter text for cells */
+}
+
+.categories-table th,
+.categories-table td {
+  font-size: 1.1rem;
+}
+
+.loading,
+.error {
+  font-size: 1.2rem;
+  color: #e74c3c; /* Red color for error messages */
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .categories-table {
+    width: 100%;
+  }
+  .categories-table th,
+  .categories-table td {
+    padding: 10px;
+    font-size: 1rem;
+  }
+}
