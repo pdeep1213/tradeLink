@@ -39,7 +39,7 @@ app.use(cookieParser());
 app.use('/img', express.static(path.join(__dirname, 'img')));
 
 //TODO : Remove the key from server.js
-sgMail.setApiKey("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");
+sgMail.setApiKey(process.env.SGMAIL);
 
 const jwt_token = process.env.JWTOKEN;
 
@@ -179,12 +179,6 @@ app.post('/updateStatus', async (req, res) => {
 });
 
 //Message Handling End----------------------------------------------------------------------------------------
-
-
-
-app.set('json replacer', (key, value) => 
-    typeof value === 'bigint' ? value.toString() : value
-);
 
 app.post('/logout', (req, res) =>{
     res.cookie('tradelink', '', {
