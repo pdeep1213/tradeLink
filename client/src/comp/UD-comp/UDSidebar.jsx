@@ -127,6 +127,15 @@ useEffect(() => {
             </li>
             <li>
               <button
+                className={activeButton === "userPurschase" ? "active" : ""}
+                onClick={() => handleButtonClick("userPurschase")}
+              >
+                <span className="material-symbols-outlined">orders</span>
+                My Listings
+              </button>
+            </li>
+            <li>
+              <button
                 className={activeButton === "userPayment" ? "active" : ""}
                 onClick={() => handleButtonClick("userPayment")}
               >

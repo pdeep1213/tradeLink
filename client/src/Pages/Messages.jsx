@@ -77,7 +77,7 @@ function Messages() {
 
     return (
     <div>
-      <Navbar userRole={userRole} userUsername={name} setUnreadCount={setUnreadCount}></Navbar>  
+      <Navbar userRole={userRole} userUsername={name} setUnreadCount={setUnread}></Navbar>  
       <h1>My Chats</h1>
       <MS_SideBar chats={chats} onChatSelect={handleChatClick} />
             {isChatOpen && (

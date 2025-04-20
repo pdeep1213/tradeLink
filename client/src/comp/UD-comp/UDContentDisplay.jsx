@@ -33,6 +33,7 @@ function UDContentDisplay({ activeButton, profile }) {
     userWishlist: <Wishlist />,
     userEarnings: <h3>User Earnings Content</h3>,
     userListings: <UserListing></UserListing>,
+    userPurschase : <h3>My Purschases</h3>,
     userPayment: <h3>User Payment Info Content</h3>,
   };
     console.log("Admin? ", isAdmin);
