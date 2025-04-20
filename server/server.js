@@ -15,8 +15,8 @@ const {
 } = require('./itemHandler.js');
 const {
     profile, wishlist_uid, wishlist_add, 
-    wishlist_remove, info, 
-    rateuser
+    wishlist_remove, info, rateuser, 
+    uploadprofile, updateProfileInfo, deleteProfileImage
 } = require('./profileHandler.js');
 const {sendMessage, getMessages, emitMessage, getChats, updateStatus} = require('./MessageHandler.js');
 const {transaction} = require('./transaction.js')
@@ -38,7 +38,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use('/img', express.static(path.join(__dirname, 'img')));
 
-sgMail.setApiKey("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");
+//TODO : Remove the key from server.js
+sgMail.setApiKey(process.env.SGMAIL);
 
 const jwt_token = process.env.JWTOKEN;
 
@@ -118,6 +119,11 @@ app.post('/wishlist/remove', wishlist_remove);
 
 //in profileHandler rate the user after buying an item [see that method for more info]
 app.post('/rateuser', rateuser);
+
+//in profileHandler updates user info name, pfp, and description /pfp/ for images
+app.post('/updateProfile', uploadprofile.single('image'), updateProfileInfo); 
+
+app.post('/deletepfimg', deleteProfileImage);
 //------------------------------------------------------------
 
 //Message Handling Start----------------------------------------------------------------------------------------
@@ -173,12 +179,6 @@ app.post('/updateStatus', async (req, res) => {
 });
 
 //Message Handling End----------------------------------------------------------------------------------------
-
-
-
-app.set('json replacer', (key, value) => 
-    typeof value === 'bigint' ? value.toString() : value
-);
 
 app.post('/logout', (req, res) =>{
     res.cookie('tradelink', '', {
@@ -251,6 +251,7 @@ app.post('/register', async (req, res) =>{
         //add uid to userrating
         query = "insert into userrating (uid) values (?)";
         await con.query(query, result[0].uid); //make a row for the user
+        con.release();
         res.status(200).json({ message: 'Task Inserted Successfully', result});
     }catch (err){
         res.status(500).json({error: 'Error During Post', details: err.message});
@@ -283,6 +284,7 @@ app.post('/login', async (req, res) => {
             maxAge: 30 * 24 * 60 * 60 *1000, //day (?), hour(24), minute (60), second (60), millisecond (1000)
             sameSite: 'Strict',
         });
+        con.release();
 
 
         res.status(200).json({ 

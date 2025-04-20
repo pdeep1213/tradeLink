@@ -4,7 +4,7 @@ import Logo from "./FINANCE.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const Navbar = ({ userRole, userUsername, setUnreadCount, onLogout }) => {
+const Navbar = ({ userRole, userUsername, setUnreadCount}) => {
   const location = useLocation();
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
   const isMain = location.pathname === "/dashboard"; // Placeholder to remove later
@@ -39,7 +39,21 @@ const Navbar = ({ userRole, userUsername, setUnreadCount, onLogout }) => {
     };
   }, [userUsername, setUnreadCount]); 
 
-  const authLinks = !isAuthPage && (
+ const logout = async () => {
+        try{
+            await fetch("http://128.6.60.7:8080/logout", {
+                method: "POST",
+                credentials: 'include',
+            });
+            setUserRole(null);
+            window.history.foward(1);
+        }
+        catch (err){
+            console.log("error logging out");
+        }
+    };
+
+    const authLinks = !isAuthPage && (
     <>
       {!userUsername ? (
         <>
@@ -90,7 +104,7 @@ const Navbar = ({ userRole, userUsername, setUnreadCount, onLogout }) => {
                 </div>
                 <div className="logout-menu">
                   <span className="material-symbols-outlined logout-icon">logout</span>
-                  <Link to="/" onClick={onLogout} className="dropdown-item">Log Out</Link>
+                  <Link to="/" onClick={logout} className="dropdown-item">Log Out</Link>
                 </div>
               </div>
             )}

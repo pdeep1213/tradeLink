@@ -87,19 +87,6 @@ const MainPage = () => {
         setFilters(prev => ({ ...prev, itemname: term }));
     };
 
-    const logout = async () => {
-        try{
-            await fetch("http://128.6.60.7:8080/logout", {
-                method: "POST",
-                credentials: 'include',
-            });
-            setUserRole(null);
-            window.history.foward(1);
-        }
-        catch (err){
-            console.log("error logging out");
-        }
-    };
 
     const handleCategoryChange = (category) => {
         const catId = CATEGORY_MAPPING[category.toLowerCase()] ?? -1;
