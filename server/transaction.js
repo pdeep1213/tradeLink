@@ -53,6 +53,37 @@ const transaction = async (req , res) => {
 
 };
 
+
+const earnings = async (req,res) => {
+    const { uid } = req.params;
+    let con;
+
+    try {
+        con = await db.getConnection();
+        const user_Transactions = await con.query('SELECT * from Transactions WHERE sellerID=?',[uid]);
+
+        //Get total amount
+        const totalResult = await con.query('SELECT SUM(amount) AS total FROM Transactions WHERE sellerID = ?', [uid]);
+        const total = totalResult[0].total || 0;
+        
+        //Get total purschases
+        const purchasesResult = await con.query('SELECT COUNT(*) AS purchases FROM Transactions WHERE sellerID = ?', [uid]);
+        const purchases = purchasesResult[0].purchases;
+        res.status(200).json({
+            total,
+            purchases,
+            transactions: user_Transactions
+        });
+
+    } catch (err) {
+        console.error("Error in earnings:", err);
+        res.status(500).json({ error: "Failed to fetch earnings data." });
+        } finally {
+            if (con) con.release();
+        }
+}
+
 module.exports = {
- transaction
+ transaction,
+ earnings
 }
