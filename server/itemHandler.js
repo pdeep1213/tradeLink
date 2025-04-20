@@ -17,6 +17,7 @@ const uploaditem = async (req, res) => {
         console.log("no token");
         return res.status(401).json({message: "no token"})
     }
+    let con;
     try {
         const decoded = jwt.verify(token, jwt_token);
         const uid = decoded.uid; //uid for the table
@@ -27,7 +28,7 @@ const uploaditem = async (req, res) => {
         const value = [uid, ...Object.values(data)];
         const question = value.map(() => '?').join(', ');            
         let query = `insert into items (uid, ${columns}) values (${question})`;
-        let con = await db.getConnection();
+        con = await db.getConnection();
         var result = await con.query(query, value);
         console.log("Itemlist result: ", result);
         const item_id = Number(result.insertId);
@@ -35,11 +36,12 @@ const uploaditem = async (req, res) => {
         query = "insert into rating (item_id) values (?)";
         var result = await con.query(query, item_id);
         res.status(200).json({ message: 'Item Inserted Successfully', item_id});
-        con.release();
         }
         catch (error){
             console.log(error);
             res.status(500).send("issue during item uploading");
+        }finally{
+            con.release();
         }
 };
 
@@ -49,26 +51,30 @@ const uploaditem = async (req, res) => {
 const removeItem =  async (req, res)=> {
     const {item_id} = req.body;
     console.log(item_id);
+    let con;
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const query = "DELETE from items WHERE item_id = ?";
         const result = await con.query(query, item_id);
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Item not found" });
         }
         res.status(200).json({ message: "Item removed successfully" });
-        con.release();
     } catch (error) {
         console.error("Error removing item:", error);
         res.status(500).json({ message: "Internal server error" });
+    }
+    finally{
+        con.release();
     }
 };
 
 //This function acquires all the items that are in stock
 const listItem =  async (req, res)=> {
     const {item_id, listed} = req.body;
+    let con;
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         let instock = (listed) ? 1 : 0;
         const query = "UPDATE items SET instock = ?  WHERE item_id = ?";
         const result = await con.query(query, [instock,item_id]);
@@ -81,25 +87,33 @@ const listItem =  async (req, res)=> {
         console.error("Error removing item:", error);
         res.status(500).json({ message: "Internal server error" });
     }
+    finally{
+        con.release();
+    }
 };
 // This function gets all the item for guest
 const sendlistGuest = async (req, res) => {
-  try {
-    const con = await db.getConnection(); 
-    const query = 'SELECT * FROM items WHERE instock = 1'; 
-    const rows = await con.query(query); 
-    con.release();
+    let con;
+    try {
+        con = await db.getConnection(); 
+        const query = 'SELECT * FROM items WHERE instock = 1'; 
+        const rows = await con.query(query); 
+        con.release();
 
-    if (!rows || rows.length === 0) {
-      return res.status(400).json({ message: "Item not found" });
+        if (!rows || rows.length === 0) {
+            return res.status(400).json({ message: "Item not found" });
+        }
+
+        console.log("Success sending items");
+        res.status(200).json(rows);
+    } catch (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+    finally{
+        con.release();
     }
 
-    console.log("Success sending items");
-    res.status(200).json(rows);
-  } catch (err) {
-    console.error("Error:", err);
-    return res.status(500).json({ message: "Internal server error", error: err.message });
-  }
 };
 
 //This function gets all the item the user has listed
@@ -109,10 +123,11 @@ const sendlist =  async (req, res) => {
         return res.status(401).json({ message: "no token" });
     }
     const { type } = req.query;
+    let con;
     try {
         const decoded = jwt.verify(token, jwt_token);
         const uid = decoded.uid;
-        const con = await db.getConnection().catch(err => {
+        con = await db.getConnection().catch(err => {
             console.error("DB Connection Error:", err);
             return null;
         });
@@ -154,7 +169,6 @@ const sendlist =  async (req, res) => {
             params = [uid, uid];
         }
         const rows = await con.query(query, params);
-        con.release();
         if (!rows || rows.length === 0) {
             return res.status(400).json({ message: "No Items Found" });
         }
@@ -164,6 +178,10 @@ const sendlist =  async (req, res) => {
         console.error("Error:", err);
         return res.status(500).json({ message: "Internal server error", error: err.message });
     }
+    finally{
+        con.release();
+    }
+
 };
 //Get uid of the seller 
 const sellerID = async (req, res) => {
@@ -173,10 +191,10 @@ const sellerID = async (req, res) => {
         return res.status(400).json({ message: "Missing item_id" });
     }
 
+    let con;
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const result = await con.query("SELECT uid FROM items WHERE item_id = ?", [item_id]);
-        con.release();
 
         if (result.length === 0) {
             return res.status(404).json({ message: "Item not found" });
@@ -188,51 +206,62 @@ const sellerID = async (req, res) => {
         console.error("Error fetching ID:", error);
         res.status(500).json({ message: "Internal reporting error" });
         }
+    finally{
+        con.release();
+    }
+
 };
 
 //todo redirect to itemreport table instead, requiring two paramter, item_id and reason [int, varchar(512)]
 const reportitem = async (req, res)=> {
     const {item_id} = req.body;
     console.log(item_id);
+    let con;
     try {
-       const con = await db.getConnection();
+       con = await db.getConnection();
        const query = "UPDATE items SET report = 1  WHERE item_id = ?";
        const result = await con.query(query, item_id);
        if (result.affectedRows === 0) {
            return res.status(404).json({ message: "Item not found" });
         }
         res.status(200).json({ message: "Item report successfully" });
-        con.release();
     } catch (error) {
       console.error("Error reporting item:", error);
       res.status(500).json({ message: "Internal reporting error" });
       }
+    finally{ 
+        con.release();
+    }
 };
 
 //This get all the category for category filtering
 const getAllCategory = async (req, res) => {
     const query = "select info from categories";
+    let con;
     try{
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const result = await con.query(query);
         //console.log(result);
         res.send(result);
-        con.release();
     } catch (error) {
       console.error("Error cat:", error);
       res.status(500).json({ message: "Internal cat error" });
       }
+    finally{
+        con.release();
+    }
 };
 
 
 //This function will handle the rating of an item.
 const updateitemrating = async (req, res) => {
+    let con;
     try {
         const item_id = req.body.item_id //the body should contain the item_id
         const rate = req.body.rating; //the body should contain a number from 1-5
         //Step 1 grab the object current rating and rate_count
         const query1 = "select avg_rate from rating where item_id = ?";
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const result = await con.query(query, item_id);
         var tmp = result[0].avg_rate;
         var query3;
@@ -266,11 +295,13 @@ const updateitemrating = async (req, res) => {
             query3 = `update rating set avg_rate = (avg_rate + ?)/2 where item_id = ?`;
             await con.query(query3, [rate, item_id]);
         }
-        con.release();
         res.status(200).json({message: "Rating updated Successfully"});
     }
     catch (err){
         console.log("error in itemrating");
+    }
+    finally{
+        con.release();
     }
 };
 

@@ -11,15 +11,16 @@ const jwt_token = process.env.JWTOKEN;
 // get user info for user dashboard
 const profile = async (req, res) => {
    const token = req.cookies.tradelink
-   if (!token) {
-         return res.status(400).json({ message: "No token provided" });
-   }
+    if (!token) {
+        return res.status(400).json({ message: "No token provided" });
+    }
+    let con;
     try {
-      const decoded = jwt.verify(token, jwt_token);
+        const decoded = jwt.verify(token, jwt_token);
         //console.log("Decoded JWT:", decoded);
         const uid = decoded.uid;
         //console.log("uid", uid);
-        const con = await db.getConnection().catch(err => {
+        con = await db.getConnection().catch(err => {
         //console.error("DB Connection Error:", err);
         return null;
     });
@@ -29,7 +30,6 @@ const profile = async (req, res) => {
         const rows = await con.query(
             "SELECT uid, username, email, perm, pfpic, pfdesc FROM ulogin WHERE uid = ?", [uid]
         );
-        con.release();
         //console.log("DB Query Result:", rows[0].perm); 
         if (!rows || rows.length === 0) { 
             return res.status(400).json({ message: "User not found" });
@@ -38,6 +38,8 @@ const profile = async (req, res) => {
     } catch (err) {
         console.error("Error:", err);
         return res.status(500).json({ message: "Internal server error", error: err.message });
+    }finally{
+        con.release();
     }
 };
 
@@ -91,15 +93,16 @@ const wishlist_remove =  async (req, res) => {
     if (!uid || !item_id) {
         return res.status(400).send("Missing uid or item_id");
     }
-      
+    let con; 
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         await con.query("DELETE FROM wishlist WHERE uid = ? AND item_id = ?", [uid, item_id]);
-        con.release();
         res.send({ message: "Item removed from wishlist" });
     } catch (err) {
         console.error("❌ Error removing wishlist item:", err);
         res.status(500).send("Could not remove item");
+    }finally{
+        con.release();
     }
 };
       
@@ -135,8 +138,9 @@ const rateuser = async (req, res) => {
 
     var id = req.body.itemid;
     var query = "select uid from items where item_id = ?";
+    let con;
     try{
-        const con = await db.getConnection();
+        con = await db.getConnection();
         var result = await con.query(query, id);
         id = result[0].uid;//rewrite the item_id with the sellers uid since item_id is no longer needed
         query = "select avg from userrating where uid = ?";
@@ -166,6 +170,8 @@ const rateuser = async (req, res) => {
     catch (err){
         console.log("error when updaing user rating: ", err);
         res.send(500).json({message: "issue when rating user profile"});
+    }finally{
+        con.release();
     }
 
 };
@@ -260,11 +266,12 @@ const deleteProfileImage = async (req, res) => {
     if (!token) {
         return res.status(400).json({ message: "No token provided" });
     }
+    let con;
     try{
         const decoded = jwt.verify(token, jwt_token);
         //console.log("Decoded JWT:", decoded);
         const uid = decoded.uid;
-        const con = await db.getConnection(); 
+        con = await db.getConnection(); 
         const query = 'SELECT pfpics FROM ulogin where uid = (?)'; 
         const [rows] = await con.query(query, [uid]); 
         var i = "./" + rows.pfpic;
@@ -276,6 +283,8 @@ const deleteProfileImage = async (req, res) => {
         });
     } catch(err){
         res.status(500).json({message: "error deleting accoutn profile pic"});
+    }finally{
+        con.release();
     }
 
 };

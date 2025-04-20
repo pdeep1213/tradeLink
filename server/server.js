@@ -194,11 +194,12 @@ app.get('/send_token', async (req, res) => {
     if(!token){
         return res.status(401).json({message: "no token"})
     }
+    let con;
     try {
         const decoded = jwt.verify(token, jwt_token);
         console.log(decoded);
         const uid = decoded.uid;
-        const con = await db.getConnection().catch(err => {
+        con = await db.getConnection().catch(err => {
             console.error("DB Connection Error:", err);
             return null;
         });
@@ -208,7 +209,6 @@ app.get('/send_token', async (req, res) => {
         const rows = await con.query(
             "SELECT perm FROM ulogin WHERE uid = ?", [uid]
         );
-        con.release();
         if (!rows || rows.length === 0) { 
             return res.status(400).json({ message: "User not found" });
         }
@@ -217,7 +217,9 @@ app.get('/send_token', async (req, res) => {
         console.error("Error:", err);
         return res.status(500).json({ message: "Internal server error", error: err.message });
     }
-
+    finally{
+        con.release();
+    }
 });
 
 ////POST
@@ -266,9 +268,9 @@ app.post('/register', async (req, res) =>{
 // **Login Route (No Encryption)**
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
-
+    let con;
     try {
-        const con = await db.getConnection();
+        con = await db.getConnection();
         const result = await con.query("SELECT * FROM ulogin WHERE email=? AND password=?", [email, password]);
         // Fetch user from database
         const user = Array.isArray(result) ? result[0] : result;
@@ -284,7 +286,6 @@ app.post('/login', async (req, res) => {
             maxAge: 30 * 24 * 60 * 60 *1000, //day (?), hour(24), minute (60), second (60), millisecond (1000)
             sameSite: 'Strict',
         });
-        con.release();
 
 
         res.status(200).json({ 
@@ -296,6 +297,10 @@ app.post('/login', async (req, res) => {
         console.log(err);
         res.status(500).json({ error: 'Error During Login', details: err.message });
     }
+    finally{
+        con.release();
+    }
+
 });
 
 
@@ -382,12 +387,14 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
             }
             console.log(`Query Deletion Succesful, ${result.affectedRows} removed`);
         }));
+        con.release();
     }
 
     // Item Report
     app.get('/item-report', async (req, res) => {
+        let con;
         try {
-            const con = await db.getConnection();
+            con = await db.getConnection();
             
             const query = `
                 SELECT 
@@ -402,7 +409,6 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
             `;
             
             const result = await con.query(query);
-            con.release();
     
             if (!result || result.length === 0) {
                 return res.status(200).json([]);
@@ -413,12 +419,16 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
             console.error("Error fetching categories:", error);
             res.status(500).json({ error: "Error fetching categories" });
         }
+        finally{
+            con.release();
+        }
     });
     
     // UserReport
     app.get('/user-report', async (req, res) => {
+        let con;
         try {
-          const con = await db.getConnection();
+         con = await db.getConnection();
       
           const query = `
             SELECT 
@@ -435,7 +445,6 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
       
           const listingsResult = await con.query(query);
       
-          con.release();
       
           if (!listingsResult || listingsResult.length === 0) {
             return res.status(200).json([]);
@@ -445,6 +454,9 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         } catch (error) {
           console.error("Error fetching user reports:", error);
           res.status(500).json({ error: "Error fetching user reports" });
+        }
+        finally{
+            con.release();
         }
       }); 
       

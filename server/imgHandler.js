@@ -26,20 +26,23 @@ const imgFetch = async (req, res) => {
     const id = req.query.item_id;
     //console.log(id);
     //query database for all img path of that id
+    let con;
     try {
-        const con = await db.getConnection().catch(err => {
+        con = await db.getConnection().catch(err => {
             console.error("DB Connection Error:", err);
             return null;
         });
         const query = `select imgpath from itemsImg where item_id = ?`;
         const result = await con.execute(query, [id]);
         //console.log(result[0].imgpath);
-        con.release();
         res.send(result);
     }
     catch (err){
         console.log("error retreving imgs");
+    }finally{
+        con.release();
     }
+
 
 };
 
@@ -57,8 +60,9 @@ const imgupload = async (req, res) =>{//handles img upload from client, change 5
     //storing of the img
     const filepath = req.files.map(file => 'http://128.6.60.7:8080/img/' + file.filename);
     console.log("img path: ", filepath);
+    let con;
     try{
-        const con = await db.getConnection().catch(err => {
+        con = await db.getConnection().catch(err => {
             console.error("DB Connection Error:", err);
             return null;
         });
@@ -76,6 +80,8 @@ const imgupload = async (req, res) =>{//handles img upload from client, change 5
         con.release();
     }catch (err){
         return res.send("error during img upload");
+    }finally{
+        con.release();
     }
     return res.send("img upload successful");   
 };
