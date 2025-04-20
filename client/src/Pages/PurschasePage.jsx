@@ -116,7 +116,7 @@ useEffect(() => {
     <div className="purchase-page">
       
      <div className='main-item'>
-        <img src={Logo} alt={title} className="item-image" />
+        <img src={images == null ? Logo : images} alt={title} className="item-image" />
         <div className='item-info'>
             <h1>{title}</h1>
             <p>{description}</p>

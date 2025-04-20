@@ -74,7 +74,7 @@ function Confirm({isOpen, onClose, title, price, item_id}) {
         <div className='win-header'><div className='win-title'>{title}</div></div>
         <div className='Buyer'><div className='heading'>Buyer</div><div className='win-user'>{username}</div></div>
         <div className='Pay-with'><div className='heading'>Pay With</div><div className='win-payWith'>Default</div></div>
-        <div className='Total'><div className='heading'>Total</div><div className='win-price'>{price * 0.0625}</div></div>
+        <div className='Total'><div className='heading'>Total</div><div className='win-price'>{price * 1.0625}</div></div>
         <div className='win-footer'><div className='disclamier'>By placing this order, you agree to TradeLink's terms and conditions</div><button className='buy-btn' onClick={buy_now}>Buy Now</button></div>
     </div>
     </div>

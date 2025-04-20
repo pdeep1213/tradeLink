@@ -85,10 +85,10 @@ function ItemCard({
       const data = await response.json();
       if (response.ok) {
         console.log('Item removed successfully');
-        refreshItems();
       } else {
         console.error('Failed to remove item:', data.message);
       }
+      refreshItems();
     } catch (error) {
       console.error('Error removing item:', error);
     }
@@ -132,6 +132,8 @@ function ItemCard({
       const data = await response.json();
       if (response.ok) {
         console.log('Item reported successfully:', data);
+        alert("Report successful!");
+        refreshItems();
       } else {
         console.error('Failed to report item:', data.message);
       }
@@ -206,7 +208,7 @@ function ItemCard({
       <img src={images || Logo} alt={title} className="item-image" />
       {(!user && uid) && (
         <div className="menu-container">
-          <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>&#x22EE;</div>
+          <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>...</div>
           {menuOpen && (
             <div className="dropdown-menu">
               <button className='report' onClick={report_req}>Report</button>

@@ -320,7 +320,7 @@ const process_refund = async (req, res) => {
         con = await db.getConnection();
         //Delete from Transaction 
         const deleteQuery = `DELETE FROM Transactions WHERE itemID = ?`;
-        let result = await con.query(deleteQuery, [item_id]);
+        const result = await con.query(deleteQuery, [item_id]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Transaction not found or already refunded." });

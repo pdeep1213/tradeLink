@@ -30,7 +30,7 @@ function UserEarnings({uid}) {
   
     return (
         <div className="ue-container">
-        <h2 className="heading">Earnings Summary</h2>
+        <h2 className="ue-heading">Earnings Summary</h2>
       
         <div className="stats-container">
           <div className="stat-card">

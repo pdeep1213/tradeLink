@@ -23,6 +23,7 @@ const ItemListPage = ({ userRole, profile, filters }) => {
                     });
                     if (img.ok) {
                         const imgData = await img.json();
+                        console.log(imgData);
                         return {
                             ...item,
                             img: imgData.length > 0 ? imgData[0].imgpath : null,
@@ -53,16 +54,17 @@ const ItemListPage = ({ userRole, profile, filters }) => {
             });
             const result = await response.json();
             if (!result.success) throw new Error("Filtering failed");
-
             const enrichedItems = await Promise.all(result.data.map(async (item) => {
                 try {
                     const imgRes = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, { method: "POST" });
+                    
                     const imgData = imgRes.ok ? await imgRes.json() : [];
                     return { ...item, img: imgData[0]?.imgpath || null, wished: item.wished === 1 };
                 } catch {
                     return { ...item, img: null, wished: item.wished === 1 };
                 }
             }));
+            console.log(enrichedItems);
             return enrichedItems;
         }
     };
@@ -80,7 +82,7 @@ const ItemListPage = ({ userRole, profile, filters }) => {
                         <p>Loading items...</p>
                     ) : isError ? (
                         <p>Error fetching items: {error.message}</p>
-                    ) : items?.length > 0 ? (
+                    ) : items?.length > 0 ? (   
                         items.map(item => (
                             <ItemCard
                                 key={item.item_id}
@@ -95,7 +97,7 @@ const ItemListPage = ({ userRole, profile, filters }) => {
                             />
                         ))
                     ) : (
-                        <p>No items found.</p>
+                        <p className="popup-message">No items found.</p>
                     )}
                 </div>
             </div>
