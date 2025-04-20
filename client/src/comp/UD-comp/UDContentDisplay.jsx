@@ -7,6 +7,8 @@ import Wishlist from '../../Pages/Wishlist';
 import AdminReport from './AdminReport';
 import UserReport from './UserReport';
 import ItemReport from './ItemReport'; 
+import MyPurschases from './MyPurschases';
+import UserEarnings from './UserEarnings';
 
 function UDContentDisplay({ activeButton, profile }) {
   if (!profile) {
@@ -31,9 +33,9 @@ function UDContentDisplay({ activeButton, profile }) {
     userProfile: <UserHome profile={profile} />,
     userSettings: <h3>User Settings Content</h3>,
     userWishlist: <Wishlist />,
-    userEarnings: <h3>User Earnings Content</h3>,
+    userEarnings: <UserEarnings uid={profile.uid}></UserEarnings>,
     userListings: <UserListing></UserListing>,
-    userPurschase : <h3>My Purschases</h3>,
+    userPurschase : <MyPurschases profile={profile}></MyPurschases>,
     userPayment: <h3>User Payment Info Content</h3>,
   };
     console.log("Admin? ", isAdmin);

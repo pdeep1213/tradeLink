@@ -86,7 +86,8 @@
 
 .remove,
 .unlist,
-.list {
+.list,
+.refund {
   flex: 1;
   padding: 10px;
   color: white;
@@ -96,7 +97,9 @@
   font-size: 14px;
   transition: background 0.2s ease-in-out;
 }
-
+.refund{
+  background-color: #333;
+}
 .remove {
   background-color: #b22222;
 }
@@ -111,7 +114,8 @@
 
 .remove:hover,
 .unlist:hover,
-.list:hover {
+.list:hover,
+.refund:hover {
   filter: brightness(1.1);
 }
 

@@ -47,6 +47,7 @@ function UserListing() {
               price={price}
               category={category}
               user={true}
+              type={'User'}
               instock={instock}
               refreshItems={refreshItems}
             />

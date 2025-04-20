@@ -11,7 +11,8 @@ const {upload, imgFetch, imgupload} = require('./imgHandler.js');
 const {
     uploaditem, removeItem, listItem, sendlistGuest, 
     sendlist, reportitem, sellerID, 
-    getAllCategory, updateitemrating
+    getAllCategory, updateitemrating, getMyPurchases,
+    process_refund
 } = require('./itemHandler.js');
 const {
     profile, wishlist_uid, wishlist_add, 
@@ -19,7 +20,7 @@ const {
     uploadprofile, updateProfileInfo, deleteProfileImage
 } = require('./profileHandler.js');
 const {sendMessage, getMessages, emitMessage, getChats, updateStatus} = require('./MessageHandler.js');
-const {transaction} = require('./transaction.js')
+const {transaction, earnings} = require('./transaction.js')
 const {filteritem,filterLocation} = require('./returnHandler.js');
 const cors = require('cors');
 const path = require('path');
@@ -46,6 +47,9 @@ const jwt_token = process.env.JWTOKEN;
 //------------------------------------------------------------
 //for buying item
 app.post('/transaction', transaction);
+
+//for getting earning Stats
+app.get('/earnings/:uid', earnings);
 //------------------------------------------------------------
 
 
@@ -99,6 +103,12 @@ app.post('/report_item', reportitem);
 
 //in itemHandler to get uid of seller
 app.post('/sellerID', sellerID);
+
+//in itemHandler to get Purchases of a user
+app.get('/send_Purschases/:uid', getMyPurchases);
+
+//in itemHandler to process a refund
+app.post('/process_refund', process_refund);
 //------------------------------------------------------------
 
 //------------------------------------------------------------

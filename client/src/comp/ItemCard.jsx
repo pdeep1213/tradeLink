@@ -12,6 +12,7 @@ function ItemCard({
   category,
   images,
   user,
+  type,
   instock,
   refreshItems,
   wished: wishedProp
@@ -152,6 +153,54 @@ function ItemCard({
     4: { name: 'Others', color: '#808080' },
   };
 
+  //
+  const onRefund = async () => {
+    try {
+      const response = await fetch('http://128.6.60.7:8080/process_refund', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ item_id }),
+        credentials: 'include'
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        refreshItems();
+        console.log("Refund successful:", data.message);
+        // Optionally update state to remove refunded item
+      } else {
+        console.error("Refund failed:", data.error || data.message);
+      }
+    } catch (error) {
+      console.error("Error processing refund:", error);
+    }
+  }
+  //Buttons
+  const renderButtons = () => {
+    switch (type) {
+      case 'User':
+        return (
+          <>
+            <button className="remove" onClick={remove_btn}>Remove</button>
+            <button className={listed ? 'unlist' : 'list'} onClick={toggleListing}>
+              {listed ? 'Unlist' : 'List'}
+            </button>
+          </>
+        );
+      case 'Buyer':
+        return (
+          <button className="refund" onClick={onRefund}>Refund</button>
+        );
+      default:
+        return (
+          <button className="add-to-cart" onClick={purchase_click}>Purchase</button>
+        );
+    }
+  };
+
   return (
     <div className="item-card">
       <img src={images || Logo} alt={title} className="item-image" />
@@ -182,18 +231,10 @@ function ItemCard({
             {categories[category]?.name || 'Unknown'}
           </span>
         </div>
-        {user ? (
-          <div className="btns">
-            <button className="remove" onClick={remove_btn}>Remove</button>
-            <button className={listed ? 'unlist' : 'list'} onClick={toggleListing}>
-              {listed ? 'Unlist' : 'List'}
-            </button>
-          </div>
-        ) : (
-          <div className="btns-main">
-          <button className="add-to-cart" onClick={purchase_click}>Purchase</button>
-          </div>
-        )}
+
+        <div className="btns">
+        {renderButtons()}
+         </div>
       </div>
     </div>
   );

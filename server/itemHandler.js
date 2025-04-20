@@ -274,6 +274,80 @@ const updateitemrating = async (req, res) => {
     }
 };
 
+const getMyPurchases = async (req, res) => {
+    const { uid } = req.params;
+    let con;
+
+    try {
+        con = await db.getConnection();
+
+        // Step 1: Get all purchases for this user
+        const purchaseQuery = `SELECT * FROM Transactions WHERE buyerID = ?`;
+        let result = await con.query(purchaseQuery, [uid]);
+        let purchases = Array.isArray(result) ? result : [];
+
+        if (purchases.length === 0) {
+            return res.status(200).json([]); // no purchases
+        }
+
+        // Step 2: Extract itemIDs and ensure they are unique
+        const itemIds = [...new Set(purchases.map(p => parseInt(p.itemID)).filter(id => !isNaN(id)))];
+
+        if (itemIds.length === 0) {
+            return res.status(200).json(purchases); // no valid itemIDs to fetch
+        }
+
+        // Step 3: Fetch item details
+        const itemQuery = `SELECT * FROM items WHERE item_id IN (${itemIds.map(() => '?').join(',')})`;
+        const items = await con.query(itemQuery, itemIds);
+
+
+        res.status(200).json(items);
+
+    } catch (err) {
+        console.error("Error in getMyPurchasesWithItems:", err);
+        res.status(500).json({ error: "Failed to fetch purchases and item details" });
+    } finally {
+        if (con) con.release();
+    }
+};
+
+const process_refund = async (req, res) => {
+    const { item_id } = req.body;
+    let con;
+    console.log(item_id);
+    try {
+        con = await db.getConnection();
+        //Delete from Transaction 
+        const deleteQuery = `DELETE FROM Transactions WHERE itemID = ?`;
+        let result = await con.query(deleteQuery, [item_id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Transaction not found or already refunded." });
+        }
+        
+        // Get item seller (uid from Item table)
+        const sellerQuery = `SELECT uid FROM items WHERE item_id = ?`;
+        const sellerRows = await con.query(sellerQuery, [item_id]);
+
+        console.log(sellerRows);
+        const seller = sellerRows[0].uid; 
+
+        //Send a notification
+        const message = `Your item with ID ${item_id} has been refunded.`;
+        const messageQuery = `INSERT INTO Messages (sender_id, receiver_id, content, timestamp) VALUES (?, ?, ?, NOW())`;
+        result = await con.query(messageQuery,['0',seller,message])
+
+        res.status(200).json({ message: "Refund processed successfully." });
+
+    } catch (err) {
+        console.error("Error processing refund:", err);
+        res.status(500).json({ error: "Failed to process refund." });
+    } finally {
+        if (con) con.release();
+    }
+};
+
 module.exports = {
     uploaditem,
     removeItem,
@@ -283,5 +357,7 @@ module.exports = {
     reportitem,
     sellerID,
     getAllCategory,
-    updateitemrating
+    updateitemrating,
+    getMyPurchases,
+    process_refund
 };
