@@ -469,6 +469,68 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
             con.release();
         }
       }); 
+
+      app.get('/trending', async (req, res) => {
+        let con;
+        try {
+          con = await db.getConnection();
+          const query = `
+            SELECT * FROM items 
+            WHERE instock > 0
+              AND report = 0
+            ORDER BY view_count DESC 
+            LIMIT 10;
+          `;
+          const result = await con.query(query);
+          res.status(200).json(result);
+        } catch (err) {
+          console.error("Error fetching trending items:", err);
+          res.status(500).json({ error: "Error fetching trending items" });
+        } finally {
+          if (con) con.release();
+        }
+      });
+        
+      app.get('/recent', async (req, res) => {
+        let con;
+        try {
+          con = await db.getConnection();
+          const query = `
+            SELECT * FROM items 
+            WHERE created_at >= NOW() - INTERVAL 7 DAY 
+              AND instock > 0
+              AND report = 0
+            ORDER BY created_at DESC;
+          `;
+          const result = await con.query(query);
+          res.status(200).json(result);
+        } catch (err) {
+          console.error("Error fetching recent items:", err);
+          res.status(500).json({ error: "Error fetching recent items" });
+        } finally {
+          if (con) con.release();
+        }
+      });  
+
+      app.post('/view_item', async (req, res) => {
+        const { item_id } = req.body;
+        if (!item_id) {
+          return res.status(400).json({ error: "Item ID is required" });
+        }
+      
+        let con;
+        try {
+          con = await db.getConnection();
+          const query = `UPDATE items SET view_count = view_count + 1 WHERE item_id = ?`;
+          await con.query(query, [item_id]);
+          res.status(200).json({ success: true });
+        } catch (err) {
+          console.error("Error updating view count:", err);
+          res.status(500).json({ error: "Failed to update view count" });
+        } finally {
+          if (con) con.release();
+        }
+      });      
       
 const server = app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
 const io = socketIo(server, { cors: corsOption }); 

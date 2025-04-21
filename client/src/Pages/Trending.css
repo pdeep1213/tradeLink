@@ -1,0 +1,20 @@
+.trending-page {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.trending-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #ffcc00;
+  text-align: center;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.trending-items-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}

@@ -15,16 +15,16 @@ function ItemCard({
   type,
   instock,
   refreshItems,
-  wished: wishedProp
+  wished: wishedProp = false
 }) {
   const [listed, setListed] = useState(instock === 1);
-  const [wished, setWished] = useState(wishedProp || false);
+  const [wished, setWished] = useState(wishedProp);
   const [uid, setUid] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setWished(wishedProp || false);
+    setWished(!!wishedProp);
   }, [wishedProp]);
 
   useEffect(() => {
@@ -33,26 +33,26 @@ function ItemCard({
         const response = await fetch("http://128.6.60.7:8080/profile", {
           credentials: 'include'
         });
-        if (!response.ok) {
-     //     navigate("/Login");
-          return;
-        }
+        if (!response.ok) return;
         const data = await response.json();
         setUid(data.uid);
       } catch (err) {
         console.error("Error fetching profile:", err);
-//        navigate("/Login");
       }
     };
     getUID();
   }, []);
 
-  const toggleWishlist = async () => {
-    if (!uid) {
- //     navigate("/Login");
-      return;
-    }
+  const handleViewClick = () => {
+    fetch("http://128.6.60.7:8080/view_item", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ item_id }),
+    }).catch((err) => console.error("View count update failed:", err));
+  };
 
+  const toggleWishlist = async () => {
+    if (!uid) return;
     const endpoint = wished ? 'wishlist/remove' : 'wishlist/add';
 
     try {
@@ -63,7 +63,6 @@ function ItemCard({
       });
 
       const result = await response.json();
-
       if (response.ok) {
         setWished(!wished);
         console.log(`✅ Wishlist ${wished ? 'removed' : 'added'}:`, result);
@@ -83,11 +82,8 @@ function ItemCard({
         body: JSON.stringify({ item_id }),
       });
       const data = await response.json();
-      if (response.ok) {
-        console.log('Item removed successfully');
-      } else {
-        console.error('Failed to remove item:', data.message);
-      }
+      if (response.ok) console.log('Item removed successfully');
+      else console.error('Failed to remove item:', data.message);
       refreshItems();
     } catch (error) {
       console.error('Error removing item:', error);
@@ -128,7 +124,6 @@ function ItemCard({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ item_id }),
       });
-
       const data = await response.json();
       if (response.ok) {
         console.log('Item reported successfully:', data);
@@ -148,6 +143,26 @@ function ItemCard({
     });
   };
 
+  const onRefund = async () => {
+    try {
+      const response = await fetch('http://128.6.60.7:8080/process_refund', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ item_id }),
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (response.ok) {
+        refreshItems();
+        console.log("Refund successful:", data.message);
+      } else {
+        console.error("Refund failed:", data.error || data.message);
+      }
+    } catch (error) {
+      console.error("Error processing refund:", error);
+    }
+  };
+
   const categories = {
     1: { name: 'Electronics', color: '#00008B' },
     2: { name: 'Furniture', color: '#5D4037' },
@@ -155,63 +170,37 @@ function ItemCard({
     4: { name: 'Others', color: '#808080' },
   };
 
-  //
-  const onRefund = async () => {
-    try {
-      const response = await fetch('http://128.6.60.7:8080/process_refund', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ item_id }),
-        credentials: 'include'
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok) {
-        refreshItems();
-        console.log("Refund successful:", data.message);
-        // Optionally update state to remove refunded item
-      } else {
-        console.error("Refund failed:", data.error || data.message);
-      }
-    } catch (error) {
-      console.error("Error processing refund:", error);
-    }
-  }
-  //Buttons
   const renderButtons = () => {
     switch (type) {
       case 'User':
         return (
           <>
-            <button className="remove" onClick={remove_btn}>Remove</button>
-            <button className={listed ? 'unlist' : 'list'} onClick={toggleListing}>
+            <button className="remove" onClick={(e) => { e.stopPropagation(); remove_btn(); }}>Remove</button>
+            <button className={listed ? 'unlist' : 'list'} onClick={(e) => { e.stopPropagation(); toggleListing(); }}>
               {listed ? 'Unlist' : 'List'}
             </button>
           </>
         );
       case 'Buyer':
         return (
-          <button className="refund" onClick={onRefund}>Refund</button>
+          <button className="refund" onClick={(e) => { e.stopPropagation(); onRefund(); }}>Refund</button>
         );
       default:
         return (
-          <button className="add-to-cart" onClick={purchase_click}>Purchase</button>
+          <button className="add-to-cart" onClick={(e) => { e.stopPropagation(); purchase_click(); }}>Purchase</button>
         );
     }
   };
 
   return (
-    <div className="item-card">
+    <div className="item-card" onClick={handleViewClick}>
       <img src={images || Logo} alt={title} className="item-image" />
       {(!user && uid) && (
         <div className="menu-container">
-          <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>...</div>
+          <div className="menu-icon" onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}>...</div>
           {menuOpen && (
             <div className="dropdown-menu">
-              <button className='report' onClick={report_req}>Report</button>
+              <button className='report' onClick={(e) => { e.stopPropagation(); report_req(); }}>Report</button>
             </div>
           )}
         </div>
@@ -221,7 +210,10 @@ function ItemCard({
         <h2 className="item-title">
           {title}
           {!user && uid && (
-            <span onClick={toggleWishlist} style={{ cursor: 'pointer', float: 'right' }}>
+            <span className="wishlist-icon" onClick={(e) => {
+              e.stopPropagation();
+              toggleWishlist();
+            }}>
               {wished ? <FaHeart color="red" /> : <FaRegHeart color="gray" />}
             </span>
           )}
@@ -233,10 +225,9 @@ function ItemCard({
             {categories[category]?.name || 'Unknown'}
           </span>
         </div>
-
         <div className="btns">
-        {renderButtons()}
-         </div>
+          {renderButtons()}
+        </div>
       </div>
     </div>
   );
