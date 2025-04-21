@@ -16,28 +16,8 @@ const Navbar = ({ userRole, userUsername, setUnreadCount}) => {
   const [unread, setUnread] = useState(0);
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
-  const toggleNotif = () => setNotifOpen(!isNotifOpen);
   
 
-    useEffect(() => {
-    if (!userUsername) return;
-
-    const socket = io("http://128.6.60.7:8080", { transports: ["websocket"] });
-
-    socket.on(`new-notification:${userUsername}`, () => {
-      setUnread((prevUnread) => {
-        const newUnread = prevUnread + 1;
-        if (setUnreadCount) {
-          setUnreadCount(newUnread); 
-        }
-        return newUnread;
-      });
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [userUsername, setUnreadCount]); 
 
  const logout = async () => {
         try{
@@ -62,28 +42,6 @@ const Navbar = ({ userRole, userUsername, setUnreadCount}) => {
         </>
       ) : (
         <>
-          <span className="shopping-cart-icon material-symbols-outlined">shopping_cart</span>
-          <span className="material-symbols-outlined noti-icon" role="button" tabIndex="0" onClick={toggleNotif} >
-            notifications
-            {unread > 0 && (
-              <span className="badge">{unread}</span>
-            )}
-          </span>
-          {isNotifOpen && (
-            <div className="notification-dropdown">
-              {unread > 0 ? (
-                <div className="notification-item">
-                  <ul>
-                    <li>New message from Seller XYZ</li>
-                    <li>New message from Seller ABC</li>
-                  </ul>
-                </div>
-              ) : (
-                <div className="no-notifications">No new notifications</div>
-              )}
-            </div>
-          )} 
-          <div className="vertical-line"></div>
           <span className="Uname">{userUsername}</span>
           <div className="dropdown">
             <img

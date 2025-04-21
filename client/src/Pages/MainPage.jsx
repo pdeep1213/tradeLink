@@ -39,7 +39,6 @@ const MainPage = () => {
 
                 if (!response.ok) {
                     console.error("Failed to fetch profile:", response.status, response.statusText);
-                    setUserRole("guest");
                     return;
                 }
                 else { 
@@ -47,7 +46,6 @@ const MainPage = () => {
                     console.log("Profile data:", data);
                     if (!data || !data.username || !data.email || data.perm === undefined) {
                         console.error("Invalid profile data format:", data);
-                        setUserRole("guest");
                         return;
                     }
                     setProfile(data);
@@ -56,10 +54,8 @@ const MainPage = () => {
                 }
             } catch (error) {
                 console.error("Error fetching profile:", error);
-                setUserRole("guest");
             }
         };
-        if(userRole !== "guest")
             fetchProfile();
     }, []);
     
@@ -112,7 +108,7 @@ const MainPage = () => {
                 selectedCategory={filters.category}
             />
             <ItemListPage 
-                userRole={userRole || "guest"} 
+                userRole={userRole} 
                 profile={profile} 
                 filters={filters}
                /* searchTerm={searchTerm} 

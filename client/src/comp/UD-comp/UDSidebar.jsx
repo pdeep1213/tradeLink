@@ -7,7 +7,7 @@ const Sidebar = ({ profile, setActivePage }) => {
 useEffect(() => {
   if (!profile) return;
   console.log("Profile Loaded:", profile);
-  const role = profile.perm === 1 ? "adminProfile" : "userHome";
+  const role = profile.perm === 1 ? "adminProfile" : "userProfile";
   setActiveButton(role);
   setActivePage(role);
 }, [profile, setActivePage]);
@@ -73,29 +73,11 @@ useEffect(() => {
           <div className="ud-user-button">
             <li>
               <button
-                className={activeButton === "userHome" ? "active" : ""}
-                onClick={() => handleButtonClick("userHome")}
-              >
-                <span className="material-symbols-outlined">overview_key</span>
-                Overview
-              </button>
-            </li>
-            <li>
-              <button
                 className={activeButton === "userProfile" ? "active" : ""}
                 onClick={() => handleButtonClick("userProfile")}
               >
                 <span className="material-symbols-outlined">person_search</span>
                 Profile
-              </button>
-            </li>
-            <li>
-              <button
-                className={activeButton === "userSettings" ? "active" : ""}
-                onClick={() => handleButtonClick("userSettings")}
-              >
-                <span className="material-symbols-outlined">settings</span>
-                Settings
               </button>
             </li>
             <li>

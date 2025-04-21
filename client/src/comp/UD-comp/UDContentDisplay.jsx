@@ -31,7 +31,6 @@ function UDContentDisplay({ activeButton, profile }) {
   const userPages = {
     userHome: <h3>Overview</h3>,
     userProfile: <UserHome profile={profile} />,
-    userSettings: <h3>User Settings Content</h3>,
     userWishlist: <Wishlist />,
     userEarnings: <UserEarnings uid={profile.uid}></UserEarnings>,
     userListings: <UserListing></UserListing>,
