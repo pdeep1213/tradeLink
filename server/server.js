@@ -17,7 +17,7 @@ const {
 const {
     profile, wishlist_uid, wishlist_add, 
     wishlist_remove, info, rateuser, 
-    uploadprofile, updateProfileInfo, deleteProfileImage
+    uploadprofile, updateProfileInfo
 } = require('./profileHandler.js');
 const {sendMessage, getMessages, emitMessage, getChats, updateStatus} = require('./MessageHandler.js');
 const {transaction, earnings} = require('./transaction.js')
@@ -133,7 +133,6 @@ app.post('/rateuser', rateuser);
 //in profileHandler updates user info name, pfp, and description /pfp/ for images
 app.post('/updateProfile', uploadprofile.single('image'), updateProfileInfo); 
 
-app.post('/deletepfimg', deleteProfileImage);
 //------------------------------------------------------------
 
 //Message Handling Start----------------------------------------------------------------------------------------

@@ -267,15 +267,16 @@ async function deleteProfilePic(uid){
         con = await db.getConnection(); 
         const query = 'SELECT pfpics FROM ulogin where uid = (?)'; 
         const [rows] = await con.query(query, [uid]); 
-        var i = "./" + rows.pfpic;
+        let result = [rows].pfpic;
+        var i = "./" + result;
         fs.unlink(i, (err) => {
-            if(err)
-                return res.status(500).json({message: "Issue deleting account profile pic"});
+            if (err)
+                console.log("issue deleteing img");
             else
-                return res.status(200).json({message: "profile pic deleted"});
+                console.log("delete success");
         });
     } catch(err){
-        res.status(500).json({message: "error deleting accoutn profile pic"});
+        console.log("issue deleteing image");
     }finally{
         con.release();
     }
@@ -291,5 +292,4 @@ module.exports = {
     rateuser,
     uploadprofile,
     updateProfileInfo,
-    deleteProfileImage
 };

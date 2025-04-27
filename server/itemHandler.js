@@ -1,6 +1,7 @@
 const db = require('./db');
 const jwt = require('jsonwebtoken');
 const jwt_token = process.env.JWTOKEN;
+const fs = require('fs');
 
 
 const uploaditem = async (req, res) => {
@@ -55,6 +56,8 @@ const removeItem =  async (req, res)=> {
     try {
         con = await db.getConnection();
         const query = "DELETE from items WHERE item_id = ?";
+        console.log("delete item img")
+        await deleteItemPic(item_id);
         const result = await con.query(query, item_id);
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Item not found" });
@@ -65,6 +68,39 @@ const removeItem =  async (req, res)=> {
         res.status(500).json({ message: "Internal server error" });
     }
     finally{
+        con.release();
+    }
+};
+
+async function deleteItemPic(item_id){
+    let con;
+    try{
+        con = await db.getConnection(); 
+        const query = 'SELECT imgpath FROM itemsImg where item_id = (?)'; 
+        const rows = await con.query(query, [item_id]); 
+        if (rows.length > 0){
+            for (const row of rows){
+                let result = row.imgpath;
+                const idex = result.indexOf("/img");
+                result = "." +result.substring(idex);
+                console.log("img path: " +result);
+                fs.access(result, fs.constants.F_OK, (err) =>{
+                    if (err)
+                        console.log("img path doesn't exist");
+                    else{
+                        fs.unlink(result, (err) => {
+                            if (err)
+                                console.log("issue deleteing img");
+                            else
+                                console.log("delete success");
+                        });
+                    }
+                });
+            }
+        }
+    } catch(err){
+        console.log("issue deleteing image");
+    }finally{
         con.release();
     }
 };
