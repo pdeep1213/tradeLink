@@ -232,11 +232,22 @@ app.get('/send_token', async (req, res) => {
     }
 });
 
+async function encryptPassword(password) {
+    const nonce = process.env.HASHNONCE; 
+    const pass = new TextEncoder('utf-8').encode(nonce + password);
+    const hash = await crypto.subtle.digest('SHA-256', pass);
+    const arr = Array.from(new Uint8Array(hash));
+    const hex = arr.map(bytes => ('00' + bytes.toString(16)).slice(-2)).join('');
+    return hex;
+};
+
 ////POST
 app.post('/register', async (req, res) =>{
     const data = req.body;
     console.log("Data: ", data); //test
-
+    const newpassword = await encryptPassword(data.password);
+    data.password = newpassword;
+    console.log("Data update: ", data); //test
     const columns = Object.keys(data).join(', ');
     const value = Object.values(data);
     const question = value.map(() => '?').join(', '); //this is to prevent sql injection attack
@@ -275,9 +286,11 @@ app.post('/register', async (req, res) =>{
 });
 
 
-// **Login Route (No Encryption)**
+// **Login Route**
 app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+    const newpassword = await encryptPassword(password);
+    password = newpassword;
     let con;
     try {
         con = await db.getConnection();
