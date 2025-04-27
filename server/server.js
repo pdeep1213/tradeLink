@@ -510,7 +510,7 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         } finally {
           if (con) con.release();
         }
-      });      
+      });  
 
       app.post('/view_item', async (req, res) => {
         const { item_id } = req.body;
@@ -531,7 +531,6 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
           if (con) con.release();
         }
       });
-      
       
 const server = app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
 const io = socketIo(server, { cors: corsOption }); 

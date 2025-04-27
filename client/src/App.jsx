@@ -12,6 +12,8 @@ import MainPage from "./Pages/MainPage.jsx";
 import Wishlist from "./Pages/Wishlist.jsx";
 import PurchasePage from "./Pages/PurschasePage.jsx";
 import Messages from "./Pages/Messages.jsx";
+import Trending from "./Pages/Trending.jsx";
+import MostRecent from "./Pages/MostRecent.jsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +41,8 @@ const App = () => {
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/purchase/:itemId" element={<PurchasePage />} />
             <Route path="/myMessages" exact Component={Messages} />
+            <Route path="/trending" element={<Trending />} />
+            <Route path="/recent" element={<MostRecent />} />
           </Routes>
         </Router>
       </div>

@@ -35,6 +35,8 @@ const Navbar = ({ userRole, userUsername, setUnreadCount}) => {
 
     const authLinks = !isAuthPage && (
     <>
+    <Link to="/trending" className="nav-link">🔥 Trending</Link>
+    <Link to="/recent" className="nav-link">🆕 Most Recent</Link>
       {!userUsername ? (
         <>
           <Link to="/register" className="login-button">Sign Up</Link>

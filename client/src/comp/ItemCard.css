@@ -35,6 +35,13 @@
   align-items: center;
 }
 
+.wishlist-icon {
+  margin-left: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
 .item-description {
   font-size: 14px;
   color: #666;
@@ -97,9 +104,11 @@
   font-size: 14px;
   transition: background 0.2s ease-in-out;
 }
-.refund{
+
+.refund {
   background-color: #333;
 }
+
 .remove {
   background-color: #b22222;
 }
@@ -163,10 +172,4 @@
 
 .dropdown-menu button:hover {
   background: #f0f0f0;
-}
-
-/* Wishlist heart icon spacing */
-.item-title span {
-  margin-left: auto;
-  margin-top: 2px;
 }
