@@ -211,7 +211,7 @@ const updateProfileInfo = async (req, res) =>{//handles img upload from client
         });
         console.log("testing imgs");
         if (img){
-            console.log("img: ", img);
+            await deleteProfilePic(uid);
             //storing of the img
             const filepath = req.files.map(file => 'http://128.6.60.7:8080/pfp/' + file.filename);
             console.log("img path: ", filepath);
@@ -261,16 +261,9 @@ const updateProfileInfo = async (req, res) =>{//handles img upload from client
 };
 
 //call this before deleteing the profile to help clear up residule img file in the backend
-const deleteProfileImage = async (req, res) => {
-    const token = req.cookies.tradelink
-    if (!token) {
-        return res.status(400).json({ message: "No token provided" });
-    }
+async function deleteProfilePic(uid){
     let con;
     try{
-        const decoded = jwt.verify(token, jwt_token);
-        //console.log("Decoded JWT:", decoded);
-        const uid = decoded.uid;
         con = await db.getConnection(); 
         const query = 'SELECT pfpics FROM ulogin where uid = (?)'; 
         const [rows] = await con.query(query, [uid]); 
