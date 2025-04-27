@@ -216,7 +216,7 @@ const updateProfileInfo = async (req, res) =>{//handles img upload from client
             const filepath = req.files.map(file => 'http://128.6.60.7:8080/pfp/' + file.filename);
             console.log("img path: ", filepath);
             const query = `update ulogin set pfpic=(?) where uid=(?)`; 
-            await con.execute(query, [img, uid], (err, results) => {
+            await con.execute(query, [filepath, uid], (err, results) => {
                 if (err) {
                     console.log("error inserting filepath into user info");
                 }
@@ -229,14 +229,7 @@ const updateProfileInfo = async (req, res) =>{//handles img upload from client
         if(descrip){
             console.log("testing desc: ", descrip);
             const query = `update ulogin set pfdesc=? where uid = ?`;
-            await con.execute(query, [descrip, uid]);//, (err, results) => {
-                /*if (err) {
-                    console.log("error changing description into user info");
-                }
-                else{
-                    console.log("description chagned successfully");
-                }
-            });*/
+            await con.execute(query, [descrip, uid]);
         }
         const name = req.body.username;
         console.log("testing names");
@@ -268,8 +261,9 @@ async function deleteProfilePic(uid){
         const query = 'SELECT pfpics FROM ulogin where uid = (?)'; 
         const [rows] = await con.query(query, [uid]); 
         let result = [rows].pfpic;
-        var i = "./" + result;
-        fs.unlink(i, (err) => {
+        const idex = result.indexOf("/pfp");
+        result = "." + result.substring(idex);
+        fs.unlink(result, (err) => {
             if (err)
                 console.log("issue deleteing img");
             else
