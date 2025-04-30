@@ -20,6 +20,7 @@ function ItemCard({
   const [listed, setListed] = useState(instock === 1);
   const [wished, setWished] = useState(wishedProp);
   const [uid, setUid] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -35,6 +36,7 @@ function ItemCard({
         });
         if (!response.ok) return;
         const data = await response.json();
+        setProfile(data);
         setUid(data.uid);
       } catch (err) {
         console.error("Error fetching profile:", err);
@@ -139,7 +141,7 @@ function ItemCard({
 
   const purchase_click = () => {
     navigate(`/purchase/${item_id}`, {
-      state: { item_id, title, price, images, description, item_id }
+      state: { item_id, title, price, images, description, item_id, profile }
     });
   };
 

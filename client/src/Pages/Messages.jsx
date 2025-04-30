@@ -9,6 +9,7 @@ function Messages() {
     const [name, setName] = useState("");
     const [chats,setChats] = useState([]);
     const [userRole, setUserRole] = useState(location.state?.userRole || null);
+    const [profile, setProfile] = useState();
     const navigate = useNavigate();
     const [unread, setUnread] = useState(0);
 
@@ -33,6 +34,7 @@ function Messages() {
             }
     
             const data = await response.json();
+            setProfile(data);
             setUID(data.uid);
             setName(data.username);
             const role = data.perm === 1 ? "admin" : "user";
@@ -77,7 +79,7 @@ function Messages() {
 
     return (
     <div>
-      <Navbar userRole={userRole} userUsername={name} setUnread={setUnread}></Navbar>  
+      <Navbar></Navbar>  
       <h1>My Chats</h1>
       <MS_SideBar chats={chats} onChatSelect={handleChatClick} />
             {isChatOpen && (

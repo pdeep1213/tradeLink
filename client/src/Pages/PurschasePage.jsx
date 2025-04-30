@@ -6,22 +6,22 @@ import Logo from '../comp/FINANCE.png';
 import ItemCard from '../comp/ItemCard';
 import Confirm from '../comp/Confirm';
 import Chat from '../comp/Chat';
+import Navbar from '../comp/Navbar';
 
 
 function PurchasePage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { title, price, images, description, item_id, myuid } = location.state || {};
+  const { title, price, images, description, item_id, myuid, profile } = location.state || {};
   const [confirm_win, setConfirmWin] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [sellerID, SetID] = useState("");
 
-  useEffect(() => {
-    document.body.style.background = "linear-gradient(to right bottom, #4c7cc4, #aeaddc, #baceeb)";
-    return () => { 
-        document.body.style.background = ""; 
-    };
-}, []); 
+   // Set page background color
+     useEffect(() => {
+         document.body.style.backgroundColor = "#02071d";
+         return () => { document.body.style.backgroundColor = ""; };
+     }, []);
 
 
   //Fetching the current Item
@@ -114,7 +114,7 @@ useEffect(() => {
 
   return (
     <div className="purchase-page">
-      
+    <Navbar ></Navbar>  
      <div className='main-item'>
         <img src={images == null ? Logo : images} alt={title} className="item-image" />
         <div className='item-info'>
@@ -130,9 +130,22 @@ useEffect(() => {
         <Confirm isOpen={confirm_win} onClose={() => setConfirmWin(false)} title={title} price={price} item_id={item_id}></Confirm>
       </div>
       <div className='other-item'>
-        {/*TODO: Add other items to be shown on the bottom of the screen*/} 
-         
-      </div>
+  <h2>Other Items You May Like</h2>
+  <div className="item-list">
+    {items && items.slice(0, 6).map((item, index) => (
+      <ItemCard
+        key={index}
+        title={item.title}
+        price={item.price}
+        img={item.img}
+        description={item.description}
+        item_id={item.item_id}
+        myuid={myuid}
+        profile={profile}
+      />
+    ))}
+  </div>
+</div>
     </div>
   );
 }

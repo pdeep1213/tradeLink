@@ -64,7 +64,7 @@ document.body.style.backgroundImage = "";
 
   return (
     <>
-      <Navbar userRole={userRole} userUsername={userUsername} profile={profile}/>
+      <Navbar/>
 
       <div id="UserDashboard-body">
         {profile && (

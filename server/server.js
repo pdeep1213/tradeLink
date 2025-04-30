@@ -30,6 +30,7 @@ const corsOption = {
 };
 const sgMail = require('@sendgrid/mail');
 const socketIo = require('socket.io');
+const { Console } = require('console');
 require("dotenv").config();
 
 
@@ -197,6 +198,7 @@ app.post('/logout', (req, res) =>{
         expires: new Date(0),
         sameSite: 'Strict'
     });
+    console.log("Deleted the cookie");
     res.send("deleting cookie");
 });
 
