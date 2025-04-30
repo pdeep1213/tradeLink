@@ -7,6 +7,8 @@ import "./MainPage.css";
 import Chat from "../comp/Chat.jsx";
 import FilterSidebar from "../comp/MP-comp/FilterSidebar.jsx";
 
+
+// maps category names to their number for backend
 const CATEGORY_MAPPING = { 
   electronics: 1,
   furnitures: 2,
@@ -14,10 +16,15 @@ const CATEGORY_MAPPING = {
   other: 4
 };
 
+
 const MainPage = () => {
     const location = useLocation();
+    
+    // makes role guest by default, unless otherwise pass through from login
     const [userRole, setUserRole] = useState(location.state?.userRole || "guest");
     const [profile, setProfile] = useState(null);
+   
+    // Store search filters like name, category, location, and price
     const [filters, setFilters] = useState({
         itemname: '',
         category: -1,
@@ -28,6 +35,7 @@ const MainPage = () => {
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [categories, setCategories] = useState([]);
 
+    // Load the user profile from the server
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -48,7 +56,7 @@ const MainPage = () => {
                         console.error("Invalid profile data format:", data);
                         return;
                     }
-                    setProfile(data);
+                    setProfile(data); // Save all profile data(name,UID,description,Pic) to state to be pass down to props
                     const role = data.perm === 1 ? "admin" : "user";
                     setUserRole(role);
                 }
@@ -59,6 +67,8 @@ const MainPage = () => {
             fetchProfile();
     }, []);
     
+
+     // Load item categories from the server
     useEffect(() => {
     const fetchCat = async () => {
       try {
@@ -74,10 +84,13 @@ const MainPage = () => {
     fetchCat();
   }, []);
 
+        // Set page background color
     useEffect(() => {
         document.body.style.backgroundColor = "#02071d";
         return () => { document.body.style.backgroundColor = ""; };
     }, []);
+
+
 
     const handleSearch = (term) => {
         setFilters(prev => ({ ...prev, itemname: term }));
@@ -100,7 +113,7 @@ const MainPage = () => {
 
     return (
         <>
-            <Navbar userRole={userRole} userUsername={profile?.username} />
+            <Navbar userRole={userRole} userUsername={profile?.username} profile={profile}  />
             <SearchBar 
                 onSearch={handleSearch}
                 categories={categories}

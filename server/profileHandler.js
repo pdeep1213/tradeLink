@@ -193,7 +193,8 @@ const storage = multer.diskStorage({
 
 const uploadprofile = multer({storage: storage});
 
-const updateProfileInfo = async (req, res) =>{//handles img upload from client
+const updateProfileInfo = async (req, res) =>{
+    //Handles the updating of user information pertaining to their profile photo, description and username
     const token = req.cookies.tradelink
     if (!token) {
         return res.status(400).json({ message: "No token provided" });
@@ -209,11 +210,13 @@ const updateProfileInfo = async (req, res) =>{//handles img upload from client
             console.error("DB Connection Error:", err);
             return null;
         });
-        console.log("testing imgs");
+        console.log("testing imgs: ", img);
         if (img){
+            console.log("inserting new images");
             await deleteProfilePic(uid);
             //storing of the img
             const filepath = req.files.map(file => 'http://128.6.60.7:8080/pfp/' + file.filename);
+            console.log("updating img filepath");
             console.log("img path: ", filepath);
             const query = `update ulogin set pfpic=(?) where uid=(?)`; 
             await con.execute(query, [filepath, uid], (err, results) => {
@@ -258,9 +261,10 @@ async function deleteProfilePic(uid){
     let con;
     try{
         con = await db.getConnection(); 
-        const query = 'SELECT pfpics FROM ulogin where uid = (?)'; 
-        const [rows] = await con.query(query, [uid]); 
-        let result = [rows].pfpic;
+        const query = 'SELECT pfpic FROM ulogin where uid = (?)'; 
+        const rows = await con.query(query, [uid]); 
+        console.log(rows);
+        let result = JSON.parse(rows[0].pfpic)[0];
         const idex = result.indexOf("/pfp");
         result = "." + result.substring(idex);
         fs.unlink(result, (err) => {

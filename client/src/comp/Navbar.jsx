@@ -2,14 +2,12 @@ import React, { useState, useEffect} from "react";
 import "./Navbar.css";
 import Logo from "./FINANCE.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
 
-const Navbar = ({ userRole, userUsername, setUnreadCount}) => {
-  const location = useLocation();
+const Navbar = ({ userRole, userUsername, profile}) => {
+    const location = useLocation();
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
   const isMain = location.pathname === "/dashboard"; // Placeholder to remove later
 
-  const socket = io("http://128.6.60.7:8080", { transports: ["websocket"] });  
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotifOpen, setNotifOpen] = useState(false);
@@ -17,8 +15,7 @@ const Navbar = ({ userRole, userUsername, setUnreadCount}) => {
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   
-
-
+// when logout is clicked: clears cookies and user data back to landing page.
  const logout = async () => {
         try{
             await fetch("http://128.6.60.7:8080/logout", {
@@ -37,7 +34,9 @@ const Navbar = ({ userRole, userUsername, setUnreadCount}) => {
     <>
     <Link to="/trending" className="nav-link">🔥 Trending</Link>
     <Link to="/recent" className="nav-link">🆕 Most Recent</Link>
-      {!userUsername ? (
+
+{/* Determines what the user sees in the navigation bar, whether signed in or not */}
+        {!userUsername ? (
         <>
           <Link to="/register" className="login-button">Sign Up</Link>
           <Link to="/login" className="lb">Log In</Link>
@@ -46,12 +45,13 @@ const Navbar = ({ userRole, userUsername, setUnreadCount}) => {
         <>
           <span className="Uname">{userUsername}</span>
           <div className="dropdown">
-            <img
-              src={Logo}
-              alt="PIC"
-              className="dropdown-trigger"
-              onClick={toggleDropdown}
-            />
+          <img
+          src={JSON.parse(profile.pfpic) || Logo}   
+          alt="Profile"
+            className="dropdown-trigger"
+               onClick={toggleDropdown}
+                /> 
+          {/* If the user is logged in, they have access to the dropdown user as dashboard chat and the logout button. */}
             {isDropdownOpen && (
               <div className="dropdown-menu-navbar">
                 <div className="mydash-menu">
@@ -75,7 +75,8 @@ const Navbar = ({ userRole, userUsername, setUnreadCount}) => {
   );
 
   return (
-    <header className="header">
+    
+      <header className="header">
       <Link to={userUsername ? "/MainPage" : "/"} className="heading">
         <img src={Logo} className="logo" alt="TradeLink Logo" />
         <span className="title">TradeLink</span>

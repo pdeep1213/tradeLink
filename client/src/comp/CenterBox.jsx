@@ -1,6 +1,9 @@
 import React from 'react';
 import "./CenterBox.css";
 
+
+
+// Displays a section highlighting the main features of the marketplace on landing page
 function CenterBox() {
   return (
   <>

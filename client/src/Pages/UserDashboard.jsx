@@ -13,6 +13,8 @@ const UserDashboard = () => {
   const [activePage, setActivePage] = useState("user");
   const [profile, setProfile] = useState(null);
 
+
+  // Set background color and clean, to avoid overlapping background color 
   useEffect(() => {
     document.body.style.backgroundColor = "#080f25";
    document.body.style.backgroundImage = "none";
@@ -21,6 +23,8 @@ document.body.style.backgroundImage = "";
       };
   }, []);
 
+
+     // Load the user profile from the server
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -42,7 +46,7 @@ document.body.style.backgroundImage = "";
           return;
         }
 
-        setProfile(data);
+        setProfile(data);// Save profile data
 
         const role = data.perm === 1 ? "admin" : "user";
         setUserRole(role); 
@@ -60,7 +64,7 @@ document.body.style.backgroundImage = "";
 
   return (
     <>
-      <Navbar userRole={userRole} userUsername={userUsername} />
+      <Navbar userRole={userRole} userUsername={userUsername} profile={profile}/>
 
       <div id="UserDashboard-body">
         {profile && (

@@ -38,6 +38,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use('/img', express.static(path.join(__dirname, 'img')));
+app.use('/pfp', express.static(path.join(__dirname, 'pfp')));
+
 
 //TODO : Remove the key from server.js
 sgMail.setApiKey(process.env.SGMAIL);
@@ -131,7 +133,7 @@ app.post('/wishlist/remove', wishlist_remove);
 app.post('/rateuser', rateuser);
 
 //in profileHandler updates user info name, pfp, and description /pfp/ for images
-app.post('/updateProfile', uploadprofile.single('image'), updateProfileInfo); 
+app.post('/updateProfile', uploadprofile.array('files',1), updateProfileInfo); 
 
 //------------------------------------------------------------
 

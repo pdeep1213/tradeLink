@@ -2,6 +2,8 @@ import React from 'react';
 import './BrowseButton.css';
 import { Link } from 'react-router-dom';
 
+
+// makes it possible for users who are not signed in to browse as a guest.
 function BrowseButton() {
   return (
     <div className='browse-container'>

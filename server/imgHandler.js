@@ -24,7 +24,6 @@ const upload = multer({storage: storage});
 const imgFetch = async (req, res) => {
     //acquire itemid
     const id = req.query.item_id;
-    //console.log(id);
     //query database for all img path of that id
     let con;
     try {
