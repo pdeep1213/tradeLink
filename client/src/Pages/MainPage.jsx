@@ -42,8 +42,6 @@ const MainPage = () => {
                 const response = await fetch("http://128.6.60.7:8080/profile", {
                     credentials: "include",
                 });
-                console.log("Response status:", response.status);
-                console.log("Response:", response);
 
                 if (!response.ok) {
                     console.error("Failed to fetch profile:", response.status, response.statusText);
@@ -51,7 +49,6 @@ const MainPage = () => {
                 }
                 else { 
                     const data = await response.json();
-                    console.log("Profile data:", data);
                     if (!data || !data.username || !data.email || data.perm === undefined) {
                         console.error("Invalid profile data format:", data);
                         return;

@@ -199,6 +199,7 @@ const updateProfileInfo = async (req, res) =>{
     if (!token) {
         return res.status(400).json({ message: "No token provided" });
     }
+    let retmessage = "";
     let con;
     try{
         const decoded = jwt.verify(token, jwt_token);
@@ -211,7 +212,7 @@ const updateProfileInfo = async (req, res) =>{
             return null;
         });
         console.log("testing imgs: ", img);
-        if (img){
+        if (img.length > 0){
             console.log("inserting new images");
             await deleteProfilePic(uid);
             //storing of the img
@@ -227,12 +228,14 @@ const updateProfileInfo = async (req, res) =>{
                     console.log("img uploaded successfully");
                 }
             });
+            retmessage += "profile pic updated\n";
         }
         const descrip = req.body.description;
         if(descrip){
             console.log("testing desc: ", descrip);
             const query = `update ulogin set pfdesc=? where uid = ?`;
             await con.execute(query, [descrip, uid]);
+            retmessage += "description pic updated\n";
         }
         const name = req.body.username;
         console.log("testing names");
@@ -247,7 +250,9 @@ const updateProfileInfo = async (req, res) =>{
                     console.log("username uploaded successfully");
                 }
             });
+            retmessage += "username updated\n";
         }
+        res.status(200).json({message: retmessage});
     } catch(err) {
         res.status(500).json({message: "issue updating profile"});
        }

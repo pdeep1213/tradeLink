@@ -134,7 +134,7 @@ const ListItem = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="country_code" className="form-label">Country Code:</label>
+          <label htmlFor="country_code" className="form-label">Zip Code:</label>
           <input
             type="number"
             id="country_code"
@@ -142,7 +142,7 @@ const ListItem = () => {
             value={item.country_code}
             onChange={handleChange}
             className="form-input"
-            placeholder="Enter country code"
+            placeholder="Enter zip code"
             required
           />
         </div>
