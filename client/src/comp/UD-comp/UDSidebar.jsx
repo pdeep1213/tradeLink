@@ -6,7 +6,6 @@ const Sidebar = ({ profile, setActivePage }) => {
 
 useEffect(() => {
   if (!profile) return;
-  console.log("Profile Loaded:", profile);
   const role = profile.perm === 1 ? "adminProfile" : "userProfile";
   setActiveButton(role);
   setActivePage(role);

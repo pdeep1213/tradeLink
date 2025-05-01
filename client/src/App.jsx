@@ -47,7 +47,6 @@ const App = () => {
         </Router>
       </div>
 
-      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };

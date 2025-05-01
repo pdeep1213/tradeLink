@@ -113,7 +113,7 @@ const MainPage = () => {
 
     return (
         <>
-            <Navbar userRole={userRole} userUsername={profile?.username} profile={profile}  />
+            <Navbar/>
             <SearchBar 
                 onSearch={handleSearch}
                 categories={categories}

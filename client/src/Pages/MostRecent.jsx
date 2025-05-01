@@ -82,7 +82,7 @@ const MostRecent = () => {
 
   return (
     <>
-      <Navbar userRole={userRole} userUsername={profile?.username} />
+      <Navbar/>
       <h1 style={{ color: "white", textAlign: "center", marginTop: "20px" }}>🆕 Recently Added Items</h1>
       <ItemListPage 
         userRole={userRole || "guest"} 

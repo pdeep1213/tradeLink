@@ -13,22 +13,14 @@ function UserHome({ profile }) {
 const [showPopup, setShowPopup] = useState(false);
     const [profilePicPreview, setProfilePicPreview] = useState(profile.pfpic || test);
 
-useEffect(() => {
     // Fetch profile data when component mounts or when profile is updated
-    //
-console.log(profilePicPreview); 
-
-}, []);
 
 useEffect(() => {
-    console.log(profile.pfpic);
   if (profile.pfpic) {
     const parsedPicArray = JSON.parse(profile.pfpic);
     if (parsedPicArray.length > 0) {
       setProfilePicPreview(parsedPicArray[0]);
-       console.log(parsedPicArray[0]);
     }
-      console.log(parsedPicArray);
   }
 }, [profile.pfpic]);
 

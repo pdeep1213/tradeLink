@@ -3,10 +3,31 @@ import "./Navbar.css";
 import Logo from "./FINANCE.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const Navbar = ({ userRole, userUsername, profile}) => {
-    const location = useLocation();
+const Navbar = () => {
+  const location = useLocation();
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
-  const isMain = location.pathname === "/dashboard"; // Placeholder to remove later
+  const [profile, setProfile] = useState();  
+  const [userUsername, setUname] = useState("");
+
+  const navigate = useNavigate(); // Hook for redirection
+
+  //Get user profile if logged In
+  useEffect(() => {
+      const getUID = async () => {
+        try {
+          const response = await fetch("http://128.6.60.7:8080/profile", {
+            credentials: 'include'
+          });
+          if (!response.ok) return;
+          const data = await response.json();
+          setProfile(data);
+          setUname(data.username);
+        } catch (err) {
+          console.error("Error fetching profile:", err);
+        }
+      };
+      getUID();
+    }, []);
 
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -22,8 +43,8 @@ const Navbar = ({ userRole, userUsername, profile}) => {
                 method: "POST",
                 credentials: 'include',
             });
-            setUserRole(null);
-            window.history.foward(1);
+            
+           navigate('/MainPage');
         }
         catch (err){
             console.log("error logging out");

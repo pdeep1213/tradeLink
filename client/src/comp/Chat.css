@@ -4,6 +4,7 @@
   top: 8vh;
   width: 100vw; /* Adjust based on available space */
   height: 100vh;
+  z-index: 9999;
 }
 
 .chat-window {

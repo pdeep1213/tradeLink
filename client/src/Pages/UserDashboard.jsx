@@ -32,14 +32,12 @@ document.body.style.backgroundImage = "";
           credentials: "include",
         });
 
-        console.log("Response Status:", response.status);
         if (!response.ok) {
           console.error("Failed to fetch profile:", response.status, response.statusText);
           return;
         }
 
         const data = await response.json();
-        console.log("Profile data fetched:", data);
 
         if (!data || !data.username || !data.email || data.perm === undefined) {
           console.error("Invalid profile data format:", data);
@@ -64,7 +62,7 @@ document.body.style.backgroundImage = "";
 
   return (
     <>
-      <Navbar userRole={userRole} userUsername={userUsername} profile={profile}/>
+      <Navbar/>
 
       <div id="UserDashboard-body">
         {profile && (
