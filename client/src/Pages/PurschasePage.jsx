@@ -16,13 +16,19 @@ function PurchasePage() {
   const [confirm_win, setConfirmWin] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [sellerID, SetID] = useState("");
-
+  const [taxTotal, setTaxTotal] = useState(0);
+  const [total, setTotal] = useState(0);
    // Set page background color
      useEffect(() => {
          document.body.style.backgroundColor = "#02071d";
          return () => { document.body.style.backgroundColor = ""; };
      }, []);
-
+    //calculate the tax and total price of the good
+     useEffect(() => {
+         setTaxTotal(Math.ceil((0.0625 * price)*100)/100);
+         const temp = (Math.ceil((0.0625 * price)*100)/100);
+         setTotal(parseFloat(price) + parseFloat(temp));
+     }, []);
 
   //Fetching the current Item
   const fetchSellerID = async () => {
@@ -114,22 +120,40 @@ useEffect(() => {
 
   return (
     <div className="purchase-page">
-    <Navbar ></Navbar>  
-     <div className='main-item'>
-        <img src={images == null ? Logo : images} alt={title} className="item-image" />
-        <div className='item-info'>
-            <h1>{title}</h1>
-            <p>{description}</p>
-            <p className="price">Price: ${price}</p>
+    <Navbar ></Navbar> 
+  <div class = "top-div">
+        <div className='main-item'>
+            <img src={images == null ? Logo : images} alt={title} className="item-image" />
+            <div className='item-info'>
+                <h1>{title}</h1>
+                <p>{description}</p>
+                <p className="price">Price: ${price}</p>
+            </div>
+            <div className="actions">
+                <button className="trade-start" onClick={handleTradeClick}>Initiate Trade</button>
+            </div>
+            <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} receiver_id={sellerID}></Chat>
+            <Confirm isOpen={confirm_win} onClose={() => setConfirmWin(false)} title={title} price={price} item_id={item_id}></Confirm>
         </div>
-        <div className="actions">
-            <button className="buy-now" onClick={() =>setConfirmWin(true)}>Buy Now</button>
-            <button className="trade-start" onClick={handleTradeClick}>Initiate Trade</button>
+      <div id="second-div" >
+        <div class="top-div">
+            <h3 id="subprice"> SubTotal:</h3>
+            <h4 id="subprice2">${price}</h4>
         </div>
-        <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} receiver_id={sellerID}></Chat>
-        <Confirm isOpen={confirm_win} onClose={() => setConfirmWin(false)} title={title} price={price} item_id={item_id}></Confirm>
+        <div class="top-div">
+            <h3 id="subprice">Tax:</h3>
+            <h4 id="subprice2">${taxTotal}</h4>
+        </div>
+      <hr></hr>
+        <div class="top-div">
+            <h3 id="subprice">Total:</h3>
+            <h4 id="subprice2">${total}</h4>
+        </div>
+      {/*TODO change onclick for buy-now to a credit card input screen pass in the item state to the credit card screen*/}
+        <button className="buy-now" onClick={() =>setConfirmWin(true)}>Buy Now</button>
       </div>
-      <div className='other-item'>
+  </div>
+     <div className='other-item'>
   <h2>Other Items You May Like</h2>
   <div className="item-list">
     {items && items.filter(item => item.item_id !== item_id) // Exclude current item

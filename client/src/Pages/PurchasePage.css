@@ -4,6 +4,31 @@ html, body {
   padding: 0;
   
 }
+.top-div {
+    display:inline-block;
+    gap:2;
+}
+#second-div {
+    width:34%;
+    float:right;
+    background: #555555;
+    height: 330px;
+    display:grid;
+    border-radius:1rem; 
+
+}
+#subprice {
+    padding: 1.5rem 0rem 0rem 2rem;
+    text-align:left;
+    float:left;
+}
+#subprice2 {
+    padding: 1.5rem 2rem 0rem 0rem;
+    text-align:right;
+    float:right;
+    right: 100px;
+    color:white
+}
 
 /* Page container */
 .purchase-page {
@@ -17,19 +42,22 @@ html, body {
   display: grid;
   grid-template-columns: 1fr 1.2fr 0.8fr;
   gap: 30px;
-  background: white;
+  background:#555;
   padding: 30px;
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   align-items: center;
+  width: 63%;
+  float: left;
 }
 
 /* Product image */
 .item-image {
-  width: 100%;
-  max-width: 350px;
-  height: auto;
-  object-fit: contain;
+  width: 300px;
+  max-width: 100%;
+  height: 270px;
+  max-height: 200%;
+  object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
@@ -44,17 +72,19 @@ html, body {
 .item-info h1 {
   font-size: 2rem;
   margin: 0;
+  color: white;
 }
 
 .item-info p {
   font-size: 1rem;
   line-height: 1.5;
+color: white;
 }
 
 /* Price styling */
 .price {
   font-weight: bold;
-  color: #2d6cdf;
+  color: #28a745 !important; 
   font-size: 1.2rem;
 }
 
@@ -65,7 +95,19 @@ html, body {
   gap: 15px;
 }
 
-.buy-now, .trade-start {
+.buy-now {
+  width: 50%;
+  font-size: 1rem;
+  margin-left: 26%;
+  margin-bottom: 5%;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.trade-start {
   padding: 12px 18px;
   font-size: 1rem;
   font-weight: 500;
@@ -99,7 +141,7 @@ html, body {
 .other-item h2 {
   font-size: 1.5rem;
   margin-bottom: 20px;
-  color: #444;
+  color: white;
 }
 
 /* Scrollable item list */

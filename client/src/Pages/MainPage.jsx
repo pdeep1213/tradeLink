@@ -6,7 +6,7 @@ import SearchBar from '../comp/MP-comp/SearchBar.jsx';
 import "./MainPage.css";
 import Chat from "../comp/Chat.jsx";
 import FilterSidebar from "../comp/MP-comp/FilterSidebar.jsx";
-
+import CatBox from "../comp/MP-comp/CatBox.jsx";
 
 // maps category names to their number for backend
 const CATEGORY_MAPPING = { 
@@ -83,7 +83,7 @@ const MainPage = () => {
 
         // Set page background color
     useEffect(() => {
-        document.body.style.backgroundColor = "#02071d";
+        document.body.style.backgroundColor = "rgb(38,38,38)";
         return () => { document.body.style.backgroundColor = ""; };
     }, []);
 
@@ -117,6 +117,7 @@ const MainPage = () => {
                 onCategoryChange={handleCategoryChange}
                 selectedCategory={filters.category}
             />
+            <CatBox/>
             <ItemListPage 
                 userRole={userRole} 
                 profile={profile} 
