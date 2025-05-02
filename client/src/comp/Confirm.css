@@ -1,9 +1,9 @@
 .confirm-overlay {
     position: fixed;
-    bottom: 0%;
+    bottom: 5%;
     left: 25%;
     width: 50%;
-    height: 80%;
+    height: 90%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -93,3 +93,58 @@
     color: #555;
     max-width: 60%;
 }
+
+.Card-info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 20px;
+    background: #fafafa;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+  }
+  
+  .Card-info-container input {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    font-size: 1rem;
+    border: 1.5px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .Card-info-container input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    outline: none;
+  }
+  
+  .Card-name,
+  .Card-num,
+  .Card-exp,
+  .Card-cvc {
+    display: flex;
+    flex-direction: column;
+  }
+  .Card-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-end; /* Optional: aligns the button to the right inside flex container */
+    margin-top: 1rem;
+  }
+  
+  .Card-btn:hover {
+    background-color: #0056b3;
+  }
+  .Card-btn:disabled {
+       background-color: #ccc;
+       cursor: not-allowed;
+    }  
+  

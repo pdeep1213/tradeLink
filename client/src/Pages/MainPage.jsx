@@ -58,6 +58,7 @@ const MainPage = () => {
                     setUserRole(role);
                 }
             } catch (error) {
+                setUserRole("guest"); 
                 console.error("Error fetching profile:", error);
             }
         };

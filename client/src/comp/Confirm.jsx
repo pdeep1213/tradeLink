@@ -9,7 +9,11 @@ function Confirm({isOpen, onClose, title, price, item_id}) {
     const [username, SetUserName] = useState("");
     const [uid, setUid] = useState("");
     const navigate = useNavigate();
-
+    const [cardnum, setCardNum] = useState("");
+    const [cardExp, setCardExp] = useState("");
+    const [cardCVC, setCardCVC] = useState("");
+    const [cardName, setCardName] = useState("");
+    const [cardSet, setCardSet] = useState(false);
   //Get Buyers Profile
   useEffect(() => {
           const fetchProfile = async () => {
@@ -62,6 +66,62 @@ function Confirm({isOpen, onClose, title, price, item_id}) {
     }
   }    
 
+  // Luhn Algorithm to validate card number
+const checkNumber = (num) => {
+  if (!/^\d+$/.test(num)) return false;
+
+  let sum = 0;
+  let shouldDouble = false;
+
+  // Process digits from right to left
+  for (let i = num.length - 1; i >= 0; i--) {
+    let digit = parseInt(num[i]);
+
+    if (shouldDouble) {
+      digit *= 2;
+      if (digit > 9) digit -= 9;
+    }
+
+    sum += digit;
+    shouldDouble = !shouldDouble;
+  }
+
+  return sum % 10 === 0;
+};
+
+  //Check if card is valid
+  const checkValidCard = async () => {
+    const cardNumRegex = /^\d{16}$/;
+    const cardExpRegex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
+    const cardCVCRegex = /^\d{3}$/;
+    if (!cardNumRegex.test(cardnum) && !checkNumber(cardnum)) {
+      alert("Invalid card number");
+      return;
+    }
+    if (!cardExpRegex.test(cardExp)) {
+      alert("Invalid expiration date");
+      return;
+    }
+    if (!cardCVCRegex.test(cardCVC)) {
+      alert("Invalid CVC");
+      return;
+    }
+    const currentDate = new Date();
+    const [expMonth, expYear] = cardExp.split("/");
+    const expDate = new Date(`20${expYear}`, expMonth - 1);
+    if (expDate < currentDate) {
+      alert("Card has expired");
+      return;
+    }
+    const cardData = {
+      cardnum: cardnum,
+      cardExp: cardExp,
+      cardCVC: cardCVC,
+      cardName: cardName,
+    };
+    setCardSet(true);
+  }
+
   return (
     <div className='confirm-overlay'>
     <div className='confirm-window'>
@@ -73,7 +133,18 @@ function Confirm({isOpen, onClose, title, price, item_id}) {
         </button>
         <div className='win-header'><div className='win-title'>{title}</div></div>
         <div className='Buyer'><div className='heading'>Buyer</div><div className='win-user'>{username}</div></div>
-        <div className='Pay-with'><div className='heading'>Pay With</div><div className='win-payWith'>Default</div></div>
+        {!cardSet && (
+          <div className="Card-info-container">
+          <div className='Card-name'><input type="text" placeholder="Name on Card" value={cardName} onChange={(e) => setCardName(e.target.value)} /></div>
+          <div className='Card-num'><input type="text" placeholder="Card Number" value={cardnum} onChange={(e) => setCardNum(e.target.value)} /></div>
+          <div className='Card-exp'><input type="text" placeholder="MM/YY" value={cardExp} onChange={(e) => setCardExp(e.target.value)} /></div>
+          <div className='Card-cvc'><input type="text" placeholder="CVC" value={cardCVC} onChange={(e) => setCardCVC(e.target.value)} /></div>
+          <button className='Card-btn' onClick={() => checkValidCard()} disabled={!cardName || !cardnum || !cardExp || !cardCVC}>Save Card</button>
+          </div>
+        )}
+        <div className='Pay-with'><div className='heading'>Pay With</div><div className='win-payWith'>{cardSet ? `${cardName}  ****-${cardnum.substring(cardnum.length-4,cardnum.length)}` : "..."}</div></div>
+        
+        
         <div className='Total'><div className='heading'>Total</div><div className='win-price'>{price * 1.0625}</div></div>
         <div className='win-footer'><div className='disclamier'>By placing this order, you agree to TradeLink's terms and conditions</div><button className='buy-btn' onClick={buy_now}>Buy Now</button></div>
     </div>

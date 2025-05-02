@@ -137,7 +137,7 @@ function ItemCard({
   };
 
   const purchase_click = () => {
-    if(!null) navigate('/login');
+    if(!uid) navigate('/login');
     else {
     navigate(`/purchase/${item.item_id}`, {
       state: { item_id : item.item_id, title : item.itemname, price : item.price, images : item.img, description : item.description, profile }
