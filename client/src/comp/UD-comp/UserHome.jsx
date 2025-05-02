@@ -32,7 +32,7 @@ const click = async () => {
   formData.append('description', valDes);
     formData.append('files', profilePic);
 
-    fetch('http://128.6.60.7:8080/updateProfile', { 
+   await fetch('http://128.6.60.7:8080/updateProfile', { 
      credentials: "include",
      method: 'POST',
     body: formData
@@ -40,6 +40,7 @@ const click = async () => {
   .catch(error => {
     console.error('Error saving profile:', error);
   });
+  location.reload();
 };
 
 // when click: option to set new profile picture which is set here

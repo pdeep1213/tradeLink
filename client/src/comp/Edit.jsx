@@ -63,7 +63,7 @@ function Edit({
     <form onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="title">Title</label>
-        <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <input classname="inputEdit" id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
       </div>
 
       <div className="form-group">
@@ -73,7 +73,7 @@ function Edit({
 
       <div className="form-group">
         <label htmlFor="price">Price</label>
-        <input id="price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
+        <input classname="inputEdit" id="price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
       </div>
 
       <div className="form-group">

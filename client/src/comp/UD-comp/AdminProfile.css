@@ -22,7 +22,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;  
-  width: 100%;
+  width:95%;
 }
 
 .profile-picture-container {

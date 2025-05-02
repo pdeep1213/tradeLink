@@ -53,9 +53,6 @@ const Navbar = () => {
 
     const authLinks = !isAuthPage && (
     <>
-    <Link to="/trending" className="nav-link">🔥 Trending</Link>
-    <Link to="/recent" className="nav-link">🆕 Most Recent</Link>
-
 {/* Determines what the user sees in the navigation bar, whether signed in or not */}
         {!userUsername ? (
         <>
