@@ -31,9 +31,9 @@ const uploaditem = async (req, res) => {
         let query = `insert into items (uid, ${columns}) values (${question})`;
         con = await db.getConnection();
         var result = await con.query(query, value);
-        console.log("Itemlist result: ", result);
+//        console.log("Itemlist result: ", result);
         const item_id = Number(result.insertId);
-        console.log("item id: ", item_id);
+//        console.log("item id: ", item_id);
         query = "insert into rating (item_id) values (?)";
         var result = await con.query(query, item_id);
         res.status(200).json({ message: 'Item Inserted Successfully', item_id});

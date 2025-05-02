@@ -5,7 +5,7 @@ const db = require('./db');
 const filteritem = async (req, res) => {
     let con = await db.getConnection();
     const data = req.body;
-    console.log(data);
+//    console.log(data);
     // Filter by category if provided
     const categoryQuery = data.category !== -1 ? `AND category = ${data.category} ` : "";
 
@@ -22,7 +22,7 @@ const filteritem = async (req, res) => {
     const itemnameQuery = data.itemname !== "" ? `AND itemname LIKE "%${data.itemname}%" ` : "";
 
     // Filter by county_code if provided
-    const countyCodeQuery = data.county_code ? `AND county_code = ${data.county_code} ` : "";
+    const countyCodeQuery = data.county_code ? `AND country_code = ${data.county_code} ` : "";
 
     // Filter by township if provided
     const townshipQuery = data.township ? `AND township LIKE "%${data.township}%" ` : "";
@@ -38,7 +38,7 @@ const filteritem = async (req, res) => {
         const rows = await con.execute(query);
         console.log(rows);
         // Return filtered items as response
-        res.json({
+        res.status(200).json({
             success: true,
             data: rows
         });

@@ -198,7 +198,7 @@ app.post('/logout', (req, res) =>{
         expires: new Date(0),
         sameSite: 'Strict'
     });
-    console.log("Deleted the cookie");
+//    console.log("Deleted the cookie");
     res.send("deleting cookie");
 });
 
@@ -553,9 +553,9 @@ const io = socketIo(server, { cors: corsOption });
 
 // Handling socket connections
 io.on('connection', (socket) => {
-    console.log('New client connected',socket.id);
+    //console.log('New client connected',socket.id);
     
     socket.on('disconnect', () => {
-        console.log('Client disconnected');
+       // console.log('Client disconnected');
     });
 });
