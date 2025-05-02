@@ -1,9 +1,9 @@
   const db = require('./db');  // Import the database connection
 
+
   // Function to send a message
   exports.sendMessage = async (sender_id, receiver_id, content) => {
     try {
-      
       const con = await db.getConnection().catch(err => {
         console.error("DB Connection Error:", err);
         return null;

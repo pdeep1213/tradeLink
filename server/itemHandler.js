@@ -415,6 +415,30 @@ const process_refund = async (req, res) => {
     }
 };
 
+const edit_item = async (req, res) => {
+   const {item} = req.body;
+
+   try{
+    const con = db.getConnection();
+    const result = await con.query(`UPDATE items 
+       SET title = ?, description = ?, price = ?, category = ? 
+       WHERE id = ?`,
+      [item.itemname, item.description, item.price, item.category, item.id]
+    );
+
+    if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Item not found." });
+      }
+  
+      res.status(200).json({ message: "Item updated successfully." });
+   } catch (err) {
+    console.error("Error processing Edit:", err);
+    res.status(500).json({ error: "Failed to process Edit." });
+    } finally {
+        if (con) con.release();
+    }
+}
+
 module.exports = {
     uploaditem,
     removeItem,
@@ -426,5 +450,6 @@ module.exports = {
     getAllCategory,
     updateitemrating,
     getMyPurchases,
-    process_refund
+    process_refund,
+    edit_item
 };

@@ -7,6 +7,13 @@
   z-index: 9999;
 }
 
+.chat-prompt {
+  font-size: 0.9rem;
+  color: #444;
+  margin-top: 4px;
+  text-align: center;
+}
+
 .chat-window {
   position: relative;
   width: 60vw; /* Adjust width as needed */

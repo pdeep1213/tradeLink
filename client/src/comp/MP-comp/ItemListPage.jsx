@@ -77,13 +77,8 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
                     ) : displayItems.length > 0 ? (
                         displayItems.map(item => (
                             <ItemCard
+                                item={item}
                                 key={item.item_id}
-                                item_id={item.item_id}
-                                title={item.itemname}
-                                description={item.description}
-                                price={item.price}
-                                category={item.category}
-                                images={item.img}
                                 user={userRole === "admin"}
                                 wished={!!item.wished}
                             />

@@ -32,7 +32,7 @@ const MainPage = () => {
         county_code: '',
         price: { flag: -1, low: 0, high: 0 }
     });
-    const [isChatOpen, setIsChatOpen] = useState(false);
+    
     const [categories, setCategories] = useState([]);
 
     // Load the user profile from the server
@@ -124,9 +124,8 @@ const MainPage = () => {
                /* searchTerm={searchTerm} 
                 selectedCategory={selectedCategory}*/ 
             /> 
-            <span className="material-symbols-outlined chat-icon" onClick={() => setIsChatOpen(true)} role="button" tabIndex="0">chat</span>
             <FilterSidebar onFilterChange={handleLocationFilter} categories={categories} />
-            <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+            
         </>
     );
 };
