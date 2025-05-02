@@ -137,10 +137,11 @@ function ItemCard({
   };
 
   const purchase_click = () => {
-    console.log(item.images);
+    if(!null) navigate('/login');
+    else {
     navigate(`/purchase/${item.item_id}`, {
       state: { item_id : item.item_id, title : item.itemname, price : item.price, images : item.img, description : item.description, profile }
-    });
+    });}
   };
 
   const onRefund = async () => {
