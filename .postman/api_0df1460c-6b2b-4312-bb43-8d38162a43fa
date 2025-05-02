@@ -9,6 +9,7 @@ id = 0df1460c-6b2b-4312-bb43-8d38162a43fa
 
 [config.relations.collections]
 rootDirectory = postman/collections
+files[] = {"id":"44174376-ac5b457d-805e-4601-a401-6828f54b71d3","path":"TradeLink API Test.json","metaData":{}}
 
 [config.relations.collections.metaData]
 

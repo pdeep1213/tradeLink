@@ -1,0 +1,2595 @@
+{
+	"info": {
+		"_postman_id": "ac5b457d-805e-4601-a401-6828f54b71d3",
+		"name": "TradeLink API Test",
+		"description": "Run the HelperRun folder first to set up all the enviorment variable that will be use by the SeqTest folder. If you don't most of those test will fail.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "44174376-ac5b457d-805e-4601-a401-6828f54b71d3"
+	},
+	"item": [
+		{
+			"name": "SeqTest",
+			"item": [
+				{
+					"name": "Adding to Wishlist-UI009",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3bee6a7e-bda5-42c4-9368-1f39a9095de1",
+								"exec": [
+									"let item_info = pm.environment.get(\"item_info\");",
+									"let parse = JSON.parse(item_info);",
+									"",
+									"let item_id = parse.item_id;",
+									"",
+									"pm.variables.set(\"item_id\", item_id);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "3c845315-1cb1-4288-b56c-063c4e8a1b37",
+								"exec": [
+									"pm.test(\"UI-009 adding an item to my wishlist\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "838f25cb-7f75-4132-94f6-6a816914e227",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": {{user_id}},\n    \"item_id\": {{item_id}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/wishlist/add",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"wishlist",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Removing from Wishlist",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f0b66d96-61db-471e-9b9e-34de801cb459",
+								"exec": [
+									"let item_info = pm.environment.get(\"item_info\");",
+									"let parse = JSON.parse(item_info);",
+									"",
+									"let item_id = parse.item_id;",
+									"",
+									"",
+									"pm.variables.set(\"item_id\", item_id);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1a5330af-9700-44d0-8e2a-07def6c1d1a2",
+								"exec": [
+									"pm.test(\"Status Code is 200\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "9d369a77-4a78-4dd9-91af-4484927c9a5c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": {{user_id}},\n    \"item_id\": {{item_id}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/wishlist/remove",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"wishlist",
+								"remove"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ItemReport-CM004",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "283ccd15-3514-4801-ae8c-c9924766464b",
+								"exec": [
+									"let item_info = pm.environment.get(\"item_info\");",
+									"let parse = JSON.parse(item_info);",
+									"let item_id = parse.item_id;",
+									"",
+									"",
+									"pm.variables.set(\"item_id\", item_id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "7f9dda9d-ac5a-48e1-b5b4-50550eace516",
+								"exec": [
+									"pm.test(\"CM-004 reporting an item as user\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "f1a863fa-5f23-436a-ba64-4494c0b04d14",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": {{item_id}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/report_item",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"report_item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unlist Item [exist]-CM008",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4a79c3d4-26d2-4896-9556-bff8d1c64949",
+								"exec": [
+									"let item_info = pm.environment.get(\"item_info\");",
+									"let parse = JSON.parse(item_info);",
+									"let item_id = parse.item_id;",
+									"",
+									"pm.variables.set(\"item_id\", item_id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "7cea8dc8-5f44-4d15-900f-ba101337f3de",
+								"exec": [
+									"",
+									"pm.test(\"CM-008 unlisting an item that's currently under sell\", function(){",
+									"    pm.response.to.have.status(200)",
+									"    console.log(\"Pass login in test\")",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "a4f40e89-3e5e-4f09-bd1f-2cb50186e68f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": {{item_id}},\n    \"newListedStatus\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/listing_item",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"listing_item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unlist Item [does not exist]-CM008",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "af62cb99-b298-4c67-b909-5d11ac9eed8d",
+								"exec": [
+									"let item_info = pm.environment.get(\"item_info\");",
+									"let parse = JSON.parse(item_info);",
+									"let item_id = parse.item_id;",
+									"",
+									"pm.variables.set(\"item_id\", item_id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a09cfb52-5144-45df-b0cb-4b3e78b33edf",
+								"exec": [
+									"pm.test(\"CM-008 unlisting an item but it was removed so the item doesn't exist\", function(){",
+									"    pm.response.to.have.status(404)",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "580ef9dc-a045-4262-a28c-071a5da08910",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": -10,\n    \"newListedStatus\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/listing_item",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"listing_item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "relist Item",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "05c47180-5876-4f00-ad73-59e38a3641aa",
+								"exec": [
+									"let item_info = pm.environment.get(\"item_info\");",
+									"let parse = JSON.parse(item_info);",
+									"let item_id = parse.item_id;",
+									"",
+									"pm.variables.set(\"item_id\", item_id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "109ef67b-a971-435c-8bb8-7d0f66c1f335",
+								"exec": [
+									"pm.test(\"Status Code is 200\", function(){",
+									"    pm.response.to.have.status(200)",
+									"    console.log(\"Pass login in test\")",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "8001fd4f-88ee-4310-9629-96b8599659a4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": {{item_id}},\n    \"newListedStatus\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/listing_item",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"listing_item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeItem [user]-UI003",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f48b032f-59db-4b29-8ae4-72caf4d2fdfd",
+								"exec": [
+									"if (pm.environment.get(\"buffer_id2\") != -100){",
+									"    pm.test(\"UI-003 removing an item from User\", function(){",
+									"        pm.response.to.have.status(200)",
+									"    })",
+									"}",
+									"else{",
+									"        pm.test(\"UI-003 removing an item from User\", function(){",
+									"        pm.response.to.have.status(404)",
+									"    })",
+									"}",
+									"pm.environment.set(\"buffer_id2\", -100)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5a478835-0167-4073-8901-f1484214bb7b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "f41ebd15-ba98-4961-aa0f-527811f542c2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": {{buffer_id2}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/remove_item",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"remove_item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeItem [admin][exist]-CM006",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "62111735-9758-41f7-a595-171af1483012",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "61d37779-8316-4368-9e05-7567a69e35bd",
+								"exec": [
+									"if(pm.environment.get(\"buffer_id\") != -100){",
+									"    pm.test(\"CM-006 removing an item as Admin\", function(){",
+									"        pm.response.to.have.status(200)",
+									"    })",
+									"}",
+									"else{",
+									"    pm.test(\"CM-006 removing an item as Admin\", function(){",
+									"        pm.response.to.have.status(404)",
+									"    }) ",
+									"}",
+									"pm.environment.set(\"buffer_id\", -100)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "5084bdc6-9952-4aaf-bdec-498ebc446878",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": {{buffer_id}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/remove_item",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"remove_item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "removeItem [admin][does not exist]-CM006",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "214c30bc-a0b4-40ce-9503-1277b6b85698",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "48f4d361-adc3-48a6-bd01-0e9ced350669",
+								"exec": [
+									"pm.test(\"CM-006 removing an item from Admin but items is already removed\", function(){",
+									"    pm.response.to.have.status(404)",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "f21b1cf1-a506-4860-9716-d824f3031ee1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": -100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/remove_item",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"remove_item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Testing Messaging-UI002+UI103",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3dd89928-df0d-47bd-b772-5cd8fadb2f6f",
+								"exec": [
+									"let message = \"this is a test message\";",
+									"",
+									"pm.variables.set(\"message\", message);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "dafde9f3-1383-4211-9545-c7f20ff26d67",
+								"exec": [
+									"pm.test(\"UI-002 Testing sending a message\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"UI-103 Testing message sending reponse time below 2 sec\", function(){",
+									"    pm.expect(pm.response.responseTime).below(2000);",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "f7bfeaa7-556d-4a4e-bb6e-2a35455313fc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"receiver_id\": \"{{seller_id}}\",\n    \"sender_id\": \"{{buyer_id}}\",\n    \"content\": \"{{message}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/sendMessage",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"sendMessage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update UserProfile [1 item]-UI014",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1d449326-0d50-41e5-88f0-5dbcb452e96b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0e3ea52c-84e9-4ada-b0bd-f125642684cd",
+								"exec": [
+									"pm.test(\"UI-014 Testing updating profile with 1 item\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "4f4003c7-c653-4708-a4be-632be147cdab",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "secret",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "new_name",
+									"type": "text",
+									"uuid": "f08f1991-c8f6-43c0-99df-780b67fc4d6c"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{mainurl}}/updateProfile",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"updateProfile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update UserProfile [2 item]-UI014",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a59d0ad6-47f2-4efe-856f-02099450f32c",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "ab4302e0-e501-43e3-851d-b69d455e789e",
+								"exec": [
+									"pm.test(\"UI-014 testing user profile update w/ 2 item\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "5a4b15df-cb29-41e5-978e-36c9ece6ed8f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "secret",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "new_name",
+									"type": "text",
+									"uuid": "f08f1991-c8f6-43c0-99df-780b67fc4d6c"
+								},
+								{
+									"key": "description",
+									"value": "new_description",
+									"type": "text",
+									"uuid": "4e5a33df-d253-466f-aeb1-04578ad161d7"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{mainurl}}/updateProfile",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"updateProfile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update UserProfile [3 item]-UI014",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3f032a17-8e55-4ad1-893b-2bd4288c4800",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "179d9c56-aa9b-43a2-9efa-8e7b2ec1a959",
+								"exec": [
+									"pm.test(\"UI-014 testing user profile update w/ 3 item\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "c8757be1-1e94-43ae-8fb8-c7a3fcc27052",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "secret",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "new_name",
+									"type": "text",
+									"uuid": "f08f1991-c8f6-43c0-99df-780b67fc4d6c"
+								},
+								{
+									"key": "description",
+									"value": "new_description",
+									"type": "text",
+									"uuid": "75add5e9-df15-4a81-a3e0-9877f9064da2"
+								},
+								{
+									"key": "files",
+									"type": "file",
+									"uuid": "3c1a551f-37f8-461b-ac76-cfbbf308fc20",
+									"src": "postman-cloud:///1f026af6-7cff-46a0-9638-7a9aa0aa5183"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{mainurl}}/updateProfile",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"updateProfile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UI-001 item filtering 1 category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8a9c32fa-1b9b-47cd-ba5c-3d306c5742a8",
+								"exec": [
+									"pm.test(\"UI-001 testing item filtering\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "603dd200-1b66-4d09-9e32-866c2fdfb4d6",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "77d7bda0-2398-4934-982a-336697ff06f0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": 1,\n    \"price\": {\n        \"flag\": -1,\n        \"low\": 5,\n        \"high\": 10\n    },\n    \"itemname\": \"\",\n    \"county_code\": \"\",\n    \"township\": \"\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/filter",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UI-001 item filtering 2 category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "17d222f9-9e27-4ebb-9cce-0bb10ea3f7e3",
+								"exec": [
+									"let responseData = pm.response.json();",
+									"",
+									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
+									"    let firstItem = responseData.data[0];",
+									"",
+									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
+									"",
+									"    pm.environment.set(\"item_id\", firstItem.item_id);",
+									"    pm.environment.set(\"itemname\", firstItem.itemname);",
+									"    pm.environment.set(\"category\", firstItem.category);",
+									"    pm.environment.set(\"price\", firstItem.price);",
+									"",
+									"} ",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "12b69d91-fe06-4c0f-b4d1-f8e58aacd728",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "9dce9d04-964f-4f01-9a52-4bf114a3dfac",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": 1,\n    \"price\": {\n        \"flag\": -1,\n        \"low\": 5,\n        \"high\": 10\n    },\n    \"itemname\": \"a\",\n    \"county_code\": \"\",\n    \"township\": \"\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/filter",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UI-001 item filtering 3 category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cbd18aed-9b00-42e7-bc8a-8b380c9187af",
+								"exec": [
+									"let responseData = pm.response.json();",
+									"",
+									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
+									"    let firstItem = responseData.data[0];",
+									"",
+									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
+									"",
+									"    pm.environment.set(\"item_id\", firstItem.item_id);",
+									"    pm.environment.set(\"itemname\", firstItem.itemname);",
+									"    pm.environment.set(\"category\", firstItem.category);",
+									"    pm.environment.set(\"price\", firstItem.price);",
+									"",
+									"} ",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0a134005-d56e-4f21-921c-27eb466a46b9",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "19b3d1db-2549-4e9a-a1cf-311e914a4ff5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": 1,\n    \"price\": {\n        \"flag\": -1,\n        \"low\": 5,\n        \"high\": 10\n    },\n    \"itemname\": \"a\",\n    \"county_code\": \"1\",\n    \"township\": \"\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/filter",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UI-001 item filtering 4 category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2bd6c979-df9f-4b9d-9c7a-12fa80ee18d5",
+								"exec": [
+									"let responseData = pm.response.json();",
+									"",
+									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
+									"    let firstItem = responseData.data[0];",
+									"",
+									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
+									"",
+									"    pm.environment.set(\"item_id\", firstItem.item_id);",
+									"    pm.environment.set(\"itemname\", firstItem.itemname);",
+									"    pm.environment.set(\"category\", firstItem.category);",
+									"    pm.environment.set(\"price\", firstItem.price);",
+									"",
+									"} ",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "54c7ea9c-088e-4953-b7af-92bae720e514",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "a0fcc453-7f90-4e31-97b8-ea1c3b267586",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": 1,\n    \"price\": {\n        \"flag\": -1,\n        \"low\": 5,\n        \"high\": 10\n    },\n    \"itemname\": \"a\",\n    \"county_code\": \"1\",\n    \"township\": \"a\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/filter",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UI-001 item filtering 5 [less than] category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "761b886d-8fd1-46ab-af3f-44e09b10db1b",
+								"exec": [
+									"let responseData = pm.response.json();",
+									"",
+									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
+									"    let firstItem = responseData.data[0];",
+									"",
+									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
+									"",
+									"    pm.environment.set(\"item_id\", firstItem.item_id);",
+									"    pm.environment.set(\"itemname\", firstItem.itemname);",
+									"    pm.environment.set(\"category\", firstItem.category);",
+									"    pm.environment.set(\"price\", firstItem.price);",
+									"",
+									"} ",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9140eea3-9175-4936-ae5f-6a5982b192cd",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "32cc10f7-b35f-49ea-9e16-691d174e4f79",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": 1,\n    \"price\": {\n        \"flag\": 0,\n        \"low\": 5,\n        \"high\": 10\n    },\n    \"itemname\": \"a\",\n    \"county_code\": \"1\",\n    \"township\": \"a\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/filter",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UI-001 item filtering 5 [greater than] category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "eb8bffa2-16c9-4a19-b6ad-671dd444cfe9",
+								"exec": [
+									"let responseData = pm.response.json();",
+									"",
+									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
+									"    let firstItem = responseData.data[0];",
+									"",
+									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
+									"",
+									"    pm.environment.set(\"item_id\", firstItem.item_id);",
+									"    pm.environment.set(\"itemname\", firstItem.itemname);",
+									"    pm.environment.set(\"category\", firstItem.category);",
+									"    pm.environment.set(\"price\", firstItem.price);",
+									"",
+									"} ",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "36be803a-8ef1-4217-8bb9-a2a11bfd28f3",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "71ceed7a-f9ea-4a0b-915b-241fcaa3c885",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": 1,\n    \"price\": {\n        \"flag\": 1,\n        \"low\": 5,\n        \"high\": 10\n    },\n    \"itemname\": \"a\",\n    \"county_code\": \"1\",\n    \"township\": \"a\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/filter",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UI-001 item filtering 5 [between] category Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ce1aee39-65bf-495d-a7a7-9fb98fca612a",
+								"exec": [
+									"let responseData = pm.response.json();",
+									"",
+									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
+									"    let firstItem = responseData.data[0];",
+									"",
+									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
+									"",
+									"    pm.environment.set(\"item_id\", firstItem.item_id);",
+									"    pm.environment.set(\"itemname\", firstItem.itemname);",
+									"    pm.environment.set(\"category\", firstItem.category);",
+									"    pm.environment.set(\"price\", firstItem.price);",
+									"",
+									"} ",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3cad6b2e-0fed-4d8c-97fe-4b6f192625bd",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "e33b4818-506f-4e46-85a9-769d7e424d4d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": 1,\n    \"price\": {\n        \"flag\": 2,\n        \"low\": 1,\n        \"high\": 5\n    },\n    \"itemname\": \"a\",\n    \"county_code\": \"1\",\n    \"township\": \"a\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/filter",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report-CM007",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "09def891-0811-49b1-b94e-8bf8a85e04ce",
+								"exec": [
+									"//CM-007",
+									"pm.test(\"CM-007 generating a report as Admin\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "eb8bd77c-b61f-47e9-b959-06e460c083d6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_admin}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/item-report",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"item-report"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "8928f415-e291-41d9-845e-49b36dfc45f9"
+		},
+		{
+			"name": "HelperRun",
+			"item": [
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e8833b59-029e-492f-86ae-9e278d667be7",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "56eae0ee-1a86-4ad7-8fef-b4b1b205b1b8",
+								"exec": [
+									"pm.test(\"Status Code is 200\", function(){",
+									"    pm.response.to.have.status(200)",
+									"    console.log(\"Pass login in test\")",
+									"})",
+									"let token = pm.cookies.get(\"tradelink\");",
+									"pm.environment.set(\"token_admin\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "274ca6ef-cbea-40c1-b961-4763245897c1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "payload",
+									"value": "{}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@a.com\",\n    \"password\": \"a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/login",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "6ada2c50-0e50-411f-b4f3-9846405394bd",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0929db0-c9c8-4ffa-960f-9c5167f4f75b",
+								"exec": [
+									"pm.test(\"Status Code is 200\", function(){",
+									"    pm.response.to.have.status(200)",
+									"    console.log(\"Pass login in test\")",
+									"})",
+									"let token = pm.cookies.get(\"tradelink\");",
+									"pm.environment.set(\"token_user\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "ad5962fa-7427-4814-a48f-75f45c94b1a4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "payload",
+									"value": "{}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@a.com\",\n    \"password\": \"a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/login",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "daf9c0ef-0c38-42a2-81b0-afa5662ae025",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1edb985c-c1c5-4bb7-9589-3b97a340fc05",
+								"exec": [
+									"pm.test(\"Status Code is 200\", function(){",
+									"    pm.response.to.have.status(200)",
+									"    console.log(\"Pass login in test\")",
+									"})",
+									"let token = pm.cookies.get(\"tradelink\");",
+									"pm.environment.set(\"token_user2\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "980a9fd7-8cf6-4cb5-a0b7-f74a9b8534f0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "payload",
+									"value": "{}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user2@a.com\",\n    \"password\": \"a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/login",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetItems",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f3a0735b-ab66-4051-9dc1-8b27efc3584d",
+								"exec": [
+									"let itemInfo = pm.response.json();",
+									"pm.environment.set(\"item_info\", JSON.stringify(itemInfo[0]))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "2167a6f5-f997-4978-9835-2e6e2bb4580d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{mainurl}}/send_listings_guest",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"send_listings_guest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "640b9c2b-0e60-4b24-befb-55b9a45f9666",
+								"exec": [
+									"let itemInfo = pm.response.json();",
+									"pm.environment.set(\"user_id\", JSON.stringify(itemInfo.uid))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "b2684b4f-cf5f-40da-ae5c-7f794d628584",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://128.6.60.7:8080/profile",
+							"protocol": "http",
+							"host": [
+								"128",
+								"6",
+								"60",
+								"7"
+							],
+							"port": "8080",
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listrandomitem",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c5b50ac9-bb28-42d2-8377-3fb052781b08",
+								"exec": [
+									"let bufferItem = pm.response.json()",
+									"pm.environment.set(\"buffer_id\", JSON.stringify(bufferItem.item_id))",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4147cbf3-c821-4550-a5a4-baf773953c7a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "56ddee10-b891-4c36-acb7-ce7483b6a1c9",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"itemname\": \"toremove\",\n    \"description\": \"removeme\",\n    \"category\": 2,\n    \"price\": \"5.00\",\n    \"country_code\": \"US\",\n    \"township\": \"news\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/uploadItem",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"uploadItem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listrandomitem Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94498819-8ad2-4ee3-b07f-4f88a2ef44ec",
+								"exec": [
+									"let bufferItem = pm.response.json()",
+									"pm.environment.set(\"buffer_id2\", JSON.stringify(bufferItem.item_id))",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ae8e1a66-42ba-477f-971f-6c553223c251",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "e00fb33e-c290-494a-ab89-c2ef8d6fa11a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"itemname\": \"toremove\",\n    \"description\": \"removeme\",\n    \"category\": 1,\n    \"price\": \"5.00\",\n    \"country_code\": \"US\",\n    \"township\": \"news\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/uploadItem",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"uploadItem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sellerID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "526fcf65-0a21-4aa0-8e75-0cd377dc8dec",
+								"exec": [
+									"res = pm.response.json()",
+									"",
+									"pm.environment.set(\"seller_id\", res.uid)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "792324ab-30d5-458d-aadd-df4a9a1c0cbd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mainurl}}/profile",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "buyerID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "905b2a2a-834b-49d3-b5f3-aae124255e6a",
+								"exec": [
+									"res = pm.response.json()",
+									"",
+									"pm.environment.set(\"buyer_id\", res.uid)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "46856064-6f56-401a-a0c9-14afb3cfb1e7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user2}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mainurl}}/profile",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "d1b3b436-1867-46ab-816a-dacdbf19e6e0"
+		},
+		{
+			"name": "TODO",
+			"item": [
+				{
+					"name": "UI005",
+					"id": "59599512-b7d0-4701-9200-8c82232224e8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UI010",
+					"id": "a4432a73-8ce5-4fdd-ac1f-8fdfda9babea",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TP012",
+					"id": "b2d28ad6-dd9b-48d5-a6b3-3520c816cfcb",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TP015",
+					"id": "6d054d0c-c2e5-4a5c-b322-6ad31193d8e2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TP016",
+					"id": "f9a56b72-829b-4206-a149-0b806213bce6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TP017",
+					"id": "d4afe209-b8b3-4919-9a91-2793a2a7cb39",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "1634f39c-52ef-4c4f-89a7-82dae546b65c"
+		}
+	],
+	"auth": {
+		"type": "jwt",
+		"jwt": [
+			{
+				"key": "algorithm",
+				"value": "HS256",
+				"type": "string"
+			},
+			{
+				"key": "isSecretBase64Encoded",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "payload",
+				"value": "{}",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "headerPrefix",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "queryParamKey",
+				"value": "token",
+				"type": "string"
+			},
+			{
+				"key": "header",
+				"value": "{}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b17de3fa-e0e8-47f2-bc64-98cd7b546a3a",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "db8a9134-171b-46ba-b1b0-fed1ad1aac19",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
