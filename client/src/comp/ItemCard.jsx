@@ -65,12 +65,11 @@ function ItemCard({
       const result = await response.json();
       if (response.ok) {
         setWished(!wished);
-        console.log(`✅ Wishlist ${wished ? 'removed' : 'added'}:`, result);
       } else {
-        console.error('❌ Wishlist toggle failed:', result.message);
+        console.error(' Wishlist toggle failed:', result.message);
       }
     } catch (err) {
-      console.error('🚨 Error toggling wishlist:', err);
+      console.error('Error toggling wishlist:', err);
     }
   };
 
