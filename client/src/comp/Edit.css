@@ -1,0 +1,125 @@
+:root {
+  --primary: #007bff;
+  --primary-hover: #0056b3;
+  --border-radius: 10px;
+  --transition: 0.2s ease;
+  --font-color: #333;
+  --bg-color: #fff;
+  --modal-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.modal-content {
+  background: var(--bg-color);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: var(--modal-shadow);
+  animation: slideIn 0.3s ease-out;
+}
+
+.modal-content h2 {
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--font-color);
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #555;
+}
+
+input,
+textarea,
+select {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  transition: border var(--transition);
+}
+
+textarea {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  transition: border var(--transition);
+  min-height: 120px;
+  width: 300px; /* Increased height */
+  resize: horizontal;   /* Optional: let user resize vertically */
+}
+
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: #e0e0e0;
+  color: #333;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.btn-secondary:hover {
+  background-color: #cfcfcf;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -51,18 +51,12 @@ function Wishlist() {
         ) : isError ? (
           <p>Error fetching wishlist: {error.message}</p>
         ) : items && items.length > 0 ? (
-          items.map(({ itemname, description, price, category, item_id, img }) => (
+          items.map((item) => (
             <ItemCard
-              key={item_id}
-              item_id={item_id}
-              title={itemname}
-              description={description}
-              price={price}
-              category={category}
-              images={img}
+              key={item.item_id}
+              item = {item}
               user={false}
-              instock={1}
-              refreshItems={() => {}}
+              instock={item.instock}
               wished={true}
             />
           ))

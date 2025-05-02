@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './ItemCard.css';
 import Logo from './FINANCE.png';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaEdit } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
+
 function ItemCard({
-  item_id,
-  title,
-  description,
-  price,
-  category,
-  images,
+  item,
   user,
   type,
   instock,
   refreshItems,
+  onEditClick,
   wished: wishedProp = false
 }) {
   const [listed, setListed] = useState(instock === 1);
@@ -22,6 +19,7 @@ function ItemCard({
   const [uid, setUid] = useState(null);
   const [profile, setProfile] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,7 +47,7 @@ function ItemCard({
     fetch("http://128.6.60.7:8080/view_item", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ item_id }),
+      body: JSON.stringify({ item_id : item.item_id }),
     }).catch((err) => console.error("View count update failed:", err));
   };
 
@@ -61,7 +59,7 @@ function ItemCard({
       const response = await fetch(`http://128.6.60.7:8080/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid, item_id }),
+        body: JSON.stringify({ uid, item_id : item.item_id }),
       });
 
       const result = await response.json();
@@ -81,7 +79,7 @@ function ItemCard({
       const response = await fetch('http://128.6.60.7:8080/remove_item', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item_id }),
+        body: JSON.stringify({ item_id : item.item_id }),
       });
       const data = await response.json();
       if (response.ok) console.log('Item removed successfully');
@@ -97,7 +95,7 @@ function ItemCard({
       const response = await fetch('http://128.6.60.7:8080/listing_item', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item_id, listed: newListedStatus }),
+        body: JSON.stringify({ item_id : item.item_id, listed: newListedStatus }),
       });
       const data = await response.json();
       if (response.ok) {
@@ -124,7 +122,7 @@ function ItemCard({
       const response = await fetch('http://128.6.60.7:8080/report_item', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item_id }),
+        body: JSON.stringify({ item_id : item.item_id }),
       });
       const data = await response.json();
       if (response.ok) {
@@ -140,8 +138,9 @@ function ItemCard({
   };
 
   const purchase_click = () => {
-    navigate(`/purchase/${item_id}`, {
-      state: { item_id, title, price, images, description, item_id, profile }
+    console.log(item.images);
+    navigate(`/purchase/${item.item_id}`, {
+      state: { item_id : item.item_id, title : item.itemname, price : item.price, images : item.img, description : item.description, profile }
     });
   };
 
@@ -150,7 +149,7 @@ function ItemCard({
       const response = await fetch('http://128.6.60.7:8080/process_refund', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item_id }),
+        body: JSON.stringify({ item_id : item.item_id }),
         credentials: 'include'
       });
       const data = await response.json();
@@ -196,7 +195,7 @@ function ItemCard({
 
   return (
     <div className="item-card" onClick={handleViewClick}>
-      <img src={images || Logo} alt={title} className="item-image" />
+      <img src={item.img || Logo} alt={item.title} className="item-image" />
       {(!user && uid) && (
         <div className="menu-container">
           <div className="menu-icon" onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}>...</div>
@@ -207,10 +206,9 @@ function ItemCard({
           )}
         </div>
       )}
-
       <div className="item-content">
         <h2 className="item-title">
-          {title}
+          {item.itemname}
           {!user && uid && (
             <span className="wishlist-icon" onClick={(e) => {
               e.stopPropagation();
@@ -219,12 +217,25 @@ function ItemCard({
               {wished ? <FaHeart color="red" /> : <FaRegHeart color="gray" />}
             </span>
           )}
+          {type === "User" && (
+            <span
+              className="edit-icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditClick(item);
+              }}
+              title="Edit Item"
+              style={{ marginLeft: '10px', cursor: 'pointer' }}
+            >
+              <FaEdit color="#555" />
+            </span>
+          )}
         </h2>
-        <p className="item-description">{description}</p>
+        <p className="item-description">{item.description}</p>
         <div className="item-footer">
-          <span className="item-price">${price}</span>
-          <span className="item-category" style={{ backgroundColor: categories[category]?.color || '#808080' }}>
-            {categories[category]?.name || 'Unknown'}
+          <span className="item-price">${item.price}</span>
+          <span className="item-category" style={{ backgroundColor: categories[item.category]?.color || '#808080' }}>
+            {categories[item.category]?.name || 'Unknown'}
           </span>
         </div>
         <div className="btns">

@@ -2,9 +2,14 @@ import React, { useEffect, useState } from 'react';
 import "./UserListing.css";
 import { Link } from "react-router-dom";
 import ItemCard from '../ItemCard';
+import Edit from '../Edit';
 
 function UserListing() {
   const [items, setItems] = useState([]);
+  const [editItem, setEditItem] = useState(null);
+
+  const handleEditClick = (item) => setEditItem(item);
+  const closeModal = () => setEditItem(null);
   
   //Fetching Item
   const fetchItems = async () => {
@@ -38,24 +43,33 @@ function UserListing() {
       <h1 className='listing-title'>My Listing</h1>
        <div className='items-box'>
        {items.length > 0 ? (
-          items.map(({ itemname, description, price, category , item_id, instock}, index) => (
+          items.map((item, index) => (
             <ItemCard
               key={index}
-              item_id={item_id}
-              title={itemname}
-              description={description}
-              price={price}
-              category={category}
+              item={item}
               user={true}
               type={'User'}
-              instock={instock}
+              instock={item.instock}
               refreshItems={refreshItems}
+              onEditClick={handleEditClick}
             />
           ))
         ) : (
           <p>No items found.</p>
         )}
        </div>
+
+       {editItem && (
+        <Edit
+          item_id={editItem.item_id}
+          itemname={editItem.itemname}
+          description={editItem.description}
+          price={editItem.price}
+          category={editItem.category}
+          refreshItems={refreshItems}
+          onClose={closeModal}
+        />
+      )}
        <Link to="/listItem" className='add-listing'>Sell Item</Link>
     </div>
   );

@@ -132,16 +132,14 @@ useEffect(() => {
       <div className='other-item'>
   <h2>Other Items You May Like</h2>
   <div className="item-list">
-    {items && items.slice(0, 6).map((item, index) => (
+    {items && items.filter(item => item.item_id !== item_id) // Exclude current item
+    .slice(0, 6) // Limit to 6 items
+    .map((item, index) => (
       <ItemCard
         key={index}
-        title={item.title}
-        price={item.price}
-        img={item.img}
-        description={item.description}
-        item_id={item.item_id}
-        myuid={myuid}
-        profile={profile}
+        item={item}
+        user={true}
+        wished={!!item.wished}
       />
     ))}
   </div>

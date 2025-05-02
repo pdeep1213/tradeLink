@@ -12,7 +12,7 @@ const {
     uploaditem, removeItem, listItem, sendlistGuest, 
     sendlist, reportitem, sellerID, 
     getAllCategory, updateitemrating, getMyPurchases,
-    process_refund
+    process_refund, edit_item
 } = require('./itemHandler.js');
 const {
     profile, wishlist_uid, wishlist_add, 
@@ -112,6 +112,9 @@ app.get('/send_Purschases/:uid', getMyPurchases);
 
 //in itemHandler to process a refund
 app.post('/process_refund', process_refund);
+
+//in itemHandler to edit items
+app.post('/edit-item',edit_item);
 //------------------------------------------------------------
 
 //------------------------------------------------------------

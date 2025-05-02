@@ -29,16 +29,13 @@ function MyPurschases({profile}) {
     <div>
         <h1>My Purschases</h1>
         {items.length > 0 ? (
-          items.map(({ itemname, description, price, category , item_id, instock}, index) => (
+          items.map((item, index) => (
             <ItemCard
               key={index}
-              item_id={item_id}
-              title={itemname}
-              description={description}
-              price={price}
-              category={category}
+              item ={item}
               type={'Buyer'}
-              instock={instock}
+              user={false}
+              instock={item.instock}
               refreshItems={refreshItems}
             />
           ))
