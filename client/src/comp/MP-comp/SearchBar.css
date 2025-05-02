@@ -6,7 +6,7 @@
   max-width: 80rem;
   margin: 1rem auto;
   padding: 0 2vw;
-margin-top: 15rem;
+margin-top: 20rem;
 }
 
 .search-form {
@@ -21,21 +21,17 @@ margin-top: 15rem;
   width: 100%;
   padding: 0.625rem 1rem;
   font-size: 1rem;
-  border-top: 0.2rem solid #ccc;
-  border-bottom: 0.2rem solid #ccc;
-  border-left: none;
-  border-right: none;
   outline: none;
   transition: all 0.3s ease-in-out;
-  margin-right: 2rem;
+  margin-right: 10rem;
 }
 .search-button {
-  padding: 0.625rem 1rem;
+  padding: 0.525rem 1rem;
   font-size: 1rem;
   background-color: #007bff;
   color: white;
   border: none;
-border-radius: 0 0.5rem 0.5rem 0;
+border-radius: 0 1rem 1rem 0;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -59,8 +55,8 @@ font-weight: bold;
 text-align: center;
 }
 .category-dropdown{
-height: 3.15rem;
-border-radius: 0.5rem 0 0 0.5rem;
+height: 2.939rem;
+border-radius: 1rem 0 0 0rem;
 text-align: center;
 border: none;
 cursor: pointer;
@@ -71,4 +67,5 @@ transition: background-color 0.3s ease;
   line-height: 2rem;      
   font-size: 1rem;     
 text-align: center;
+
 }

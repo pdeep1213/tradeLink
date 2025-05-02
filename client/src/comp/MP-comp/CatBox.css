@@ -1,0 +1,37 @@
+.catbox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1rem;
+  justify-content: center;
+}
+
+.box {
+  width: 15rem;
+  height: 3rem;
+  background-color: #2c2c2c;
+  color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.1s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+}
+
+.trendBox {
+  background-color: #c62828;
+}
+
+.recentBox {
+  background-color: #1565c0;
+}

@@ -17,24 +17,52 @@
   left: 0;
   bottom: 0;
 }
-
 .toggle-btn.outside {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: .5rem;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+ margin-top: 1rem;
 }
 
 .toggle-btn.inside {
-  align-items: center;
   display: flex;
+  align-items: center;
   justify-content: center;
+  padding: 0.5rem;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+margin-top: 1rem;
+
 }
 
 .icon-text {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  transition: all 0.3s ease; 
+margin-top: 1rem;
+padding: 0.4rem;
 }
+
+.icon-text:hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.1); 
+  border-radius: .4rem; 
+}
+
+.icon-text:active {
+  background-color: rgba(255, 255, 255, 0.2); 
+  box-shadow: inset 0 0 .2rem rgba(255, 255, 255, 0.3); 
+}
+
 
 .mp-sidebar.open .location-icon,
 .mp-sidebar.open .star-icon {
@@ -85,3 +113,19 @@
 .filter-btn:hover {
   background-color: #3498db;
 }
+
+.filter-word{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: black;
+  padding: 0 8px;
+}
+
+.word {
+margin:0;
+font-size: 1.2rem;
+font-weight: 700;
+color: white;
+
+ }

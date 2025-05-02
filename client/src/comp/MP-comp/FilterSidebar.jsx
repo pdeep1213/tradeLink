@@ -15,6 +15,7 @@ const FilterSidebar = ({ onFilterChange }) => {
     <div className="sidebar-container">
       {!isOpen && (
         <button className="toggle-btn outside" onClick={() => setIsOpen(true)}>
+          <p className="filter-word"> Filter </p>
           <span className="material-symbols-outlined outside-button">last_page</span>
         </button>
       )}
