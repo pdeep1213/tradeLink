@@ -417,13 +417,13 @@ const process_refund = async (req, res) => {
 
 const edit_item = async (req, res) => {
    const {item} = req.body;
-
+   const con = await db.getConnection();
    try{
-    const con = db.getConnection();
+    
     const result = await con.query(`UPDATE items 
-       SET title = ?, description = ?, price = ?, category = ? 
-       WHERE id = ?`,
-      [item.itemname, item.description, item.price, item.category, item.id]
+       SET itemname = ?, description = ?, price = ?, category = ? 
+       WHERE item_id = ?`,
+      [item.itemname, item.description, item.price, item.category, item.item_id]
     );
 
     if (result.affectedRows === 0) {
