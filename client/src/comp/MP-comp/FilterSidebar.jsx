@@ -24,6 +24,7 @@ const FilterSidebar = ({ onFilterChange }) => {
           <>
             <button className="toggle-btn inside" onClick={() => setIsOpen(false)}>
               <span className="material-symbols-outlined inside-button">first_page</span>
+           <p className="filter-word"> Close </p>
             </button>
             <div className="icon-text" onClick={() => setIsLocationDropdownOpen(prev => !prev)}>
               <span className="material-symbols-outlined location-icon">map</span>

@@ -27,7 +27,9 @@ function MyPurschases({profile}) {
     }  
     return (
     <div>
-        <h1>My Purschases</h1>
+      <div className="user-listing">
+      <h1 className='listing-title'>My Purchases</h1>
+      <div className='items-box'>
         {items.length > 0 ? (
           items.map((item, index) => (
             <ItemCard
@@ -42,6 +44,8 @@ function MyPurschases({profile}) {
         ) : (
           <p>No items found.</p>
         )}
+        </div>
+    </div>
     </div>
   )
 }

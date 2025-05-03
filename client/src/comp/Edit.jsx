@@ -18,7 +18,7 @@ function Edit({
         };
       }, []);  
     
-  const [title, setTitle] = useState(initialTitle);
+  const [itemname, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
   const [price, setPrice] = useState(initialPrice);
   const [category, setCategory] = useState(initialCategory);
@@ -45,8 +45,8 @@ function Edit({
       const data = await response.json();
 
       if (response.ok) {
-        alert('Item updated successfully!');
         if (refreshItems) refreshItems();
+        onClose();
       } else {
         alert('Failed to update item: ' + data.message);
       }
@@ -63,7 +63,7 @@ function Edit({
     <form onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="title">Title</label>
-        <input classname="inputEdit" id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <input classname="inputEdit" id="title" value={itemname} onChange={(e) => setTitle(e.target.value)} required />
       </div>
 
       <div className="form-group">

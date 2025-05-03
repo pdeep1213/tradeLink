@@ -387,7 +387,7 @@ const process_refund = async (req, res) => {
         con = await db.getConnection();
         //Delete from Transaction 
         const deleteQuery = `DELETE FROM Transactions WHERE itemID = ?`;
-        const result = await con.query(deleteQuery, [item_id]);
+        let result = await con.query(deleteQuery, [item_id]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Transaction not found or already refunded." });
@@ -397,11 +397,10 @@ const process_refund = async (req, res) => {
         const sellerQuery = `SELECT uid FROM items WHERE item_id = ?`;
         const sellerRows = await con.query(sellerQuery, [item_id]);
 
-        console.log(sellerRows);
         const seller = sellerRows[0].uid; 
 
         //Send a notification
-        const message = `Your item with ID ${item_id} has been refunded.`;
+        let message = `Your item with ID ${item_id} has been refunded.`;
         const messageQuery = `INSERT INTO Messages (sender_id, receiver_id, content, timestamp) VALUES (?, ?, ?, NOW())`;
         result = await con.query(messageQuery,['0',seller,message])
 
@@ -417,13 +416,13 @@ const process_refund = async (req, res) => {
 
 const edit_item = async (req, res) => {
    const {item} = req.body;
-
+   const con = await db.getConnection();
    try{
-    const con = db.getConnection();
+    
     const result = await con.query(`UPDATE items 
-       SET title = ?, description = ?, price = ?, category = ? 
-       WHERE id = ?`,
-      [item.itemname, item.description, item.price, item.category, item.id]
+       SET itemname = ?, description = ?, price = ?, category = ? 
+       WHERE item_id = ?`,
+      [item.itemname, item.description, item.price, item.category, item.item_id]
     );
 
     if (result.affectedRows === 0) {

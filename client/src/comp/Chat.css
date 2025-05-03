@@ -1,10 +1,6 @@
 .chat-overlay {
   position: fixed;
-  left: 20.5vw; /* Positioned right next to the sidebar */
-  top: 8vh;
-  width: 100vw; /* Adjust based on available space */
-  height: 100vh;
-  z-index: 9999;
+  z-index: 9;
 }
 
 .chat-prompt {
@@ -14,16 +10,30 @@
   text-align: center;
 }
 
+
 .chat-window {
-  position: relative;
-  width: 60vw; /* Adjust width as needed */
-  max-width: 100vw; /* Prevents excessive width */
+  position: fixed;
+  top: 8vh;
+  left: 20.5vw;
+  width: 60vw;
+  max-width: 100vw;
   height: 92vh;
   background-color: white;
   display: flex;
   flex-direction: column;
   padding: 15px;
   overflow: hidden;
+}
+
+.chat-window.centered {
+  position: fixed;
+  top: 40%;
+  left: 77%;
+  transform: translate(-50%, -50%);
+width: 30vw; 
+  height: 60vh; 
+  border-radius: 20px; 
+
 }
 
 .chat-window.large {
