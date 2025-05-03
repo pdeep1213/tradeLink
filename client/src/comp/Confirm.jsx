@@ -53,7 +53,8 @@ function Confirm({isOpen, onClose, title, price, item_id}) {
 
       if (!response.ok) {
         const errorMsg = await response.text();
-        setError(`Transaction failed: ${errorMsg}`);
+        console.log(errorMsg);
+        //setError(`Transaction failed: ${errorMsg}`);
         return;
       }
 
@@ -61,29 +62,29 @@ function Confirm({isOpen, onClose, title, price, item_id}) {
       onClose();
       navigate('/MainPage')
     } catch (error) {
-      console.error("Error processing transaction:", error);
-      setError("An error occurred. Please try again.");
+      console.log("Error processing transaction:", error);
+      //setError("An error occurred. Please try again.");
     }
   }    
 
   // Luhn Algorithm to validate card number
 const checkNumber = (num) => {
-  if (!/^\d+$/.test(num)) return false;
-
-  let sum = 0;
-  let shouldDouble = false;
-
+    if (!/^\d+$/.test(num)) return false;
+    if (num.length < 8) return false; //the lowest a card number can go is 8 i believe
+     
+    let sum = 0;
+    let shouldDouble = false;
   // Process digits from right to left
-  for(i = num.length-2; i<-1; i-=2){
+  for(let i = num.length-2; i<-1; i-=2){
       let tmpValue = parseInt(num[i]) * 2;
       if (tmpValue % 10 !== tmpValue){ //bigger than 9
           let right = tmpValue % 10;
           let left = Math.trunc(tmpValue /10);
           tmpValue = left + right;
       }
-      sum += tmpValue
+      sum += tmpValue;
   }
-  for(i = num.length-3; i<-1; i-=2)
+  for(let i = num.length-3; i<-1; i-=2)
       sum += parseInt(num[i]);
   let checksum = sum % 10;
   return  (((10-checksum) % 10) === parseInt(num[num.length-1]))
@@ -94,7 +95,11 @@ const checkNumber = (num) => {
     const cardNumRegex = /^\d{16}$/;
     const cardExpRegex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
     const cardCVCRegex = /^\d{3}$/;
-    if (!cardNumRegex.test(cardnum) || !checkNumber(cardnum)) {
+    /*if (!cardNumRegex.test(cardnum) || !checkNumber(cardnum)) {
+      alert("Invalid card number");
+      return;
+    }*/
+    if (!checkNumber(cardnum)) {
       alert("Invalid card number");
       return;
     }
@@ -145,7 +150,7 @@ const checkNumber = (num) => {
         <div className='Pay-with'><div className='heading'>Pay With</div><div className='win-payWith'>{cardSet ? `${cardName}  ****-${cardnum.substring(cardnum.length-4,cardnum.length)}` : "..."}</div></div>
         
         
-        <div className='Total'><div className='heading'>Total</div><div className='win-price'>{price * 1.0625}</div></div>
+        <div className='Total'><div className='heading'>Total</div><div className='win-price'>{Math.ceil((price * 1.0625)*100)/100}</div></div>
         <div className='win-footer'><div className='disclamier'>By placing this order, you agree to TradeLink's terms and conditions</div><button className='buy-btn' onClick={buy_now}>Buy Now</button></div>
     </div>
     </div>

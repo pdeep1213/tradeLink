@@ -149,7 +149,7 @@ export default function Chat({ isOpen, onClose, receiver_id, fromMS = false }) {
     }
   };
 
-  const chatWindowClass = fromMS ? "chat-window large" : "chat-window";
+  const chatWindowClass = fromMS ? "chat-window large" : "chat-window centered";
 
   return (
     <div className="chat-overlay">

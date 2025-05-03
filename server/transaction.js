@@ -5,9 +5,14 @@ const sgMail = require('@sendgrid/mail');
 
 const sendEmail = async (email, subject, text) => {
     sgMail.setApiKey(process.env.SGMAIL);
+    //skip unit test email
+    console.log(email[0]);
+    if (email.email == "user@a.com" || email.email == "user2@a.com" || email.email == "admin@a.com"){
+        return;
+    }
     const msg = {
         to: email,
-        from: 'pdeep1312@gmail.com',
+        from: 'noreply@tradelink.com',
         subject: subject,
         text: text,
     };
@@ -16,6 +21,7 @@ const sendEmail = async (email, subject, text) => {
         console.log('Email sent successfully');
     }
     catch (error) {
+        console.log("in send eamil");
         console.error('Error sending email:', error);
     }  
 }
@@ -38,6 +44,7 @@ const generateReceipt = ({ itemName, price }) => {
   
     -------------------------------
        Thank you for your purchase!
+  This Email was Sent from an Automated System - Please Do Not Reply
     `;
   };
   
@@ -69,7 +76,7 @@ const transaction = async (req , res) => {
             "SELECT price, uid FROM items WHERE item_id = ?",
             [item_id]
         );
-
+        
         if (!item) {
             return res.status(404).send("Item not found");
         }
@@ -87,19 +94,20 @@ const transaction = async (req , res) => {
         );
         
         //Unlist the item once its added to Transactions
-        const query = "UPDATE items SET instock = ?  WHERE item_id = ?";
-        const result = await con.query(query, [0,item_id]);
+        //const query = "UPDATE items SET instock = ?  WHERE item_id = ?";
+        //const result = await con.query(query, [0,item_id]);
 
        
         //Send email to seller and buyer
         const buyer = await con.query("SELECT email FROM ulogin WHERE uid = ?", [uid]);
         const seller = await con.query("SELECT email FROM ulogin WHERE uid = ?", [sellerID]);
+        console.log("sending email");
         sendEmailToUsers(buyer, seller, item_id, amount);
-        
+                  
 
-        if (result.affectedRows === 0) {
+        /*if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Item not found" });
-        }
+        }*/
 
         res.status(201).send("Transaction recorded successfully");
 

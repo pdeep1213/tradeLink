@@ -7,25 +7,29 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: 9;
 }
   
 .confirm-window {
     background: white;
     width: 100%;
+    max-width: 600px;
     height: 100%;
+    max-height: 500px;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     position: relative;
     display: flex;
     flex-direction: column;
+overflow-y: auto;
 }
-  
+
+
 /* Header and Footer Styling */
 .win-header, .win-footer {
-    background: #f2f2f2;
-    padding: 10px;
+    background: #f8f8f8;
+    padding: 12px 20px;
     display: flex;
     align-items: center;
 }
@@ -41,14 +45,12 @@
 /* Footer with Buy Button on the Bottom Right */
 .win-footer {
     margin-top: auto;
-    justify-content: space-between; /* Space between disclaimer and button */
-    align-items: center;
-    padding: 10px;
-    border-top: 1px solid #ccc;
-    background: #f2f2f2;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-top: 2px solid #ddd;
+    background: #f8f8f8;
     display: flex;
 }
-
 /* Buy Button */
 .buy-btn {
     background: #007bff;

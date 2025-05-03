@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './MS_SideBar.css';
 import Logo from '../FINANCE.png';
 
@@ -10,6 +10,8 @@ function MS_SideBar({ chats, onChatSelect }) {
     setSelectedChat(uid);
     onChatSelect(uid); // Call the parent function (if needed)
   };
+
+    
 
   return (
     <div className='sidebar'>
