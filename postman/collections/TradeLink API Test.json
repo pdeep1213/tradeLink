@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "ac5b457d-805e-4601-a401-6828f54b71d3",
+		"_postman_id": "4c4c20a0-075a-4517-892c-8a909b38ba2d",
 		"name": "TradeLink API Test",
 		"description": "Run the HelperRun folder first to set up all the enviorment variable that will be use by the SeqTest folder. If you don't most of those test will fail.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_uid": "44174376-ac5b457d-805e-4601-a401-6828f54b71d3"
+		"_uid": "44174376-4c4c20a0-075a-4517-892c-8a909b38ba2d"
 	},
 	"item": [
 		{
@@ -16,7 +16,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "3bee6a7e-bda5-42c4-9368-1f39a9095de1",
+								"id": "c2060429-0fec-4550-a345-6b85011988d4",
 								"exec": [
 									"let item_info = pm.environment.get(\"item_info\");",
 									"let parse = JSON.parse(item_info);",
@@ -33,7 +33,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3c845315-1cb1-4288-b56c-063c4e8a1b37",
+								"id": "b0072f9e-9a3b-4d62-b9ef-383e24eca69f",
 								"exec": [
 									"pm.test(\"UI-009 adding an item to my wishlist\", function(){",
 									"    pm.response.to.have.status(200)",
@@ -44,7 +44,7 @@
 							}
 						}
 					],
-					"id": "838f25cb-7f75-4132-94f6-6a816914e227",
+					"id": "fb8ca723-6a42-483b-8130-160fcab7ff22",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -125,7 +125,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "f0b66d96-61db-471e-9b9e-34de801cb459",
+								"id": "2d608448-006c-476a-b2ce-fda0228638fa",
 								"exec": [
 									"let item_info = pm.environment.get(\"item_info\");",
 									"let parse = JSON.parse(item_info);",
@@ -143,7 +143,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "1a5330af-9700-44d0-8e2a-07def6c1d1a2",
+								"id": "30e0eae7-b9c5-4be4-b38f-dfdeadfe6aae",
 								"exec": [
 									"pm.test(\"Status Code is 200\", function(){",
 									"    pm.response.to.have.status(200)",
@@ -154,7 +154,7 @@
 							}
 						}
 					],
-					"id": "9d369a77-4a78-4dd9-91af-4484927c9a5c",
+					"id": "faf23dc1-f450-49c9-9c9e-94e5c274c0d8",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -229,7 +229,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "283ccd15-3514-4801-ae8c-c9924766464b",
+								"id": "7667db67-1c4d-4999-9e22-84061c2fcc76",
 								"exec": [
 									"let item_info = pm.environment.get(\"item_info\");",
 									"let parse = JSON.parse(item_info);",
@@ -245,7 +245,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7f9dda9d-ac5a-48e1-b5b4-50550eace516",
+								"id": "958b1fb5-fb1f-4364-b5b5-c2bc22aa7ad4",
 								"exec": [
 									"pm.test(\"CM-004 reporting an item as user\", function(){",
 									"    pm.response.to.have.status(200)",
@@ -256,7 +256,7 @@
 							}
 						}
 					],
-					"id": "f1a863fa-5f23-436a-ba64-4494c0b04d14",
+					"id": "a5d7f273-28fa-4181-b65a-4a060aaca0d8",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -290,7 +290,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "4a79c3d4-26d2-4896-9556-bff8d1c64949",
+								"id": "f7e58c4d-7a82-48aa-9218-2b97bf285f97",
 								"exec": [
 									"let item_info = pm.environment.get(\"item_info\");",
 									"let parse = JSON.parse(item_info);",
@@ -305,7 +305,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7cea8dc8-5f44-4d15-900f-ba101337f3de",
+								"id": "111a824e-e7bb-420e-84fd-923d9ba99c57",
 								"exec": [
 									"",
 									"pm.test(\"CM-008 unlisting an item that's currently under sell\", function(){",
@@ -318,7 +318,7 @@
 							}
 						}
 					],
-					"id": "a4f40e89-3e5e-4f09-bd1f-2cb50186e68f",
+					"id": "9610624a-96a4-4264-9e64-bc538dea652e",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -352,7 +352,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "af62cb99-b298-4c67-b909-5d11ac9eed8d",
+								"id": "211698f0-b32d-4d99-8a36-6696f6fe355d",
 								"exec": [
 									"let item_info = pm.environment.get(\"item_info\");",
 									"let parse = JSON.parse(item_info);",
@@ -367,7 +367,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a09cfb52-5144-45df-b0cb-4b3e78b33edf",
+								"id": "2478ccdb-77d9-4568-8038-d9db284b36d4",
 								"exec": [
 									"pm.test(\"CM-008 unlisting an item but it was removed so the item doesn't exist\", function(){",
 									"    pm.response.to.have.status(404)",
@@ -378,7 +378,7 @@
 							}
 						}
 					],
-					"id": "580ef9dc-a045-4262-a28c-071a5da08910",
+					"id": "0696837a-0024-4c16-8006-8883b5315bbc",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -412,7 +412,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "05c47180-5876-4f00-ad73-59e38a3641aa",
+								"id": "fd8e74e2-2aa8-4781-b64f-a446a122c0db",
 								"exec": [
 									"let item_info = pm.environment.get(\"item_info\");",
 									"let parse = JSON.parse(item_info);",
@@ -427,7 +427,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "109ef67b-a971-435c-8bb8-7d0f66c1f335",
+								"id": "61f3dbd4-0b04-4f1c-91db-6515cce4d29b",
 								"exec": [
 									"pm.test(\"Status Code is 200\", function(){",
 									"    pm.response.to.have.status(200)",
@@ -439,7 +439,7 @@
 							}
 						}
 					],
-					"id": "8001fd4f-88ee-4310-9629-96b8599659a4",
+					"id": "27a18fe7-5df7-4179-8917-6224ed5ff358",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -473,7 +473,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f48b032f-59db-4b29-8ae4-72caf4d2fdfd",
+								"id": "82843c0a-d6fa-495e-836d-415c0fe30406",
 								"exec": [
 									"if (pm.environment.get(\"buffer_id2\") != -100){",
 									"    pm.test(\"UI-003 removing an item from User\", function(){",
@@ -494,7 +494,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "5a478835-0167-4073-8901-f1484214bb7b",
+								"id": "3f571300-60f4-4584-9a67-957e04fcbde4",
 								"exec": [
 									""
 								],
@@ -503,7 +503,7 @@
 							}
 						}
 					],
-					"id": "f41ebd15-ba98-4961-aa0f-527811f542c2",
+					"id": "9e3029e8-cc71-4af3-9640-d78a6f37e984",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -537,7 +537,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "62111735-9758-41f7-a595-171af1483012",
+								"id": "4158a933-a650-43a5-8e39-7f0a841a2a43",
 								"exec": [
 									""
 								],
@@ -548,7 +548,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "61d37779-8316-4368-9e05-7567a69e35bd",
+								"id": "e830eedd-a6a7-48fe-95eb-7bf00cc06794",
 								"exec": [
 									"if(pm.environment.get(\"buffer_id\") != -100){",
 									"    pm.test(\"CM-006 removing an item as Admin\", function(){",
@@ -567,7 +567,7 @@
 							}
 						}
 					],
-					"id": "5084bdc6-9952-4aaf-bdec-498ebc446878",
+					"id": "572d7eae-1c83-4941-b7d4-26b6696d24a3",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -601,7 +601,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "214c30bc-a0b4-40ce-9503-1277b6b85698",
+								"id": "085b67e5-5391-4433-8af3-2c39d57b3b8e",
 								"exec": [
 									""
 								],
@@ -612,7 +612,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "48f4d361-adc3-48a6-bd01-0e9ced350669",
+								"id": "4c74eaed-95b1-48da-88fd-4f1a93612b03",
 								"exec": [
 									"pm.test(\"CM-006 removing an item from Admin but items is already removed\", function(){",
 									"    pm.response.to.have.status(404)",
@@ -623,7 +623,7 @@
 							}
 						}
 					],
-					"id": "f21b1cf1-a506-4860-9716-d824f3031ee1",
+					"id": "df7fc5a1-ae6a-4bd5-acb6-3c3c8f5f915b",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -657,7 +657,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "3dd89928-df0d-47bd-b772-5cd8fadb2f6f",
+								"id": "1e7ccfc9-fc0b-4d3a-9a81-01e21735967d",
 								"exec": [
 									"let message = \"this is a test message\";",
 									"",
@@ -670,7 +670,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "dafde9f3-1383-4211-9545-c7f20ff26d67",
+								"id": "4ebae734-0855-4723-9f1f-80ddddb33f3c",
 								"exec": [
 									"pm.test(\"UI-002 Testing sending a message\", function(){",
 									"    pm.response.to.have.status(200);",
@@ -685,7 +685,7 @@
 							}
 						}
 					],
-					"id": "f7bfeaa7-556d-4a4e-bb6e-2a35455313fc",
+					"id": "e5e78eb5-8064-46dd-a0fc-5b576ba8c447",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -765,7 +765,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "1d449326-0d50-41e5-88f0-5dbcb452e96b",
+								"id": "13fd2a5b-f2ea-4da5-a463-6284c6788a41",
 								"exec": [
 									""
 								],
@@ -776,7 +776,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0e3ea52c-84e9-4ada-b0bd-f125642684cd",
+								"id": "c1890727-27cd-4eb0-8b12-a3077a14e6aa",
 								"exec": [
 									"pm.test(\"UI-014 Testing updating profile with 1 item\", function(){",
 									"    pm.response.to.have.status(200);",
@@ -787,7 +787,7 @@
 							}
 						}
 					],
-					"id": "4f4003c7-c653-4708-a4be-632be147cdab",
+					"id": "510ef36a-915f-4658-b1e6-9d62b159c409",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -868,7 +868,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "a59d0ad6-47f2-4efe-856f-02099450f32c",
+								"id": "a2dd3969-2b1f-461a-a172-ae5642d4c7fe",
 								"exec": [
 									""
 								],
@@ -879,7 +879,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ab4302e0-e501-43e3-851d-b69d455e789e",
+								"id": "cfc7bb7f-17be-41e8-b8e4-b7f510bd6445",
 								"exec": [
 									"pm.test(\"UI-014 testing user profile update w/ 2 item\", function(){",
 									"    pm.response.to.have.status(200);",
@@ -890,7 +890,7 @@
 							}
 						}
 					],
-					"id": "5a4b15df-cb29-41e5-978e-36c9ece6ed8f",
+					"id": "e6c33554-fd63-48bb-bd88-352d26c605d3",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -977,7 +977,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "3f032a17-8e55-4ad1-893b-2bd4288c4800",
+								"id": "56a1766e-3982-406e-812f-d45cde8056cf",
 								"exec": [
 									""
 								],
@@ -988,7 +988,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "179d9c56-aa9b-43a2-9efa-8e7b2ec1a959",
+								"id": "ad0905a3-3bed-433f-89a4-7dfcbdf2b7b7",
 								"exec": [
 									"pm.test(\"UI-014 testing user profile update w/ 3 item\", function(){",
 									"    pm.response.to.have.status(200);",
@@ -999,7 +999,7 @@
 							}
 						}
 					],
-					"id": "c8757be1-1e94-43ae-8fb8-c7a3fcc27052",
+					"id": "ca451435-298c-48d0-a6b5-3171bca07ac1",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1092,7 +1092,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "8a9c32fa-1b9b-47cd-ba5c-3d306c5742a8",
+								"id": "c792c0bd-186b-4f52-82c7-ea48571f6d00",
 								"exec": [
 									"pm.test(\"UI-001 testing item filtering\", function(){",
 									"    pm.response.to.have.status(200);",
@@ -1105,7 +1105,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "603dd200-1b66-4d09-9e32-866c2fdfb4d6",
+								"id": "6ae69b0a-0358-4066-b8b5-15f4101238e9",
 								"exec": [
 									""
 								],
@@ -1114,7 +1114,7 @@
 							}
 						}
 					],
-					"id": "77d7bda0-2398-4934-982a-336697ff06f0",
+					"id": "da664dd9-7f3d-412a-9bc4-f333b1992688",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1148,22 +1148,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "17d222f9-9e27-4ebb-9cce-0bb10ea3f7e3",
+								"id": "8cae75ee-05c5-4b55-b093-605759a5b097",
 								"exec": [
-									"let responseData = pm.response.json();",
-									"",
-									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
-									"    let firstItem = responseData.data[0];",
-									"",
-									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
-									"",
-									"    pm.environment.set(\"item_id\", firstItem.item_id);",
-									"    pm.environment.set(\"itemname\", firstItem.itemname);",
-									"    pm.environment.set(\"category\", firstItem.category);",
-									"    pm.environment.set(\"price\", firstItem.price);",
-									"",
-									"} ",
-									""
+									"pm.test(\"UI-001 testing item filtering\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1172,7 +1161,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "12b69d91-fe06-4c0f-b4d1-f8e58aacd728",
+								"id": "959511be-2c40-47db-8429-c4218691817e",
 								"exec": [
 									""
 								],
@@ -1181,7 +1170,7 @@
 							}
 						}
 					],
-					"id": "9dce9d04-964f-4f01-9a52-4bf114a3dfac",
+					"id": "9c6516e2-a3ed-44a8-8c16-26a1e206cc34",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1215,22 +1204,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "cbd18aed-9b00-42e7-bc8a-8b380c9187af",
+								"id": "89cf4808-fb4b-4782-8b9e-9273b20ef9bb",
 								"exec": [
-									"let responseData = pm.response.json();",
-									"",
-									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
-									"    let firstItem = responseData.data[0];",
-									"",
-									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
-									"",
-									"    pm.environment.set(\"item_id\", firstItem.item_id);",
-									"    pm.environment.set(\"itemname\", firstItem.itemname);",
-									"    pm.environment.set(\"category\", firstItem.category);",
-									"    pm.environment.set(\"price\", firstItem.price);",
-									"",
-									"} ",
-									""
+									"pm.test(\"UI-001 testing item filtering\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1239,7 +1217,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "0a134005-d56e-4f21-921c-27eb466a46b9",
+								"id": "f4dcabf0-2a68-433e-87f1-c21911b214cb",
 								"exec": [
 									""
 								],
@@ -1248,7 +1226,7 @@
 							}
 						}
 					],
-					"id": "19b3d1db-2549-4e9a-a1cf-311e914a4ff5",
+					"id": "deccda37-fdb5-4786-b196-7b783cdea904",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1282,22 +1260,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2bd6c979-df9f-4b9d-9c7a-12fa80ee18d5",
+								"id": "2fae2958-f851-4932-b8be-1ef851bce789",
 								"exec": [
-									"let responseData = pm.response.json();",
-									"",
-									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
-									"    let firstItem = responseData.data[0];",
-									"",
-									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
-									"",
-									"    pm.environment.set(\"item_id\", firstItem.item_id);",
-									"    pm.environment.set(\"itemname\", firstItem.itemname);",
-									"    pm.environment.set(\"category\", firstItem.category);",
-									"    pm.environment.set(\"price\", firstItem.price);",
-									"",
-									"} ",
-									""
+									"pm.test(\"UI-001 testing item filtering\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1306,7 +1273,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "54c7ea9c-088e-4953-b7af-92bae720e514",
+								"id": "bcaaed76-abc1-4c46-bfcb-35c6b8e78897",
 								"exec": [
 									""
 								],
@@ -1315,7 +1282,7 @@
 							}
 						}
 					],
-					"id": "a0fcc453-7f90-4e31-97b8-ea1c3b267586",
+					"id": "487964b6-b06c-43ff-a950-5bee393c0d9b",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1349,22 +1316,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "761b886d-8fd1-46ab-af3f-44e09b10db1b",
+								"id": "ecd5caef-4559-4ee8-9205-0fc7cad9e488",
 								"exec": [
-									"let responseData = pm.response.json();",
-									"",
-									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
-									"    let firstItem = responseData.data[0];",
-									"",
-									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
-									"",
-									"    pm.environment.set(\"item_id\", firstItem.item_id);",
-									"    pm.environment.set(\"itemname\", firstItem.itemname);",
-									"    pm.environment.set(\"category\", firstItem.category);",
-									"    pm.environment.set(\"price\", firstItem.price);",
-									"",
-									"} ",
-									""
+									"pm.test(\"UI-001 testing item filtering\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1373,7 +1329,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "9140eea3-9175-4936-ae5f-6a5982b192cd",
+								"id": "d796932d-cbd3-4bca-89c5-27a6f3004b53",
 								"exec": [
 									""
 								],
@@ -1382,7 +1338,7 @@
 							}
 						}
 					],
-					"id": "32cc10f7-b35f-49ea-9e16-691d174e4f79",
+					"id": "2d2af315-ae17-47f3-b0ab-f06021b7fb54",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1416,22 +1372,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "eb8bffa2-16c9-4a19-b6ad-671dd444cfe9",
+								"id": "2cf0f829-76cc-4e9c-add1-caf164cd9ed4",
 								"exec": [
-									"let responseData = pm.response.json();",
-									"",
-									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
-									"    let firstItem = responseData.data[0];",
-									"",
-									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
-									"",
-									"    pm.environment.set(\"item_id\", firstItem.item_id);",
-									"    pm.environment.set(\"itemname\", firstItem.itemname);",
-									"    pm.environment.set(\"category\", firstItem.category);",
-									"    pm.environment.set(\"price\", firstItem.price);",
-									"",
-									"} ",
-									""
+									"pm.test(\"UI-001 testing item filtering\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1440,7 +1385,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "36be803a-8ef1-4217-8bb9-a2a11bfd28f3",
+								"id": "74014e6d-d6af-470c-91ce-ac0d9a839f48",
 								"exec": [
 									""
 								],
@@ -1449,7 +1394,7 @@
 							}
 						}
 					],
-					"id": "71ceed7a-f9ea-4a0b-915b-241fcaa3c885",
+					"id": "5d7c3865-ea85-4b33-b09d-23e52e34d50c",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1483,22 +1428,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ce1aee39-65bf-495d-a7a7-9fb98fca612a",
+								"id": "a4d33a32-6c7a-411b-bff7-4a8fca847eb6",
 								"exec": [
-									"let responseData = pm.response.json();",
-									"",
-									"if (responseData.success && Array.isArray(responseData.data) && responseData.data.length > 0) {",
-									"    let firstItem = responseData.data[0];",
-									"",
-									"    pm.environment.set(\"item_info\", JSON.stringify(firstItem));",
-									"",
-									"    pm.environment.set(\"item_id\", firstItem.item_id);",
-									"    pm.environment.set(\"itemname\", firstItem.itemname);",
-									"    pm.environment.set(\"category\", firstItem.category);",
-									"    pm.environment.set(\"price\", firstItem.price);",
-									"",
-									"} ",
-									""
+									"pm.test(\"UI-001 testing item filtering\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1507,7 +1441,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "3cad6b2e-0fed-4d8c-97fe-4b6f192625bd",
+								"id": "2f277b35-72ff-471d-9057-45c56ff7f971",
 								"exec": [
 									""
 								],
@@ -1516,7 +1450,7 @@
 							}
 						}
 					],
-					"id": "e33b4818-506f-4e46-85a9-769d7e424d4d",
+					"id": "5064ad13-f309-44f1-a1cb-bdffa14f1549",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1545,12 +1479,187 @@
 					"response": []
 				},
 				{
+					"name": "Sending Email after Successful Purchase- TP016",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "78f45bb3-d2a5-4fab-b09f-e163dd4dfd3a",
+								"exec": [
+									"pm.test(\"TP-016 testing item filtering\", function(){",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "315053fe-d92d-4c60-a0d9-076d8e1ed0b6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "secret",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": {{buffer_id}},\n    \"uid\": {{user_id}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/transaction",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TP017 Refund",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "67b3b6c3-56f1-4272-a2df-f4e6beeab4e8",
+								"exec": [
+									"pm.test(\"TP-017 testing refund feature\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "44a04e50-9baf-4b86-8e08-a376920561ed",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user2}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": {{buffer_id}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/process_refund",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"process_refund"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Report-CM007",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "09def891-0811-49b1-b94e-8bf8a85e04ce",
+								"id": "96232dc8-4d7e-488b-bb89-ec898a3ecd9f",
 								"exec": [
 									"//CM-007",
 									"pm.test(\"CM-007 generating a report as Admin\", function(){",
@@ -1562,7 +1671,7 @@
 							}
 						}
 					],
-					"id": "eb8bd77c-b61f-47e9-b959-06e460c083d6",
+					"id": "7b62c6d2-16f6-4bad-84c7-ea78f7cbe57a",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1631,7 +1740,7 @@
 					"response": []
 				}
 			],
-			"id": "8928f415-e291-41d9-845e-49b36dfc45f9"
+			"id": "3c69ee1f-746d-4240-9dbf-7ed976a013fd"
 		},
 		{
 			"name": "HelperRun",
@@ -1642,7 +1751,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "e8833b59-029e-492f-86ae-9e278d667be7",
+								"id": "ca0fa05a-2878-4640-839c-7b4c19ae5dd0",
 								"exec": [
 									""
 								],
@@ -1653,7 +1762,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "56eae0ee-1a86-4ad7-8fef-b4b1b205b1b8",
+								"id": "3a925141-7820-43e5-9630-a2a95c82d31f",
 								"exec": [
 									"pm.test(\"Status Code is 200\", function(){",
 									"    pm.response.to.have.status(200)",
@@ -1667,7 +1776,7 @@
 							}
 						}
 					],
-					"id": "274ca6ef-cbea-40c1-b961-4763245897c1",
+					"id": "d5fc180e-812c-491d-ad1a-43c4a09a5907",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1747,7 +1856,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "6ada2c50-0e50-411f-b4f3-9846405394bd",
+								"id": "2a238d9b-24e7-4d9e-806a-c6e8807158cf",
 								"exec": [
 									""
 								],
@@ -1758,7 +1867,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b0929db0-c9c8-4ffa-960f-9c5167f4f75b",
+								"id": "8e60793b-4a8d-4639-9cb9-2848df1be7d1",
 								"exec": [
 									"pm.test(\"Status Code is 200\", function(){",
 									"    pm.response.to.have.status(200)",
@@ -1772,7 +1881,7 @@
 							}
 						}
 					],
-					"id": "ad5962fa-7427-4814-a48f-75f45c94b1a4",
+					"id": "0aa037ef-0723-420c-9afb-b5e0231eb1dd",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1847,12 +1956,190 @@
 					"response": []
 				},
 				{
+					"name": "sellerID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2b752e67-1696-42f8-b057-46a5dac7f7b3",
+								"exec": [
+									"res = pm.response.json()",
+									"",
+									"pm.environment.set(\"seller_id\", res.uid)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "4a63fb53-519b-4900-8889-43af76dd5942",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mainurl}}/profile",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listrandomitem",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dca8d490-a7ab-4951-96ad-2ba8aabe3fb7",
+								"exec": [
+									"let bufferItem = pm.response.json()",
+									"pm.environment.set(\"buffer_id\", JSON.stringify(bufferItem.item_id))",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "30c8b078-fb78-43c5-9a4e-842c51fe2876",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "5ee856cf-e823-47b7-b1f9-4015f8a34e59",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "payload",
+									"value": "{{token_user}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"itemname\": \"toremove\",\n    \"description\": \"removeme\",\n    \"category\": 2,\n    \"price\": \"5.00\",\n    \"country_code\": \"US\",\n    \"township\": \"news\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{mainurl}}/uploadItem",
+							"host": [
+								"{{mainurl}}"
+							],
+							"path": [
+								"uploadItem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Login User2",
 					"event": [
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "daf9c0ef-0c38-42a2-81b0-afa5662ae025",
+								"id": "8fe6cdf8-04c0-4953-b471-da0978745055",
 								"exec": [
 									""
 								],
@@ -1863,7 +2150,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "1edb985c-c1c5-4bb7-9589-3b97a340fc05",
+								"id": "bd49f8fa-c26a-43a7-90f2-b0d2ff66db9e",
 								"exec": [
 									"pm.test(\"Status Code is 200\", function(){",
 									"    pm.response.to.have.status(200)",
@@ -1877,7 +2164,7 @@
 							}
 						}
 					],
-					"id": "980a9fd7-8cf6-4cb5-a0b7-f74a9b8534f0",
+					"id": "96b46667-1015-45df-a671-d31e6bf22b51",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1957,7 +2244,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f3a0735b-ab66-4051-9dc1-8b27efc3584d",
+								"id": "cc5bc232-8368-479e-9835-a8d5a97f305f",
 								"exec": [
 									"let itemInfo = pm.response.json();",
 									"pm.environment.set(\"item_info\", JSON.stringify(itemInfo[0]))"
@@ -1967,7 +2254,7 @@
 							}
 						}
 					],
-					"id": "2167a6f5-f997-4978-9835-2e6e2bb4580d",
+					"id": "e544b560-fb49-41b4-9cb1-6f00b3985879",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1998,7 +2285,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "640b9c2b-0e60-4b24-befb-55b9a45f9666",
+								"id": "13b1a9a8-c34d-409e-9955-d9d2782c7c13",
 								"exec": [
 									"let itemInfo = pm.response.json();",
 									"pm.environment.set(\"user_id\", JSON.stringify(itemInfo.uid))"
@@ -2008,7 +2295,7 @@
 							}
 						}
 					],
-					"id": "b2684b4f-cf5f-40da-ae5c-7f794d628584",
+					"id": "ec5d00a9-c94b-4fdd-a019-3b9cad468d3b",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2073,114 +2360,12 @@
 					"response": []
 				},
 				{
-					"name": "listrandomitem",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "c5b50ac9-bb28-42d2-8377-3fb052781b08",
-								"exec": [
-									"let bufferItem = pm.response.json()",
-									"pm.environment.set(\"buffer_id\", JSON.stringify(bufferItem.item_id))",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"id": "4147cbf3-c821-4550-a5a4-baf773953c7a",
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"id": "56ddee10-b891-4c36-acb7-ce7483b6a1c9",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "jwt",
-							"jwt": [
-								{
-									"key": "payload",
-									"value": "{{token_user}}",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "algorithm",
-									"value": "HS256",
-									"type": "string"
-								},
-								{
-									"key": "isSecretBase64Encoded",
-									"value": false,
-									"type": "boolean"
-								},
-								{
-									"key": "headerPrefix",
-									"value": "Bearer",
-									"type": "string"
-								},
-								{
-									"key": "queryParamKey",
-									"value": "token",
-									"type": "string"
-								},
-								{
-									"key": "header",
-									"value": "{}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"itemname\": \"toremove\",\n    \"description\": \"removeme\",\n    \"category\": 2,\n    \"price\": \"5.00\",\n    \"country_code\": \"US\",\n    \"township\": \"news\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{mainurl}}/uploadItem",
-							"host": [
-								"{{mainurl}}"
-							],
-							"path": [
-								"uploadItem"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "listrandomitem Copy",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "94498819-8ad2-4ee3-b07f-4f88a2ef44ec",
+								"id": "9e8ce391-8fae-4e8d-acfa-cd51b25943bf",
 								"exec": [
 									"let bufferItem = pm.response.json()",
 									"pm.environment.set(\"buffer_id2\", JSON.stringify(bufferItem.item_id))",
@@ -2193,7 +2378,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ae8e1a66-42ba-477f-971f-6c553223c251",
+								"id": "4979c2b4-eb3d-44e8-ba6a-369d1eb9977b",
 								"exec": [
 									""
 								],
@@ -2202,7 +2387,7 @@
 							}
 						}
 					],
-					"id": "e00fb33e-c290-494a-ab89-c2ef8d6fa11a",
+					"id": "09379b4e-40e2-43ef-b8d7-de6892165ad5",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2277,88 +2462,12 @@
 					"response": []
 				},
 				{
-					"name": "sellerID",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "526fcf65-0a21-4aa0-8e75-0cd377dc8dec",
-								"exec": [
-									"res = pm.response.json()",
-									"",
-									"pm.environment.set(\"seller_id\", res.uid)"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"id": "792324ab-30d5-458d-aadd-df4a9a1c0cbd",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "jwt",
-							"jwt": [
-								{
-									"key": "payload",
-									"value": "{{token_user}}",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								},
-								{
-									"key": "algorithm",
-									"value": "HS256",
-									"type": "string"
-								},
-								{
-									"key": "isSecretBase64Encoded",
-									"value": false,
-									"type": "boolean"
-								},
-								{
-									"key": "headerPrefix",
-									"value": "Bearer",
-									"type": "string"
-								},
-								{
-									"key": "queryParamKey",
-									"value": "token",
-									"type": "string"
-								},
-								{
-									"key": "header",
-									"value": "{}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{mainurl}}/profile",
-							"host": [
-								"{{mainurl}}"
-							],
-							"path": [
-								"profile"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "buyerID",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "905b2a2a-834b-49d3-b5f3-aae124255e6a",
+								"id": "266b277a-4a1f-4ade-b76f-0195cc8ffab2",
 								"exec": [
 									"res = pm.response.json()",
 									"",
@@ -2369,7 +2478,7 @@
 							}
 						}
 					],
-					"id": "46856064-6f56-401a-a0c9-14afb3cfb1e7",
+					"id": "44be660f-57b5-4a24-baee-451d8ed2a7ee",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2429,89 +2538,14 @@
 					"response": []
 				}
 			],
-			"id": "d1b3b436-1867-46ab-816a-dacdbf19e6e0"
+			"id": "f565b44f-816f-4f8c-bfc0-04ef1d8ecd71"
 		},
 		{
 			"name": "TODO",
 			"item": [
 				{
 					"name": "UI005",
-					"id": "59599512-b7d0-4701-9200-8c82232224e8",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UI010",
-					"id": "a4432a73-8ce5-4fdd-ac1f-8fdfda9babea",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "TP012",
-					"id": "b2d28ad6-dd9b-48d5-a6b3-3520c816cfcb",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "TP015",
-					"id": "6d054d0c-c2e5-4a5c-b322-6ad31193d8e2",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "TP016",
-					"id": "f9a56b72-829b-4206-a149-0b806213bce6",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "TP017",
-					"id": "d4afe209-b8b3-4919-9a91-2793a2a7cb39",
+					"id": "136c822c-c026-4c76-b80e-03b6bf5d2583",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2525,7 +2559,7 @@
 					"response": []
 				}
 			],
-			"id": "1634f39c-52ef-4c4f-89a7-82dae546b65c"
+			"id": "1d4695d1-e57c-41f6-96f2-19c1aed9d2e9"
 		}
 	],
 	"auth": {
@@ -2572,7 +2606,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "b17de3fa-e0e8-47f2-bc64-98cd7b546a3a",
+				"id": "fa8f2ccf-28e2-4d8e-a010-01009fb3db6e",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
@@ -2583,7 +2617,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "db8a9134-171b-46ba-b1b0-fed1ad1aac19",
+				"id": "214e977f-073a-4bea-b851-4b98af333b91",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
