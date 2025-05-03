@@ -124,6 +124,84 @@ const info = async (req, res) => {
   }
 }
 
+//Grabs user's avg rating 
+const getUserRating = async (req, res) => {
+    const { uid } = req.params;
+
+    try {
+        const [result] = await db.query(
+        `SELECT avg FROM userrating WHERE uid = ?`, 
+        [uid]
+        );
+
+        if (!result || result.avg === null) {
+        return res.json({ avg: 0 }); // default to 0 if no ratings
+        }
+
+        res.json(result);
+    } catch (err) {
+        console.error('SQL ERROR in getUserRating:', err.message);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
+  
+
+const rateuser = async (req, res) => {
+    const { rating, itemid } = req.body;
+
+    if (typeof rating !== 'number') {
+        return res.status(400).json({ message: "Rating is not a number" });
+    }
+
+    let con;
+    try {
+        con = await db.getConnection();
+
+        const [sellerResult] = await con.query("SELECT uid FROM items WHERE item_id = ?", [itemid]);
+        if (!sellerResult || sellerResult.length === 0) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+        const sellerUid = sellerResult[0].uid;
+
+        const [ratingResult] = await con.query("SELECT * FROM userrating WHERE uid = ?", [sellerUid]);
+
+        if (!ratingResult || ratingResult.length === 0) {
+            await con.query(
+                "INSERT INTO userrating (uid, avg, zero, one, two) VALUES (?, ?, ?, ?, ?)",
+                [
+                    sellerUid,
+                    rating,
+                    rating === 0 ? 1 : 0,
+                    rating === 1 ? 1 : 0,
+                    rating === 2 ? 1 : 0
+                ]
+            );
+        } else {
+            const current = ratingResult[0];
+            const totalRatings = current.zero + current.one + current.two;
+            const newAvg = (current.avg * totalRatings + rating) / (totalRatings + 1);
+
+            await con.query(
+                "UPDATE userrating SET avg = ?, zero = zero + ?, one = one + ?, two = two + ? WHERE uid = ?",
+                [
+                    newAvg,
+                    rating === 0 ? 1 : 0,
+                    rating === 1 ? 1 : 0,
+                    rating === 2 ? 1 : 0,
+                    sellerUid
+                ]
+            );
+        }
+
+        res.status(200).json({ message: "User profile rated successfully" });
+    } catch (err) {
+        console.error("Error when updating user rating:", err);
+        res.status(500).json({ message: "Issue when rating user profile" });
+    } finally {
+        if (con) con.release();
+    }
+};
+/*
 //This will allow the a user to rate another user's profile after buying something from them
 const rateuser = async (req, res) => {
     //The front end in the fetch request should provide both:
@@ -175,6 +253,7 @@ const rateuser = async (req, res) => {
     }
 
 };
+*/
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -292,6 +371,7 @@ module.exports = {
     wishlist_add,
     wishlist_remove,
     info,
+    getUserRating,
     rateuser,
     uploadprofile,
     updateProfileInfo,

@@ -16,7 +16,7 @@ const {
 } = require('./itemHandler.js');
 const {
     profile, wishlist_uid, wishlist_add, 
-    wishlist_remove, info, rateuser, 
+    wishlist_remove, info, getUserRating, rateuser, 
     uploadprofile, updateProfileInfo
 } = require('./profileHandler.js');
 const {sendMessage, getMessages, emitMessage, getChats, updateStatus} = require('./MessageHandler.js');
@@ -126,6 +126,9 @@ app.get('/profile', profile);
 
 //in profileHandler it is grabbing a person's wishlist
 app.get('/wishlist/:uid', wishlist_uid);
+
+//in profileHandler it is grabbing a person's average rating
+app.get('/userrating/:uid', getUserRating);
       
 //in profileHandler adding to a users wishlist
 app.post('/wishlist/add', wishlist_add);

@@ -7,6 +7,7 @@ import "./MainPage.css";
 import Chat from "../comp/Chat.jsx";
 import FilterSidebar from "../comp/MP-comp/FilterSidebar.jsx";
 import CatBox from "../comp/MP-comp/CatBox.jsx";
+import RateModal from '../comp/RateModal.jsx';
 
 // maps category names to their number for backend
 const CATEGORY_MAPPING = { 
@@ -31,6 +32,12 @@ const MainPage = () => {
         township: '',
         county_code: '',
         price: { flag: -1, low: 0, high: 0 }
+    });
+
+    const [isRateOpen, setIsRateOpen] = useState(location.state?.showRating || false);
+    const [rateInfo, setRateInfo] = useState({
+    sellerId: location.state?.sellerId || null,
+    itemId: location.state?.itemId || null,
     });
     
     const [categories, setCategories] = useState([]);
@@ -127,6 +134,13 @@ const MainPage = () => {
                 selectedCategory={selectedCategory}*/ 
             /> 
             <FilterSidebar onFilterChange={handleLocationFilter} categories={categories} />
+
+            <RateModal 
+                isOpen={isRateOpen}
+                onClose={() => setIsRateOpen(false)}
+                sellerId={rateInfo.sellerId}
+                itemId={rateInfo.itemId}
+            />
             
         </>
     );

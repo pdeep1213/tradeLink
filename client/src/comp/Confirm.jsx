@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import "./Confirm.css";
 
-function Confirm({isOpen, onClose, title, price, item_id}) {
+function Confirm({ isOpen, onClose, title, price, item_id, onConfirmPurchase }) {
   if (!isOpen) return null; 
 
     const location = useLocation();
@@ -59,6 +59,7 @@ function Confirm({isOpen, onClose, title, price, item_id}) {
 
       alert("Purchase successful!");
       onClose();
+      onConfirmPurchase();
       navigate('/MainPage')
     } catch (error) {
       console.error("Error processing transaction:", error);

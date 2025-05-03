@@ -9,6 +9,7 @@ function UserHome({ profile }) {
   const [valUID, setvalUID] = useState(profile.uid);
   const [valDes, setvalDes] = useState(profile.pfdesc || "");
   const [profilePic, setProfilePic] = useState(profile.pfpic || test); 
+  const [avgRating, setAvgRating] = useState(undefined);
 
 const [showPopup, setShowPopup] = useState(false);
     const [profilePicPreview, setProfilePicPreview] = useState(profile.pfpic || test);
@@ -24,6 +25,25 @@ useEffect(() => {
   }
 }, [profile.pfpic]);
 
+useEffect(() => {
+  const fetchRating = async () => {
+    try {
+      const response = await fetch(`http://128.6.60.7:8080/userrating/${valUID}`, {
+        credentials: "include"
+      });
+      const data = await response.json();
+      if (data && typeof data.avg === "number") {
+        setAvgRating(data.avg);
+      }
+    } catch (err) {
+      console.error("Error fetching user rating:", err);
+    }
+  };
+
+  if (valUID) {
+    fetchRating();
+  }
+}, [valUID]);
 
 // save button here: any updated input fields on UserDashboard will be send over to server to save the data.    
 const click = async () => {
@@ -121,6 +141,13 @@ const handleChangePicture = (e) => {
                 rows={4}
               />
             </div>
+
+            {avgRating !== undefined && (
+              <div className="rating-container">
+                <p className="rating-label">Average User Rating:</p>
+                <div className="rating-value">{avgRating.toFixed(2)} / 2</div>
+              </div>
+            )}
 
             <button className="saveButton" onClick={click}>
               Save

@@ -1,0 +1,33 @@
+.rate-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+  
+  .rate-modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 320px;
+    text-align: center;
+  }
+  
+  .rate-buttons button {
+    margin: 0.5rem;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .close-btn {
+    margin-top: 1rem;
+    background-color: gray;
+    color: white;
+    padding: 0.5rem 1rem;
+  }
+  
