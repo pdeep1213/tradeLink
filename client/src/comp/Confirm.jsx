@@ -74,19 +74,19 @@ const checkNumber = (num) => {
   let shouldDouble = false;
 
   // Process digits from right to left
-  for (let i = num.length - 1; i >= 0; i--) {
-    let digit = parseInt(num[i]);
-
-    if (shouldDouble) {
-      digit *= 2;
-      if (digit > 9) digit -= 9;
-    }
-
-    sum += digit;
-    shouldDouble = !shouldDouble;
+  for(i = num.length-2; i<-1; i-=2){
+      let tmpValue = parseInt(num[i]) * 2;
+      if (tmpValue % 10 !== tmpValue){ //bigger than 9
+          let right = tmpValue % 10;
+          let left = Math.trunc(tmpValue /10);
+          tmpValue = left + right;
+      }
+      sum += tmpValue
   }
-
-  return sum % 10 === 0;
+  for(i = num.length-3; i<-1; i-=2)
+      sum += parseInt(num[i]);
+  let checksum = sum % 10;
+  return  (((10-checksum) % 10) === parseInt(num[num.length-1]))
 };
 
   //Check if card is valid
@@ -94,7 +94,7 @@ const checkNumber = (num) => {
     const cardNumRegex = /^\d{16}$/;
     const cardExpRegex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
     const cardCVCRegex = /^\d{3}$/;
-    if (!cardNumRegex.test(cardnum) && !checkNumber(cardnum)) {
+    if (!cardNumRegex.test(cardnum) || !checkNumber(cardnum)) {
       alert("Invalid card number");
       return;
     }

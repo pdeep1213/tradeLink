@@ -39,6 +39,7 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
                 body: JSON.stringify(filters),
             });
             const result = await response.json();
+            console.log(result);
             if (!result.success) throw new Error("Filtering failed");
             const enrichedItems = await Promise.all(result.data.map(async (item) => {
                 try {
