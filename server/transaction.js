@@ -1,6 +1,59 @@
 const db = require('./db');
 const jwt = require('jsonwebtoken');
 const jwt_token = process.env.JWTOKEN;
+const sgMail = require('@sendgrid/mail');
+
+const sendEmail = async (email, subject, text) => {
+    sgMail.setApiKey(process.env.SGMAIL);
+    const msg = {
+        to: email,
+        from: 'pdeep1312@gmail.com',
+        subject: subject,
+        text: text,
+    };
+    try {
+        await sgMail.send(msg);
+        console.log('Email sent successfully');
+    }
+    catch (error) {
+        console.error('Error sending email:', error);
+    }  
+}
+
+const generateReceipt = ({ itemName, price }) => {
+    const taxRate = 0.0625;
+    const taxAmount = price * taxRate;
+    const total = price + taxAmount;
+  
+    return `
+    -------------------------------
+               TRADELINK
+           Purchase Receipt
+    -------------------------------
+    Item        : ${itemName}
+    Amount      : $${price}
+    Tax (6.25%) : $${taxAmount}
+    -------------------------------
+    Total       : $${total}
+  
+    -------------------------------
+       Thank you for your purchase!
+    `;
+  };
+  
+const sendEmailToUsers = async (buyerEmail, sellerEmail, itemName, amount) => {
+    const subjectBuyer = `Purchase Confirmation for ${itemName}`;
+    const textBuyer = `Dear Buyer,\n\nThank you for your purchase of ${itemName}.\n\nHere is your receipt:\n${generateReceipt({ itemName, price: amount })}\n\nBest regards,\nTradeLink Team`;
+    const subjectSeller = `Sale Notification for ${itemName}`;
+    const textSeller = `Dear Seller,\n\nYour item ${itemName} has been sold.\n\nBest regards,\nTradeLink Team`;
+    try {
+        await sendEmail(buyerEmail, subjectBuyer, textBuyer);
+        await sendEmail(sellerEmail, subjectSeller, textSeller);
+    }
+    catch (error) {
+        console.error('Error sending email to users:', error);
+    }
+}
 
 const transaction = async (req , res) => {
     let con;
@@ -36,6 +89,13 @@ const transaction = async (req , res) => {
         //Unlist the item once its added to Transactions
         const query = "UPDATE items SET instock = ?  WHERE item_id = ?";
         const result = await con.query(query, [0,item_id]);
+
+       
+        //Send email to seller and buyer
+        const buyer = await con.query("SELECT email FROM ulogin WHERE uid = ?", [uid]);
+        const seller = await con.query("SELECT email FROM ulogin WHERE uid = ?", [sellerID]);
+        sendEmailToUsers(buyer, seller, item_id, amount);
+        
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Item not found" });
