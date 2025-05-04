@@ -59,9 +59,9 @@ function Confirm({ isOpen, onClose, title, price, item_id, onConfirmPurchase }) 
       }
 
       alert("Purchase successful!");
-      onClose();
       onConfirmPurchase();
-      navigate('/MainPage')
+      onClose();
+      
     } catch (error) {
       console.log("Error processing transaction:", error);
       //setError("An error occurred. Please try again.");

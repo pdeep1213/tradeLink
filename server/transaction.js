@@ -11,7 +11,7 @@ const sendEmail = async (email, subject, text) => {
     }
     const msg = {
         to: email,
-        from: 'noreply@tradelink.com',
+        from: 'pdeep1312@gmail.com',
         subject: subject,
         text: text,
     };

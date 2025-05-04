@@ -1,33 +1,115 @@
-.rate-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
+.rate-overlay {
+  position: fixed;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.rate-modal {
+  position: relative;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 450px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  animation: fadeIn 0.3s ease-in-out; /* Add a fade-in animation */
+}
+
+.rate-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.rate-options {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.rate-options button {
+  margin: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.rate-options button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+.rate-close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: none;
+  color: black;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.rate-close-button:hover {
+  background-color: #5a6268;
+  color: white; /* Darker shade on hover */
+}
+
+.rate-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  border-top: 2px solid #ddd;
+  background: #f8f8f8;
+}
+
+.rate-footer button {
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.rate-submit-btn{
+  background: #28a745;
+}
+
+.rate-submit-btn:hover {
+  background: #218838; /* Darker shade on hover */
+}
+
+.rate-skip-btn{
+  background: #384758;
+}
+.rate-skip-btn:hover {
+  background: #2c3e50; /* Darker shade on hover */
+}
+
+/* Add a fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
   }
-  
-  .rate-modal-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    width: 320px;
-    text-align: center;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  .rate-buttons button {
-    margin: 0.5rem;
-    padding: 0.75rem 1.5rem;
-  }
-  
-  .close-btn {
-    margin-top: 1rem;
-    background-color: gray;
-    color: white;
-    padding: 0.5rem 1rem;
-  }
-  
+}

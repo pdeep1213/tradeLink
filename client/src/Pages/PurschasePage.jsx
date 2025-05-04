@@ -21,7 +21,9 @@ function PurchasePage() {
   const [showRating, setShowRating] = useState(false);
   const [purchasedItemId, setPurchasedItemId] = useState(null);
   const [rating, setRating] = useState(null); 
-  const onConfirmPurchase = () => {
+  const onConfirmPurchase = async () => {
+    const id = await fetchSellerID();
+    SetID(id); 
     setShowRating(true); 
   };
   
@@ -166,6 +168,15 @@ function PurchasePage() {
                   </div>
                   <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} receiver_id={sellerID}></Chat>
                   <Confirm isOpen={confirm_win} onClose={() => setConfirmWin(false)} title={title} price={price} item_id={item_id} onConfirmPurchase={onConfirmPurchase}></Confirm>
+                  <RateModal 
+                isOpen={showRating}
+                onClose={() => {setShowRating(false);
+                    navigate('/MainPage');
+                }}
+            //   onSubmitRating={handleSubmitRating}
+                sellerId={sellerID}
+                itemId={item_id}  
+                />
               </div>
               <div id="second-div">
                   <div className="top-div">
@@ -201,13 +212,6 @@ function PurchasePage() {
                   ))}
               </div>
           </div>
-          {showRating && (
-          <RateModal 
-              isOpen={showRating}
-              onClose={() => setShowRating(false)}
-              onSubmitRating={handleSubmitRating}  
-          />
-          )}
       </div>
   );
 }
