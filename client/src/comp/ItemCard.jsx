@@ -4,7 +4,6 @@ import Logo from './FINANCE.png';
 import { FaHeart, FaRegHeart, FaEdit } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-
 function ItemCard({
   item,
   user,
@@ -23,11 +22,7 @@ function ItemCard({
   const navigate = useNavigate();
 
   useEffect(() => {
-    setWished(!!wishedProp);
-  }, [wishedProp]);
-
-  useEffect(() => {
-    const getUID = async () => {
+    const getUIDandWishlist = async () => {
       try {
         const response = await fetch("http://128.6.60.7:8080/profile", {
           credentials: 'include'
@@ -36,18 +31,28 @@ function ItemCard({
         const data = await response.json();
         setProfile(data);
         setUid(data.uid);
+
+        // After fetching UID, fetch user's wishlist
+        const wishResponse = await fetch("http://128.6.60.7:8080/wishlist", {
+          credentials: 'include'
+        });
+        if (wishResponse.ok) {
+          const wishData = await wishResponse.json();
+          const wishedItemIds = new Set(wishData.map(w => w.item_id));
+          setWished(wishedItemIds.has(item.item_id));
+        }
       } catch (err) {
-        console.error("Error fetching profile:", err);
+        console.error("Error fetching profile or wishlist:", err);
       }
     };
-    getUID();
-  }, []);
+    getUIDandWishlist();
+  }, [item.item_id]); // Important: recheck when item changes
 
   const handleViewClick = () => {
     fetch("http://128.6.60.7:8080/view_item", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ item_id : item.item_id }),
+      body: JSON.stringify({ item_id: item.item_id }),
     }).catch((err) => console.error("View count update failed:", err));
   };
 
@@ -59,16 +64,16 @@ function ItemCard({
       const response = await fetch(`http://128.6.60.7:8080/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid, item_id : item.item_id }),
+        body: JSON.stringify({ uid, item_id: item.item_id }),
       });
 
       const result = await response.json();
       if (response.ok) {
         setWished(!wished);
-        if(wished)
+        if (wished)
           refreshItems();
       } else {
-        console.error(' Wishlist toggle failed:', result.message);
+        console.error('Wishlist toggle failed:', result.message);
       }
     } catch (err) {
       console.error('Error toggling wishlist:', err);
@@ -80,7 +85,7 @@ function ItemCard({
       const response = await fetch('http://128.6.60.7:8080/remove_item', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item_id : item.item_id }),
+        body: JSON.stringify({ item_id: item.item_id }),
       });
       const data = await response.json();
       if (response.ok) console.log('Item removed successfully');
@@ -96,7 +101,7 @@ function ItemCard({
       const response = await fetch('http://128.6.60.7:8080/listing_item', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item_id : item.item_id, listed: newListedStatus }),
+        body: JSON.stringify({ item_id: item.item_id, listed: newListedStatus }),
       });
       const data = await response.json();
       if (response.ok) {
@@ -123,7 +128,7 @@ function ItemCard({
       const response = await fetch('http://128.6.60.7:8080/report_item', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item_id : item.item_id }),
+        body: JSON.stringify({ item_id: item.item_id }),
       });
       const data = await response.json();
       if (response.ok) {
@@ -139,11 +144,12 @@ function ItemCard({
   };
 
   const purchase_click = () => {
-    if(!uid) navigate('/login');
+    if (!uid) navigate('/login');
     else {
-    navigate(`/purchase/${item.item_id}`, {
-      state: { item_id : item.item_id, title : item.itemname, price : item.price, images : item.img, description : item.description, profile }
-    });}
+      navigate(`/purchase/${item.item_id}`, {
+        state: { item_id: item.item_id, title: item.itemname, price: item.price, images: item.img, description: item.description, profile }
+      });
+    }
   };
 
   const onRefund = async () => {
@@ -151,7 +157,7 @@ function ItemCard({
       const response = await fetch('http://128.6.60.7:8080/process_refund', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item_id : item.item_id }),
+        body: JSON.stringify({ item_id: item.item_id }),
         credentials: 'include'
       });
       const data = await response.json();
@@ -189,11 +195,11 @@ function ItemCard({
           <button className="refund" onClick={(e) => { e.stopPropagation(); onRefund(); }}>Refund</button>
         );
       case "admin":
-            return (
-                <>
-                 <button className="remove" onClick={(e) => { e.stopPropagation(); remove_btn(); }}>Remove</button>
-                </>
-            );
+        return (
+          <>
+            <button className="remove" onClick={(e) => { e.stopPropagation(); remove_btn(); }}>Remove</button>
+          </>
+        );
       default:
         return (
           <button className="add-to-cart" onClick={(e) => { e.stopPropagation(); purchase_click(); }}>Purchase</button>
