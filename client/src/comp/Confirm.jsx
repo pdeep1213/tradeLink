@@ -129,7 +129,7 @@ const checkNumber = (num) => {
     const response = await fetch("http://128.6.60.7:8080/saveCardInfo", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        credentials: "include", 
+        credentials: 'include', 
         body: JSON.stringify(cardData),
     });
     if (!response.ok){
@@ -154,7 +154,7 @@ const checkNumber = (num) => {
           <div className='Card-num'><input type="text" placeholder="Card Number" value={cardnum} onChange={(e) => setCardNum(e.target.value)} /></div>
           <div className='Card-exp'><input type="text" placeholder="MM/YY" value={cardExp} onChange={(e) => setCardExp(e.target.value)} /></div>
           <div className='Card-cvc'><input type="text" placeholder="CVC" value={cardCVC} onChange={(e) => setCardCVC(e.target.value)} /></div>
-          <button className='Card-btn' onClick={() => checkValidCard()} disabled={!cardName || !cardnum || !cardExp || !cardCVC}>Save Card</button>
+          <button className='Card-btn' onClick={checkValidCard} disabled={!cardName || !cardnum || !cardExp || !cardCVC}>Save Card</button>
           </div>
         )}
         <div className='Pay-with'><div className='heading'>Pay With</div><div className='win-payWith'>{cardSet ? `${cardName}  ****-${cardnum.substring(cardnum.length-4,cardnum.length)}` : "..."}</div></div>

@@ -54,6 +54,7 @@ app.post('/transaction', transaction);
 //for getting earning Stats
 app.get('/earnings/:uid', earnings);
 
+//saving card info in transaction.js
 app.post('/saveCardInfo', saveCardInfo);
 //------------------------------------------------------------
 
