@@ -157,8 +157,7 @@ const getUserRating = async (req, res) => {
   
 
 const rateuser = async (req, res) => {
-    const { rating, itemid } = req.body;
-
+    const { rating, itemId } = req.body;
     if (typeof rating !== 'number') {
         return res.status(400).json({ message: "Rating is not a number" });
     }
@@ -167,13 +166,13 @@ const rateuser = async (req, res) => {
     try {
         con = await db.getConnection();
 
-        const [sellerResult] = await con.query("SELECT uid FROM items WHERE item_id = ?", [itemid]);
+        const sellerResult = await con.query("SELECT uid FROM items WHERE item_id = ?", [itemId]);
         if (!sellerResult || sellerResult.length === 0) {
             return res.status(404).json({ message: "Item not found" });
         }
         const sellerUid = sellerResult[0].uid;
 
-        const [ratingResult] = await con.query("SELECT * FROM userrating WHERE uid = ?", [sellerUid]);
+        const ratingResult = await con.query("SELECT * FROM userrating WHERE uid = ?", [sellerUid]);
 
         if (!ratingResult || ratingResult.length === 0) {
             await con.query(

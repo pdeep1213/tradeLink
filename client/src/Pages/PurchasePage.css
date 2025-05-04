@@ -12,6 +12,9 @@ html, body {
     align-items:center;
     width:100%;
 }
+
+
+
 #mid-div {
     display:flex;
     flex-direction: column;
@@ -30,13 +33,14 @@ html, body {
 }
 
 #second-div {
-    flex: 1;
-    background: #555555;
-    height: 330px;
-    display:grid;
-    border-radius:1rem; 
+  flex: 1;
+  background: #555555;
+  height: 330px;
+  display:grid;
+  border-radius:1rem; 
 
 }
+
 #subprice {
     flex: 3;
     padding: 1.5rem 0rem 0rem 2rem;

@@ -51,6 +51,14 @@
   background-color: #0056b3; /* Darker shade on hover */
 }
 
+.rate-options button.selected {
+  background-color: #07ff5a; /* Yellow to indicate selection */
+  color: black;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  transform: scale(1.05);
+}
+
 .rate-close-button {
   position: absolute;
   top: 1rem;

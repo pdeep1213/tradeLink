@@ -34,7 +34,13 @@ function RateModal({ isOpen, onClose, sellerId, itemId }) {
     }
 
     try {
-      const response = await fetch("http://128.6.60.7:8080/rate", {
+      console.log("Submitting rating:", {
+        sellerId,
+        buyerId,
+        itemId,
+        rating,
+      });
+      const response = await fetch("http://128.6.60.7:8080/rateuser", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

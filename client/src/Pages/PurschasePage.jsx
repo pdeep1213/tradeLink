@@ -169,21 +169,16 @@ function PurchasePage() {
                   </div>
                   <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} receiver_id={sellerID}></Chat>
                   <Confirm isOpen={confirm_win} onClose={() => setConfirmWin(false)} title={title} price={price} item_id={item_id} onConfirmPurchase={onConfirmPurchase}></Confirm>
-<<<<<<< HEAD
                   <RateModal 
                 isOpen={showRating}
                 onClose={() => {setShowRating(false);
                     navigate('/MainPage');
                 }}
-            //   onSubmitRating={handleSubmitRating}
                 sellerId={sellerID}
                 itemId={item_id}  
                 />
-              </div>
-=======
                 </div>
-             </div>
->>>>>>> 6154b215f838623e226a33018f6652314aa6ab48
+              </div>
               <div id="second-div">
                   <div id="mid-div">
                     <div id="low-div">
@@ -220,6 +215,7 @@ function PurchasePage() {
                   ))}
               </div>
           </div>
+          
       </div>
   );
 }

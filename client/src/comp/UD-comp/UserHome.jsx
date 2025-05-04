@@ -104,14 +104,14 @@ const handleChangePicture = (e) => {
             </span>
           </div>
       <div className="input-container-right">
-            <div className="input-container">
+            {/* <div className="input-container">
               <p className="input-text">UID:</p>
               <input
                 className="UID-input"
                 value={valUID}
                 onChange={(e) => setvalUID(e.target.value)}
               />
-            </div>
+            </div> */}
 
             <div className="input-container">
               <p className="input-text">Username:</p>
