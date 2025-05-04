@@ -4,15 +4,17 @@ import "./SearchBar.css";
 function SearchBar({ onSearch, categories, onCategoryChange, selectedCategory }) {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleInputChange = (event) => {
+//filter by name
+    const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
   };
-
+// when filtering by name, to confrim button must be press:
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     onSearch(searchTerm); 
   };
 
+ // sort by category by drop down menu:   
   const handleCategoryChange = (event) => {
     const selected = event.target.value;
     onCategoryChange(selected);

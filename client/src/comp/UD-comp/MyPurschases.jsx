@@ -4,6 +4,8 @@ import ItemCard from '../ItemCard';
 function MyPurschases({profile}) {
     const [valUID, setvalUID] = useState(profile.uid);
     const [items, setItems] = useState([]);
+
+
     //Get Purschased Items
     const fetchItems = async () => {
       try {
@@ -25,6 +27,8 @@ function MyPurschases({profile}) {
     const refreshItems= () =>{
       fetchItems();
     }  
+    
+
     return (
     <div>
       <div className="user-listing">

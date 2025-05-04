@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import test from "../FINANCE.png"; 
 import "./UserHome.css";
@@ -69,7 +70,6 @@ const handleChangePicture = (e) => {
   if (file) {
     setProfilePic(file);
     setProfilePicPreview(URL.createObjectURL(file));
-    console.log(file.name); // <--- use 'file', not 'profilePic'
   }
 };
 

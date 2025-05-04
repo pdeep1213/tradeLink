@@ -359,7 +359,7 @@ app.post('/auth', async (req, res) => {
     //generate a random string between 32-48 characters long
     let vcode;
     do{
-        vcode = generateRandomString(Math.floor(Math.random() * (48-32+1) + 32));
+        vcode = generateRandomString(Math.floor(Math.random() * (48) + 32));
     }while(vcode in verificationCodes);
     verificationCodes[vcode] = email;
 

@@ -9,7 +9,7 @@ function AdminDashboard({ profile }) {
   const [profilePic, setProfilePic] = useState(profile.pfpic || test); 
 const [profilePicPreview, setProfilePicPreview] = useState(profile.pfpic || test);
 
-
+// see if possbile to set profile picture preview if available
 useEffect(() => {
   if (profile.pfpic) {
     const parsedPicArray = JSON.parse(profile.pfpic);
@@ -19,7 +19,7 @@ useEffect(() => {
   }
 }, [profile.pfpic]);
 
-
+// When save is clicked: send updated infomation to the backend
     const click = async () => {
   const formData = new FormData();
   formData.append('username', valUsername);
@@ -36,7 +36,7 @@ useEffect(() => {
   location.reload();
 };
 
-
+// stores the picture infomation for backend and also for profile preview
 const handleChangePicture = (e) => {
   const file = e.target.files[0];
   if (file) {
@@ -50,13 +50,17 @@ const handleChangePicture = (e) => {
   }
 
   return (
-<div className="adminDashboard">
+    <div className="adminDashboard">
+      
+      {/* Title*/}
       <h3 className="static-name">Admin Profile Panel</h3>
-
+        
+      
       <div className="adminProfile">
-        <div className="profile-container">
+      {/* Profile CSS*/}  
+      <div className="profile-container">
           <div className="profile-picture-container" onClick={handleChangePicture} >
-      <img
+             <img
               src={profilePicPreview} 
               alt="Profile"
               className="profile-picture"
@@ -74,6 +78,9 @@ const handleChangePicture = (e) => {
               add_a_photo
             </span>  
       </div>
+      {/* END of Profile Pic CSS*/}
+
+       {/* All the info input */}
           <div className="input-container-right">
             <div className="input-container">
               <p className="input-text">UID:</p> 
@@ -92,9 +99,12 @@ const handleChangePicture = (e) => {
 
             <div className="input-container">
             </div>  
+        {/* End of Info Input*/}
 
-            <button className="saveButton" onClick={click}> Save </button>
-          </div>
+      {/* All info input edited are sended to backend when save is clicked */}
+      <button className="saveButton" onClick={click}> Save </button>
+      
+      </div>
         </div>
       </div>
     </div>
