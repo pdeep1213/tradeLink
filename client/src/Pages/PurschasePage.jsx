@@ -154,6 +154,7 @@ function PurchasePage() {
       <div className="purchase-page">
           <Navbar></Navbar>
           <div className="top-div">
+             <div id="border-box">
               <div className='main-item'>
                   <img src={images == null ? Logo : images} alt={title} className="item-image" />
                   <div className='item-info'>
@@ -166,24 +167,27 @@ function PurchasePage() {
                   </div>
                   <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} receiver_id={sellerID}></Chat>
                   <Confirm isOpen={confirm_win} onClose={() => setConfirmWin(false)} title={title} price={price} item_id={item_id} onConfirmPurchase={onConfirmPurchase}></Confirm>
-              </div>
+                </div>
+             </div>
               <div id="second-div">
-                  <div className="top-div">
+                  <div id="mid-div">
+                    <div id="low-div">
                       <h3 id="subprice"> SubTotal:</h3>
                       <h4 id="subprice2">${price}</h4>
-                  </div>
-                  <div className="top-div">
+                    </div>
+                    <div id="low-div">
                       <h3 id="subprice">Tax:</h3>
                       <h4 id="subprice2">${taxTotal}</h4>
-                  </div>
-                  <hr></hr>
-                  <div className="top-div">
+                    </div>
+                      <hr></hr>
+                    <div id="low-div">
                       <h3 id="subprice">Total:</h3>
                       <h4 id="subprice2">${total}</h4>
-                  </div>
-                  <button className="buy-now" onClick={() =>  setConfirmWin(true)}>
+                    </div>
+                    <button id="buy-now" onClick={() =>  setConfirmWin(true)}>
                       Buy Now
-                  </button>
+                    </button>
+                  </div>
               </div>
           </div>
           <div className='other-item'>
