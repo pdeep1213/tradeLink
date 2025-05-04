@@ -1,11 +1,9 @@
 const db = require('./db');
 
 
-//TODO
 const filteritem = async (req, res) => {
     let con = await db.getConnection();
     const data = req.body;
-//    console.log(data);
     // Filter by category if provided
     const categoryQuery = data.category !== -1 ? `AND category = ${data.category} ` : "";
 

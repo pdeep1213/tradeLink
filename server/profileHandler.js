@@ -17,20 +17,17 @@ const profile = async (req, res) => {
     let con;
     try {
         const decoded = jwt.verify(token, jwt_token);
-        //console.log("Decoded JWT:", decoded);
         const uid = decoded.uid;
-        //console.log("uid", uid);
         con = await db.getConnection().catch(err => {
-        //console.error("DB Connection Error:", err);
         return null;
     });
         if (!con) {
             return res.status(500).json({ message: "Database connection failed" });
         }
+        //get all relevant info linked to the user to be displayed to the user 
         const rows = await con.query(
             "SELECT uid, username, email, perm, pfpic, pfdesc FROM ulogin WHERE uid = ?", [uid]
         );
-        //console.log("DB Query Result:", rows[0].perm); 
         if (!rows || rows.length === 0) { 
             return res.status(400).json({ message: "User not found" });
         }
@@ -54,7 +51,7 @@ const wishlist_uid = async (req, res) => {
         const decoded = jwt.verify(token, jwt_token);
         const uid = decoded.uid;
         con = await db.getConnection();
-
+        //grabs all the item the user has wishlisted
         const wishlistItems = await con.query(`
             SELECT 
               i.item_id, 
@@ -83,18 +80,21 @@ const wishlist_uid = async (req, res) => {
 //This should add to the user's wishlist
 const wishlist_add = async (req, res) => {
     const { uid, item_id } = req.body;
-      
     if (!uid || !item_id) {
         return res.status(400).json({ message: 'Missing uid or item_id' });
     }
-      
+    let con;
     try {
-        await db.query('INSERT IGNORE INTO wishlist (uid, item_id) VALUES (?, ?)', [uid, item_id]);
+        //this will add an item to the user wishlist db table
+        con = await db.getConnection();
+        await con.query('INSERT IGNORE INTO wishlist (uid, item_id) VALUES (?, ?)', [uid, item_id]);
         res.status(200).json({ message: 'Item added to wishlist (or already existed)' });
     } catch (err) {
         console.error('❌ Error inserting into wishlist:', err.message);
         res.status(500).json({ message: 'Server error', error: err.message });
-        }
+    } finally {
+        con.release();
+    }
 };              
 
 //this should remove an item from the user wishlist
@@ -105,6 +105,7 @@ const wishlist_remove =  async (req, res) => {
     }
     let con; 
     try {
+        //this will remove an item to the user wishlist db table
         con = await db.getConnection();
         await con.query("DELETE FROM wishlist WHERE uid = ? AND item_id = ?", [uid, item_id]);
         res.send({ message: "Item removed from wishlist" });
@@ -118,51 +119,57 @@ const wishlist_remove =  async (req, res) => {
       
 //This grabs the user's username
 const info = async (req, res) => {
-  const { uid } = req.params;
+    const { uid } = req.params;
+    let con;
+    try {
+        con = await db.getConnection();
+        const [profile] = await con.query(`SELECT username FROM ulogin WHERE uid = ?`, [uid]);
 
-  try {
-    const [profile] = await db.query(`SELECT username FROM ulogin WHERE uid = ?`, [uid]);
+        if (!profile) {
+            con.release();
+            return res.status(404).json({ message: 'User not found' });
+        }
 
-    if (!profile) {
-      return res.status(404).json({ message: 'User not found' });
+        res.status(200).json(profile);
+    } catch (err) {
+        console.error('🔥 SQL ERROR:', err.message);
+        res.status(500).json({ message: 'Server error', error: err.message });
     }
-
-    res.json(profile);
-  } catch (err) {
-    console.error('🔥 SQL ERROR:', err.message);
-    res.status(500).json({ message: 'Server error', error: err.message });
-  }
+    finally {
+        con.release();
+    }
 }
 
 //Grabs user's avg rating 
 const getUserRating = async (req, res) => {
     const { uid } = req.params;
-
+    let con;
     try {
-        const [result] = await db.query(
+        con = await db.getConnection();
+        const [result] = await con.query(
         `SELECT avg FROM userrating WHERE uid = ?`, 
         [uid]
         );
 
         if (!result || result.avg === null) {
-        return res.json({ avg: 0 }); // default to 0 if no ratings
+            con.release();
+            return res.status(200).json({ avg: 0 }); // default to 0 if no ratings
         }
 
-        res.json(result);
+        res.status(200).json(result);
     } catch (err) {
         console.error('SQL ERROR in getUserRating:', err.message);
         res.status(500).json({ message: 'Server error', error: err.message });
+    }
+    finally {
+        con.release();
     }
 };
   
 //allow the rating of an user
 const rateuser = async (req, res) => {
-<<<<<<< Updated upstream
-    const { rating, itemId } = req.body;
-=======
     const { rating, sellerId} = req.body; //grab the rating and the item that was purchase
 
->>>>>>> Stashed changes
     if (typeof rating !== 'number') {
         return res.status(400).json({ message: "Rating is not a number" });
     }
@@ -170,23 +177,8 @@ const rateuser = async (req, res) => {
     let con;
     try {
         con = await db.getConnection();
-<<<<<<< Updated upstream
 
-        const sellerResult = await con.query("SELECT uid FROM items WHERE item_id = ?", [itemId]);
-=======
-        //using the item grab 
-        /*const [sellerResult] = await con.query("SELECT uid FROM items WHERE item_id = ?", [itemid]);
->>>>>>> Stashed changes
-        if (!sellerResult || sellerResult.length === 0) {
-            return res.status(404).json({ message: "Item not found" });
-        }
-        const sellerUid = sellerResult[0].uid;*/
-
-<<<<<<< Updated upstream
-        const ratingResult = await con.query("SELECT * FROM userrating WHERE uid = ?", [sellerUid]);
-=======
         const [ratingResult] = await con.query("SELECT * FROM userrating WHERE uid = ?", [sellerId]);
->>>>>>> Stashed changes
 
         if (!ratingResult || ratingResult.length === 0) {
             await con.query(
@@ -202,8 +194,9 @@ const rateuser = async (req, res) => {
         } else {
             const current = ratingResult;
             const totalRatings = current.zero + current.one + current.two;
+            //calculate the user new rating average
             const newAvg = (current.avg * totalRatings + rating) / (totalRatings + 1);
-
+            //update user rating depending on what was the rating selected with the new average
             await con.query(
                 "UPDATE userrating SET avg = ?, zero = zero + ?, one = one + ?, two = two + ? WHERE uid = ?",
                 [
@@ -224,60 +217,8 @@ const rateuser = async (req, res) => {
         if (con) con.release();
     }
 };
-/*
-//This will allow the a user to rate another user's profile after buying something from them
-const rateuser = async (req, res) => {
-    //The front end in the fetch request should provide both:
-    //rating of 0, 1, or 2.
-    //and the item_id of the product that was brought: we will be fetching the uid using the item_id
-    //please name these two field: rating and itemid
-    const rating = req.body.rating;
 
-    if (typeof rating !== 'number'){
-        throw new Error("rating is not a number");
-    } //error catching if somehow rating is not a number
-
-    var id = req.body.itemid;
-    var query = "select uid from items where item_id = ?";
-    let con;
-    try{
-        con = await db.getConnection();
-        var result = await con.query(query, id);
-        id = result[0].uid;//rewrite the item_id with the sellers uid since item_id is no longer needed
-        query = "select avg from userrating where uid = ?";
-        result = await con.query(query, id); //this query search is to determine if this is the first time the
-        //user is being rated or not for avg calculation
-        var avg = result[0].avg;
-        if (avg === 0){
-            avg = rating;
-        }
-        else{
-            avg = (avg + rating)/2;
-        }
-        query = "update userrating set avg = ?"; //query to update avg
-        await con.query(query, avg);
-        if (rating === 0){
-            query = "update userrating set zero = zero + 1";    
-        }
-        else if (rating === 1){
-            query = "update userrating set one = one + 1";
-        }
-        else{
-            query = "update userrating set two = two +1";
-        }
-        await con.query(query); //increment the column that has the respective number
-        res.send(200).json({message: "user profile rated successfully"});
-    }
-    catch (err){
-        console.log("error when updaing user rating: ", err);
-        res.send(500).json({message: "issue when rating user profile"});
-    }finally{
-        con.release();
-    }
-
-};
-*/
-
+//saves a user profile pic to /pfp/
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, './pfp/');
@@ -295,6 +236,7 @@ const storage = multer.diskStorage({
 
 const uploadprofile = multer({storage: storage});
 
+//save the user profilepic to the backend and the path to the db and upate other profile information
 const updateProfileInfo = async (req, res) =>{
     //Handles the updating of user information pertaining to their profile photo, description and username
     const token = req.cookies.tradelink
@@ -305,7 +247,6 @@ const updateProfileInfo = async (req, res) =>{
     let con;
     try{
         const decoded = jwt.verify(token, jwt_token);
-        //console.log("Decoded JWT:", decoded);
         const uid = decoded.uid;
         //the imgs should be send as form-data
         const img = req.files;
@@ -313,14 +254,11 @@ const updateProfileInfo = async (req, res) =>{
             console.error("DB Connection Error:", err);
             return null;
         });
-        console.log("testing imgs: ", img);
         if (img.length > 0){
-            console.log("inserting new images");
+            //we will first delete the last profile img
             await deleteProfilePic(uid);
             //storing of the img
             const filepath = req.files.map(file => 'http://128.6.60.7:8080/pfp/' + file.filename);
-            console.log("updating img filepath");
-            console.log("img path: ", filepath);
             const query = `update ulogin set pfpic=(?) where uid=(?)`; 
             await con.execute(query, [filepath, uid], (err, results) => {
                 if (err) {
@@ -333,16 +271,15 @@ const updateProfileInfo = async (req, res) =>{
             retmessage += "profile pic updated\n";
         }
         const descrip = req.body.description;
+        //update the decription of the user if they gave that as an update input
         if(descrip){
-            console.log("testing desc: ", descrip);
             const query = `update ulogin set pfdesc=? where uid = ?`;
             await con.execute(query, [descrip, uid]);
             retmessage += "description pic updated\n";
         }
         const name = req.body.username;
-        console.log("testing names");
+        //update the name of the user if they gave that as an update input
         if(name){
-            console.log("testing username: ", name);
             const query = `update ulogin set username=? where uid = ?`;
             await con.execute(query, [name, uid], (err, results) => {
                 if (err) {
@@ -368,9 +305,9 @@ async function deleteProfilePic(uid){
     let con;
     try{
         con = await db.getConnection(); 
+        //delete a user's profile pic
         const query = 'SELECT pfpic FROM ulogin where uid = (?)'; 
         const rows = await con.query(query, [uid]); 
-        console.log(rows);
         let result = JSON.parse(rows[0].pfpic)[0];
         const idex = result.indexOf("/pfp");
         result = "." + result.substring(idex);

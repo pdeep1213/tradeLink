@@ -5,7 +5,7 @@ const sgMail = require('@sendgrid/mail');
 
 const sendEmail = async (email, subject, text) => {
     sgMail.setApiKey(process.env.SGMAIL);
-    //skip unit test email
+    //skip unit these email they don't exist
     if (email[0].email == "user@a.com" || email[0].email == "user2@a.com" || email[0].email == "admin@a.com"){
         return;
     }
@@ -25,11 +25,12 @@ const sendEmail = async (email, subject, text) => {
     }  
 }
 
+//generate a receipt for the user
 const generateReceipt = ({ itemName, price }) => {
     const taxRate = 0.0625;
     const taxAmount = price * taxRate;
     const total = price + taxAmount;
-  
+    //the receipt body
     return `
     -------------------------------
                TRADELINK
@@ -53,6 +54,7 @@ const sendEmailToUsers = async (buyerEmail, sellerEmail, itemName, amount) => {
     const subjectSeller = `Sale Notification for ${itemName}`;
     const textSeller = `Dear Seller,\n\nYour item ${itemName} has been sold.\n\nBest regards,\nTradeLink Team`;
     try {
+        //send a confimation email to both the seller and buyer
         await sendEmail(buyerEmail, subjectBuyer, textBuyer);
         await sendEmail(sellerEmail, subjectSeller, textSeller);
     }

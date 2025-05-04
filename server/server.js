@@ -42,7 +42,6 @@ app.use('/img', express.static(path.join(__dirname, 'img')));
 app.use('/pfp', express.static(path.join(__dirname, 'pfp')));
 
 
-//TODO : Remove the key from server.js
 sgMail.setApiKey(process.env.SGMAIL);
 
 const jwt_token = process.env.JWTOKEN;
@@ -201,16 +200,17 @@ app.post('/updateStatus', async (req, res) => {
 
 //Message Handling End----------------------------------------------------------------------------------------
 
+//delete a user's cookie upon logging out
 app.post('/logout', (req, res) =>{
     res.cookie('tradelink', '', {
         httpOnly:true,
         expires: new Date(0),
         sameSite: 'Strict'
     });
-//    console.log("Deleted the cookie");
     res.send("deleting cookie");
 });
 
+//this endpoint only purpose is to confirm that the token that link to the cookie exist in the db
 app.get('/send_token', async (req, res) => {
     const token = req.cookies.tradelink;
     if(!token){
@@ -244,6 +244,8 @@ app.get('/send_token', async (req, res) => {
     }
 });
 
+//password encryption nonce + password -> sha256 encryption
+//prevents dictionary attack
 async function encryptPassword(password) {
     const nonce = process.env.HASHNONCE; 
     const pass = new TextEncoder('utf-8').encode(nonce + password);
@@ -253,13 +255,11 @@ async function encryptPassword(password) {
     return hex;
 };
 
-////POST
+//allows the user to create an account. send a cookie back that will be use for majority of the site
 app.post('/register', async (req, res) =>{
     const data = req.body;
-    console.log("Data: ", data); //test
     const newpassword = await encryptPassword(data.password);
     data.password = newpassword;
-    console.log("Data update: ", data); //test
     const columns = Object.keys(data).join(', ');
     const value = Object.values(data);
     const question = value.map(() => '?').join(', '); //this is to prevent sql injection attack
@@ -275,7 +275,6 @@ app.post('/register', async (req, res) =>{
         }
         query = `insert into ulogin (${columns}) values (${question}) returning *`;
         result = await con.query(query, value);
-        console.log("res",result[0].uid);
         //const insertId = result.insertId;
         const sign = jwt.sign({uid: result[0].uid}, jwt_token, {expiresIn: '30d'});
             res.cookie('tradelink', sign, {
@@ -286,7 +285,6 @@ app.post('/register', async (req, res) =>{
         //add uid to userrating
         query = "insert into userrating (uid) values (?)";
         await con.query(query, result[0].uid); //make a row for the user
-        con.release();
         res.status(200).json({ message: 'Task Inserted Successfully', result});
     }catch (err){
         res.status(500).json({error: 'Error During Post', details: err.message});
@@ -301,6 +299,7 @@ app.post('/register', async (req, res) =>{
 // **Login Route**
 app.post('/login', async (req, res) => {
     let { email, password } = req.body;
+    //given a password encrypt then check with the database: this is faster than trying to decrypt a 1-way hash
     const newpassword = await encryptPassword(password);
     password = newpassword;
     let con;
@@ -313,8 +312,6 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Invalid email or password" });
         }
             
-        console.log(user);
-        console.log("sending cookie");
         const sign = jwt.sign({uid: result[0].uid}, jwt_token, {expiresIn: '30d'});
         res.cookie('tradelink', sign, {
             httpOnly:true,
@@ -343,228 +340,240 @@ app.post('/login', async (req, res) => {
 // Store verification codes temporarily (Replace with a database for production)
 const verificationCodes = {};
 
+//generate a string to be used for vertification
+function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let vertifyString = '';
+    for (let i = 0; i<length; i++){
+        vertifyString += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return vertifyString;
+}
 
 // **Send Verification Code Route**
 app.post('/auth', async (req, res) => {
-const { email } = req.body;
-if (!email) {
-    return res.status(400).json({ error: "Email is required" });
-}
-// Generate a random 6-digit verification code
-const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-        // Store code in memory (for demo purposes)
-        verificationCodes[email] = verificationCode;
+    const { email } = req.body;
+    if (!email) {
+        return res.status(400).json({ error: "Email is required" });
+    } 
+    //generate a random string between 32-48 characters long
+    let vcode;
+    do{
+        vcode = generateRandomString(Math.floor(Math.random() * (48-32+1) + 32));
+    }while(vcode in verificationCodes);
+    verificationCodes[vcode] = email;
 
 
-        const msg = {
-            to: email,
-            from: 'pdeep1312@gmail.com', // Must be a verified sender on SendGrid
-            subject: 'Your Verification Code',
-            text: `Your verification code is: ${verificationCode}`,
-            html: `<p>Your verification code is: <strong>${verificationCode}</strong></p>`,
-        };
+    const msg = {
+        to: email,
+        from: 'pdeep1312@gmail.com', // Must be a verified sender on SendGrid
+        subject: 'Vertify Your Account',
+        html: `<p>Click the Link to Vertify Your Account: <a href=http://128.6.60.7:4173/auth?confirm=${vcode}>Verify</a></p>
+        <p>Link Will Expire After 2 Hour</p> `,
+    };
+
+    try {
+        await sgMail.send(msg);
+        res.status(200).json({ message: "Verification email sent" });
+    } catch (error) {
+        console.error("Error sending email:", error);
+        res.status(500).json({ error: "Failed to send email" });
+    }
+});
 
 
-        try {
-            await sgMail.send(msg);
-            console.log(`Verification code sent to ${email}`);
-            res.status(200).json({ message: "Verification email sent" });
-        } catch (error) {
-            console.error("Error sending email:", error);
-            res.status(500).json({ error: "Failed to send email" });
-        }
-    });
+// **Verify Code Route**
+app.get('/verify', async (req, res) => {
+     const verify = req.query.confirm;
 
-
-    // **Verify Code Route**
-    app.post('/verify', (req, res) => {
-        const { email, code } = req.body;
-
-
-        if (!email || !code) {
-            return res.status(400).json({ error: "Email and code are required" });
-        }
-
-
-        // Check if code matches
-        if (verificationCodes[email] === code) {
-            delete verificationCodes[email]; // Remove after successful verification
-            res.status(200).json({ message: "Verification successful" });
-        } else {
-            res.status(400).json({ error: "Invalid verification code" });
-        }
-    });
-
-
+    //check to see if the verify string is in the dictionary
+     if (verify in verificationCodes) {
+         const activateEmail = verificationCodes[verify]; //this is the email link to that code
+         delete verificationCodes[verify]; // Remove after successful verification
+         let con;
+         try {
+             const query = `update ulogin set activate=1 where email like "?"`;
+             con = await db.getConnection();
+             const result = con.execute(query, [activateEmail]);
+         } catch (err){
+             console.log("error activating account: ", err);
+             res.status(500).json({message: "issue in email vertification"});
+         }
+         finally {
+             con.release();
+         }
+         res.status(200).json({ message: "Verification successful" });
+     } else {
+         res.status(400).json({ error: "Invalid verification code" });
+     }
+});
 
 
     //Get Auth
-    app.get('/auth', (req, res) => {
-      res.status(200).json({ message: 'Authenticated', email : currentUser });
-    })
+app.get('/auth', (req, res) => {
+    res.status(200).json({ message: 'Authenticated', email : currentUser });
+})
 
-    const SECOND = 1000; //this is seconds in millisecond
-    const MINUTE = 60*SECOND; //this is minute in millisecond
-    const HOUR = 60*MINUTE; //this is the hour in millisecond
-
-
-    //Delete unactivated account after sometime
-    setInterval(delete_unact, 2 * HOUR); //runs every 2 hour can change if needed
+const SECOND = 1000; //this is seconds in millisecond
+const MINUTE = 60*SECOND; //this is minute in millisecond
+const HOUR = 60*MINUTE; //this is the hour in millisecond
 
 
-    async function delete_unact(){
-        const con = await db.getConnection();
-        const query = "delete from ulogin where activate = 0";
-        try {
-            const result = await con.execute(query);
-            console.log(`Query Deletion Succesful, ${result.affectedRows} removed`);
-        } catch(err) {
-            console.log("error deleting account", err);
-        } finally {
-            con.release();
-        }
+//Delete unactivated account after sometime
+setInterval(delete_unact, 2 * HOUR); //runs every 2 hour can change if needed
+
+
+async function delete_unact(){
+    const con = await db.getConnection();
+    const query = "delete from ulogin where activate = 0";
+    try {
+        const result = await con.execute(query);
+        console.log(`Query Deletion Succesful, ${result.affectedRows} removed`);
+    } catch(err) {
+        console.log("error deleting account", err);
+    } finally {
+        con.release();
     }
+}
 
-    // Item Report
-    app.get('/item-report', async (req, res) => {
-        let con;
-        try {
-            con = await db.getConnection();
+// Item Report
+app.get('/item-report', async (req, res) => {
+    let con;
+    try {
+        con = await db.getConnection();
             
-            const query = `
-                SELECT 
-                    c.info AS category_name, 
-                    COUNT(i.item_id) AS total_items,
-                    SUM(CASE WHEN i.instock > 0 THEN 1 ELSE 0 END) AS active_items,
-                    SUM(CASE WHEN i.instock = 0 THEN 1 ELSE 0 END) AS completed_items,
-                    SUM(CASE WHEN i.report = 1 THEN 1 ELSE 0 END) AS reported_items
-                FROM categories c
-                RIGHT JOIN items i ON c.category = i.category
-                GROUP BY c.category, c.info;
-            `;
+        const query = `
+        SELECT 
+        c.info AS category_name, 
+        COUNT(i.item_id) AS total_items,
+        SUM(CASE WHEN i.instock > 0 THEN 1 ELSE 0 END) AS active_items,
+        SUM(CASE WHEN i.instock = 0 THEN 1 ELSE 0 END) AS completed_items,
+        SUM(CASE WHEN i.report = 1 THEN 1 ELSE 0 END) AS reported_items
+        FROM categories c
+        RIGHT JOIN items i ON c.category = i.category
+        GROUP BY c.category, c.info;
+        `;
             
-            const result = await con.query(query);
+        const result = await con.query(query);
     
-            if (!result || result.length === 0) {
-                return res.status(200).json([]);
-            }
+        if (!result || result.length === 0) {
+            return res.status(200).json([]);
+        }
     
-            res.status(200).json(result);
-        } catch (error) {
-            console.error("Error fetching categories:", error);
-            res.status(500).json({ error: "Error fetching categories" });
-        }
-        finally{
-            con.release();
-        }
-    });
+        res.status(200).json(result);
+    } catch (error) {
+        console.error("Error fetching categories:", error);
+        res.status(500).json({ error: "Error fetching categories" });
+    }
+    finally{
+        con.release();
+    }
+});
     
     // UserReport
-    app.get('/user-report', async (req, res) => {
-        let con;
-        try {
-         con = await db.getConnection();
+app.get('/user-report', async (req, res) => {
+    let con;
+    try {
+        con = await db.getConnection();
       
-          const query = `
-            SELECT 
-              u.uid,
-              COUNT(i.item_id) AS total_listings,
-              SUM(CASE WHEN i.instock > 0 THEN 1 ELSE 0 END) AS active_listings,
-              SUM(CASE WHEN i.instock = 0 THEN 1 ELSE 0 END) AS completed_listings,
-              SUM(CASE WHEN i.report = 1 THEN 1 ELSE 0 END) AS reported_listings
-            FROM ulogin u
-            LEFT JOIN items i ON u.uid = i.uid
-            WHERE u.perm = 0  -- Exclude admins (perm = 1)
-            GROUP BY u.uid;
-          `;
+        const query = `
+        SELECT 
+        u.uid,
+        COUNT(i.item_id) AS total_listings,
+        SUM(CASE WHEN i.instock > 0 THEN 1 ELSE 0 END) AS active_listings,
+        SUM(CASE WHEN i.instock = 0 THEN 1 ELSE 0 END) AS completed_listings,
+        SUM(CASE WHEN i.report = 1 THEN 1 ELSE 0 END) AS reported_listings
+        FROM ulogin u
+        LEFT JOIN items i ON u.uid = i.uid
+        WHERE u.perm = 0  -- Exclude admins (perm = 1)
+        GROUP BY u.uid;
+        `;
       
-          const listingsResult = await con.query(query);
+        const listingsResult = await con.query(query);
       
       
-          if (!listingsResult || listingsResult.length === 0) {
+        if (!listingsResult || listingsResult.length === 0) {
             return res.status(200).json([]);
-          }
+        }
       
-          res.status(200).json(listingsResult);
-        } catch (error) {
-          console.error("Error fetching user reports:", error);
-          res.status(500).json({ error: "Error fetching user reports" });
-        }
-        finally{
-            con.release();
-        }
-      }); 
+        res.status(200).json(listingsResult);
+    } catch (error) {
+        console.error("Error fetching user reports:", error);
+        res.status(500).json({ error: "Error fetching user reports" });
+    }
+    finally{
+        con.release();
+    }
+}); 
 
-      app.get('/trending', async (req, res) => {
-        let con;
-        try {
-          con = await db.getConnection();
-          const query = `
-            SELECT * FROM items 
-            WHERE instock > 0
-              AND report = 0
-            ORDER BY view_count DESC 
-            LIMIT 10;
-          `;
-          const result = await con.query(query);
-          res.status(200).json(result);
-        } catch (err) {
-          console.error("Error fetching trending items:", err);
-          res.status(500).json({ error: "Error fetching trending items" });
-        } finally {
-          if (con) con.release();
-        }
-      });
+app.get('/trending', async (req, res) => {
+    let con;
+    try {
+        con = await db.getConnection();
+        const query = `
+        SELECT * FROM items 
+        WHERE instock > 0
+        AND report = 0
+        ORDER BY view_count DESC 
+        LIMIT 10;
+        `;
+        const result = await con.query(query);
+        res.status(200).json(result);
+    } catch (err) {
+        console.error("Error fetching trending items:", err);
+        res.status(500).json({ error: "Error fetching trending items" });
+    } finally {
+        if (con) con.release();
+    }
+});
         
-      app.get('/recent', async (req, res) => {
-        let con;
-        try {
-          con = await db.getConnection();
-          const query = `
-            SELECT * FROM items 
-            WHERE created_at >= NOW() - INTERVAL 7 DAY 
-              AND instock > 0
-              AND report = 0
-            ORDER BY created_at DESC;
-          `;
-          const result = await con.query(query);
-          res.status(200).json(result);
-        } catch (err) {
-          console.error("Error fetching recent items:", err);
-          res.status(500).json({ error: "Error fetching recent items" });
-        } finally {
-          if (con) con.release();
-        }
-      });  
+app.get('/recent', async (req, res) => {
+    let con;
+    try {
+        con = await db.getConnection();
+        const query = `
+        SELECT * FROM items 
+        WHERE created_at >= NOW() - INTERVAL 7 DAY 
+        AND instock > 0
+        AND report = 0
+        ORDER BY created_at DESC;
+        `;
+        const result = await con.query(query);
+        res.status(200).json(result);
+    } catch (err) {
+        console.error("Error fetching recent items:", err);
+        res.status(500).json({ error: "Error fetching recent items" });
+    } finally {
+        if (con) con.release();
+    }
+});  
 
-      app.post('/view_item', async (req, res) => {
-        const { item_id } = req.body;
-        if (!item_id) {
-          return res.status(400).json({ error: "Item ID is required" });
-        }
+app.post('/view_item', async (req, res) => {
+    const { item_id } = req.body;
+    if (!item_id) {
+        return res.status(400).json({ error: "Item ID is required" });
+    }
       
-        let con;
-        try {
-          con = await db.getConnection();
-          const query = `UPDATE items SET view_count = view_count + 1 WHERE item_id = ?`;
-          await con.query(query, [item_id]);
-          res.status(200).json({ success: true });
-        } catch (err) {
-          console.error("Error updating view count:", err);
-          res.status(500).json({ error: "Failed to update view count" });
-        } finally {
-          if (con) con.release();
-        }
-      });
+    let con;
+    try {
+        con = await db.getConnection();
+        const query = `UPDATE items SET view_count = view_count + 1 WHERE item_id = ?`;
+        await con.query(query, [item_id]);
+        res.status(200).json({ success: true });
+    } catch (err) {
+        console.error("Error updating view count:", err);
+        res.status(500).json({ error: "Failed to update view count" });
+    } finally {
+        if (con) con.release();
+    }
+});
       
 const server = app.listen(port, "0.0.0.0" , () => console.log(`Server running on ${port}`));
 const io = socketIo(server, { cors: corsOption }); 
 
 // Handling socket connections
 io.on('connection', (socket) => {
-    //console.log('New client connected',socket.id);
     
     socket.on('disconnect', () => {
-       // console.log('Client disconnected');
     });
 });

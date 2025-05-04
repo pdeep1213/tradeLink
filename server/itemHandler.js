@@ -27,22 +27,21 @@ const uploaditem = async (req, res) => {
         const columns = Object.keys(data).join(', ');
         const value = [uid, ...Object.values(data)];
         const question = value.map(() => '?').join(', ');            
+        //insert the item into the items table
         let query = `insert into items (uid, ${columns}) values (${question})`;
         con = await db.getConnection();
         var result = await con.query(query, value);
-//        console.log("Itemlist result: ", result);
         const item_id = Number(result.insertId);
-//        console.log("item id: ", item_id);
         query = "insert into rating (item_id) values (?)";
         var result = await con.query(query, item_id);
         res.status(200).json({ message: 'Item Inserted Successfully', item_id});
-        }
-        catch (error){
-            console.log(error);
-            res.status(500).send("issue during item uploading");
-        }finally{
-            con.release();
-        }
+    }
+    catch (error){
+        console.log(error);
+        res.status(500).send("issue during item uploading");
+    }finally{
+        con.release();
+    }
 };
 
 //This function will delete an item from the database. All references to the item img should be deleted.
@@ -56,7 +55,9 @@ const removeItem =  async (req, res)=> {
         con = await db.getConnection();
         const query = "DELETE from items WHERE item_id = ?";
         console.log("delete item img")
+        //we will first delete the img that is linked with that item to free up space in teh backend
         await deleteItemPic(item_id);
+        //we will now delete the item from the db table
         const result = await con.query(query, item_id);
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Item not found" });
@@ -71,6 +72,7 @@ const removeItem =  async (req, res)=> {
     }
 };
 
+//this method handles deleteing of items pic
 async function deleteItemPic(item_id){
     let con;
     try{
@@ -80,9 +82,10 @@ async function deleteItemPic(item_id){
         if (rows.length > 0){
             for (const row of rows){
                 let result = row.imgpath;
+                //acquire only the part of the imgPath that starts with what folder it's located in
                 const idex = result.indexOf("/img");
                 result = "." +result.substring(idex);
-                console.log("img path: " +result);
+                //check if the img is alow to be deleted if it is delete the img else don't
                 fs.access(result, fs.constants.F_OK, (err) =>{
                     if (err)
                         console.log("img path doesn't exist");
@@ -111,6 +114,7 @@ const listItem =  async (req, res)=> {
     try {
         con = await db.getConnection();
         let instock = (listed) ? 1 : 0;
+        //this will query the db for all the items that are currently not unlisted
         const query = "UPDATE items SET instock = ?  WHERE item_id = ?";
         const result = await con.query(query, [instock,item_id]);
         if (result.affectedRows === 0) {
@@ -131,6 +135,8 @@ const sendlistGuest = async (req, res) => {
     let con;
     try {
         con = await db.getConnection(); 
+        //this will query the db for all item that is not unlisted. this is for if a user is not login in
+        //as this method won't need a token check
         const query = 'SELECT * FROM items WHERE instock = 1'; 
         const rows = await con.query(query); 
         con.release();
@@ -160,6 +166,7 @@ const sendlist =  async (req, res) => {
     const { type } = req.query;
     let con;
     try {
+        //decode teh cookie to acquire the UID of the user
         const decoded = jwt.verify(token, jwt_token);
         const uid = decoded.uid;
         con = await db.getConnection().catch(err => {
@@ -171,6 +178,7 @@ const sendlist =  async (req, res) => {
         }
         let query = '';
         let params = [];
+        //we will now query for all items the user has listed
         if (type === 'main') {
             query = `
                 SELECT i.*, 
@@ -218,6 +226,7 @@ const sendlist =  async (req, res) => {
     }
 
 };
+
 //Get uid of the seller 
 const sellerID = async (req, res) => {
     const {item_id} = req.body;
@@ -250,7 +259,6 @@ const sellerID = async (req, res) => {
 //todo redirect to itemreport table instead, requiring two paramter, item_id and reason [int, varchar(512)]
 const reportitem = async (req, res)=> {
     const {item_id} = req.body;
-    console.log(item_id);
     let con;
     try {
        con = await db.getConnection();
@@ -276,7 +284,6 @@ const getAllCategory = async (req, res) => {
     try{
         con = await db.getConnection();
         const result = await con.query(query);
-        //console.log(result);
         res.send(result);
     } catch (error) {
       console.error("Error cat:", error);
@@ -417,7 +424,7 @@ const edit_item = async (req, res) => {
    const {item} = req.body;
    const con = await db.getConnection();
    try{
-    
+    //update the info on a item the user has listed 
     const result = await con.query(`UPDATE items 
        SET itemname = ?, description = ?, price = ?, category = ? 
        WHERE item_id = ?`,
