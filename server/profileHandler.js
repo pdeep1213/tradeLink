@@ -155,9 +155,14 @@ const getUserRating = async (req, res) => {
     }
 };
   
-
+//allow the rating of an user
 const rateuser = async (req, res) => {
+<<<<<<< Updated upstream
     const { rating, itemId } = req.body;
+=======
+    const { rating, sellerId} = req.body; //grab the rating and the item that was purchase
+
+>>>>>>> Stashed changes
     if (typeof rating !== 'number') {
         return res.status(400).json({ message: "Rating is not a number" });
     }
@@ -165,14 +170,23 @@ const rateuser = async (req, res) => {
     let con;
     try {
         con = await db.getConnection();
+<<<<<<< Updated upstream
 
         const sellerResult = await con.query("SELECT uid FROM items WHERE item_id = ?", [itemId]);
+=======
+        //using the item grab 
+        /*const [sellerResult] = await con.query("SELECT uid FROM items WHERE item_id = ?", [itemid]);
+>>>>>>> Stashed changes
         if (!sellerResult || sellerResult.length === 0) {
             return res.status(404).json({ message: "Item not found" });
         }
-        const sellerUid = sellerResult[0].uid;
+        const sellerUid = sellerResult[0].uid;*/
 
+<<<<<<< Updated upstream
         const ratingResult = await con.query("SELECT * FROM userrating WHERE uid = ?", [sellerUid]);
+=======
+        const [ratingResult] = await con.query("SELECT * FROM userrating WHERE uid = ?", [sellerId]);
+>>>>>>> Stashed changes
 
         if (!ratingResult || ratingResult.length === 0) {
             await con.query(
@@ -186,7 +200,7 @@ const rateuser = async (req, res) => {
                 ]
             );
         } else {
-            const current = ratingResult[0];
+            const current = ratingResult;
             const totalRatings = current.zero + current.one + current.two;
             const newAvg = (current.avg * totalRatings + rating) / (totalRatings + 1);
 
@@ -197,7 +211,7 @@ const rateuser = async (req, res) => {
                     rating === 0 ? 1 : 0,
                     rating === 1 ? 1 : 0,
                     rating === 2 ? 1 : 0,
-                    sellerUid
+                    sellerId
                 ]
             );
         }
