@@ -37,13 +37,13 @@
   text-align: center;
 }
 
-.form-group {
+.form-groups {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.form-group label {
+.form-groups label {
   font-weight: 500;
   color: #555;
 }

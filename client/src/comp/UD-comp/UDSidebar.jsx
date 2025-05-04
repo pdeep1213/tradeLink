@@ -112,7 +112,7 @@ useEffect(() => {
                 onClick={() => handleButtonClick("userPurschase")}
               >
                 <span className="material-symbols-outlined">orders</span>
-                My Purschases
+                My Purchases
               </button>
             </li>
             <li>

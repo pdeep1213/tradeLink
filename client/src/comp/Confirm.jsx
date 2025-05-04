@@ -126,6 +126,15 @@ const checkNumber = (num) => {
       cardName: cardName,
     };
     setCardSet(true);
+    const response = await fetch("http://128.6.60.7:8080/saveCardInfo", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        credentials: "include", 
+        body: JSON.stringify(cardData),
+    });
+    if (!response.ok){
+        console.log("error saving card info");
+    }
   }
 
   return (

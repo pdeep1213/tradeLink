@@ -23,7 +23,6 @@ const uploaditem = async (req, res) => {
         const decoded = jwt.verify(token, jwt_token);
         const uid = decoded.uid; //uid for the table
         const data = req.body;
-        console.log("Data: ", data); //test
         //might need to modify with the new column stuff
         const columns = Object.keys(data).join(', ');
         const value = [uid, ...Object.values(data)];

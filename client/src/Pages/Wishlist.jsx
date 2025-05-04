@@ -36,10 +36,15 @@ function Wishlist() {
     return updated;
   };
 
-  const { data: items, isLoading, isError, error } = useQuery({
+
+  const { data: items, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['wishlist-items'],
     queryFn: fetchWishlistedItems,
   });
+    
+  const refreshItems = () => {
+      refetch();
+  }
 
   return (
     <div className="wishlist-page">
@@ -57,6 +62,7 @@ function Wishlist() {
               user={false}
               instock={item.instock}
               wished={true}
+              refreshItems={refreshItems}
             />
           ))
         ) : (

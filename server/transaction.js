@@ -150,7 +150,40 @@ const earnings = async (req,res) => {
         }
 }
 
+// save a user cardInfo
+const saveCardInfo = async (res, req) => {
+    const token = req.cookies.tradelink;
+    if(!token){
+        console.log("no token");
+        return res.status(401).json({message: "no token"})
+    }
+    let con;
+    try{
+        const decoded = jwt.verify(token, jwt_token);
+        const uid = decoded.uid; //uid for the table
+        const data = req.body;
+        console.log("card Data:", data);
+        //Map query column and value to prevent sql injection attck
+        const columns = Object.keys(data).join(', ');
+        const value = [uid, ...Object.values(data)];
+        const question = value.map(() => '?').join(', ');            
+        
+        let query = `insert into cardInfo (uid, ${columns}) values (${question})`;
+        //insert info into table
+        con = await db.getConnection();
+        var result = await con.query(query, value);
+        var result = await con.query(query, item_id);
+        res.status(200).json({ message: 'Card Saved'});
+     } catch (err) {
+         console.log("issue saving card info: ", err);
+         res.send(500).json({message: "saving card info failed"});
+     } finally {
+         con.release();
+     }
+};
+
 module.exports = {
  transaction,
- earnings
+ earnings,
+ saveCardInfo
 }

@@ -61,22 +61,22 @@ function Edit({
   <div className="modal-content" onClick={(e) => e.stopPropagation()}>
     <h2>Edit Item</h2>
     <form onSubmit={handleSubmit}>
-      <div className="form-group">
+      <div className="form-groups">
         <label htmlFor="title">Title</label>
         <input classname="inputEdit" id="title" value={itemname} onChange={(e) => setTitle(e.target.value)} required />
       </div>
 
-      <div className="form-group">
+      <div className="form-groups">
         <label htmlFor="description">Description</label>
         <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} required />
       </div>
 
-      <div className="form-group">
+      <div className="form-groups">
         <label htmlFor="price">Price</label>
         <input classname="inputEdit" id="price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
       </div>
 
-      <div className="form-group">
+      <div className="form-groups">
         <label htmlFor="category">Category</label>
         <select id="category" value={category} onChange={(e) => setCategory(Number(e.target.value))} required>
           <option value={1}>Electronics</option>

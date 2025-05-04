@@ -65,6 +65,8 @@ function ItemCard({
       const result = await response.json();
       if (response.ok) {
         setWished(!wished);
+        if(wished)
+          refreshItems();
       } else {
         console.error(' Wishlist toggle failed:', result.message);
       }

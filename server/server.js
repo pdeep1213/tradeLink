@@ -20,7 +20,7 @@ const {
     uploadprofile, updateProfileInfo
 } = require('./profileHandler.js');
 const {sendMessage, getMessages, emitMessage, getChats, updateStatus} = require('./MessageHandler.js');
-const {transaction, earnings} = require('./transaction.js')
+const {transaction, earnings, saveCardInfo} = require('./transaction.js')
 const {filteritem,filterLocation} = require('./returnHandler.js');
 const cors = require('cors');
 const path = require('path');
@@ -53,6 +53,8 @@ app.post('/transaction', transaction);
 
 //for getting earning Stats
 app.get('/earnings/:uid', earnings);
+
+app.post('/saveCardInfo', saveCardInfo);
 //------------------------------------------------------------
 
 
@@ -406,20 +408,20 @@ const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
 
     //Delete unactivated account after sometime
-    setInterval(delete_unact, 2*HOUR); //runs every 2 hour can change if needed
+    setInterval(delete_unact, 2 * HOUR); //runs every 2 hour can change if needed
 
 
-    function delete_unact(){
-        const con = db.getConnection();
+    async function delete_unact(){
+        const con = await db.getConnection();
         const query = "delete from ulogin where activate = 0";
-        con.query(query, (error, result => {
-            if(error){
-                console.log("Error during query deletion");
-                return;
-            }
+        try {
+            const result = await con.execute(query);
             console.log(`Query Deletion Succesful, ${result.affectedRows} removed`);
-        }));
-        con.release();
+        } catch(err) {
+            console.log("error deleting account", err);
+        } finally {
+            con.release();
+        }
     }
 
     // Item Report

@@ -38,18 +38,24 @@ const Navbar = () => {
   
 // when logout is clicked: clears cookies and user data back to landing page.
  const logout = async () => {
-        try{
-            await fetch("http://128.6.60.7:8080/logout", {
-                method: "POST",
-                credentials: 'include',
-            });
-            
-           navigate('/MainPage');
-        }
-        catch (err){
-            console.log("error logging out");
-        }
-    };
+     try{
+         await fetch("http://128.6.60.7:8080/logout", {
+             method: "POST",
+             credentials: 'include',
+         });
+
+         navigate('/MainPage');
+     }
+     catch (err){
+         console.log("error logging out");
+     }
+ };
+
+ function timeReload() {
+    setTimeout(() => {
+        window.location.reload();
+    },250);
+ }
 
     const authLinks = !isAuthPage && (
     <>
@@ -74,7 +80,7 @@ const Navbar = () => {
               <div className="dropdown-menu-navbar">
                 <div className="mydash-menu">
                   <span className="material-symbols-outlined dashboard-icon">dashboard</span>
-                  <Link to="/userDashboard" className="dropdown-item">My Dashboard</Link>
+                  <Link to="/userDashboard" onClick={timeReload} className="dropdown-item">My Dashboard</Link>
                 </div>
                 <div className="chat-menu">
                   <span className="material-symbols-outlined chatmenu-icon">forum</span>

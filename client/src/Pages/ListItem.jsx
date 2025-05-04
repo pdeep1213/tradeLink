@@ -21,11 +21,8 @@ const ListItem = () => {
   });
 
   const [images, setImages] = useState([]);
+const [imagePreview, setImagePreview] = useState([]);
 
-  useEffect(() => {
-    document.body.style.background = "linear-gradient(to right bottom, #4c7cc4, #aeaddc, #baceeb)";
-    return () => { document.body.style.backgroundColor = ""; };
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,9 +32,15 @@ const ListItem = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
-    setImages(e.target.files);
-  };
+
+const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setImages(file); 
+    setImagePreview(URL.createObjectURL(file));
+  }
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -76,10 +79,22 @@ const ListItem = () => {
 
   return (
     <div className="form-container">
-      <h2 className="form-title">Item Information Form</h2>
+      <div className="image-previews">
+    <button onClick={() => navigate(-1)} className="back-button">
+        <span class="material-symbols-outlined back-form">
+arrow_back
+</span>
+      <p className="back-text-form"> Back </p>
+      </button>
+      <img
+      src={imagePreview} 
+      className="preview-img"
+    />
+    </div>
       <form onSubmit={handleSubmit} className="item-form">
-        <div className="form-group">
-          <label htmlFor="itemname" className="form-label">Title/Name:</label>
+      <h2 className="form-title">Item Information Form</h2> 
+      <div className="form-group">
+          <label htmlFor="itemname" className="form-labels">Title/Name:</label>
           <input
             type="text"
             id="itemname"
@@ -92,7 +107,7 @@ const ListItem = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="description" className="form-label">Description:</label>
+          <label htmlFor="description" className="form-labels">Description:</label>
           <textarea
             id="description"
             name="description"
@@ -104,7 +119,7 @@ const ListItem = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="category" className="form-label">Category:</label>
+          <label htmlFor="category" className="form-labels">Category:</label>
           <select
             id="category"
             name="category"
@@ -121,7 +136,7 @@ const ListItem = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="price" className="form-label">Price/Value:</label>
+          <label htmlFor="price" className="form-labels">Price/Value:</label>
           <input
             type="number"
             id="price"
@@ -134,7 +149,7 @@ const ListItem = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="country_code" className="form-label">Zip Code:</label>
+          <label htmlFor="country_code" className="form-labels">Zip Code:</label>
           <input
             type="number"
             id="country_code"
@@ -148,7 +163,7 @@ const ListItem = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="township" className="form-label">Township:</label>
+          <label htmlFor="township" className="form-labels">Township:</label>
           <input
             type="text"
             id="township"
@@ -162,7 +177,7 @@ const ListItem = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="images" className="form-label">Upload Images:</label>
+          <label htmlFor="images" className="form-labels">Upload Images:</label>
           <input
             type="file"
             id="images"

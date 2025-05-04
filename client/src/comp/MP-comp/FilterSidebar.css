@@ -1,8 +1,9 @@
+@media only screen and (min-width: 1280px){
 .sidebar-container {
   position: fixed;
   top: 4.5rem;
   left: 20px;
-  z-index: 5;
+  z-index: 2;
   transition: width 0.3s ease-in-out;
 }
 
@@ -129,3 +130,139 @@ font-weight: 700;
 color: white;
 
  }
+
+}
+
+@media only screen and (max-width: 1279px){
+.sidebar-container {
+  position: fixed;
+  top: 4.5rem;
+  left: 20px;
+  z-index: 2;
+  transition: width 0.3s ease-in-out;
+}
+
+.mp-sidebar.open {
+  width: 250px;
+  transition: width 0.3s ease-in-out;
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+  position: fixed;
+  top: 2.8rem;
+  left: 0;
+  bottom: 0;
+}
+.toggle-btn.outside {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .5rem;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+ margin-top: 1rem;
+}
+
+.toggle-btn.inside {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+margin-top: 1rem;
+
+}
+
+.icon-text {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease; 
+margin-top: 1rem;
+padding: 0.4rem;
+}
+
+.icon-text:hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.1); 
+  border-radius: .4rem; 
+}
+
+.icon-text:active {
+  background-color: rgba(255, 255, 255, 0.2); 
+  box-shadow: inset 0 0 .2rem rgba(255, 255, 255, 0.3); 
+}
+
+
+.mp-sidebar.open .location-icon,
+.mp-sidebar.open .star-icon {
+  font-size: 35px;
+  margin-right: 10px;
+}
+
+.inside-button,
+.outside-button {
+  transition: transform 0.3s ease;
+  display: inline-flex;
+}
+
+.material-symbols-outlined.location-icon,
+.material-symbols-outlined.star-icon {
+  font-size: 35px;
+  margin-right: 10px;
+}
+
+.location-dropdown {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #34495e;
+  border-radius: 5px;
+}
+
+.location-input,
+.county-code-input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.filter-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.filter-btn:hover {
+  background-color: #3498db;
+}
+
+.filter-word{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: black;
+  padding: 0 8px;
+}
+
+.word {
+margin:0;
+font-size: 1.2rem;
+font-weight: 700;
+color: white;
+
+ }
+}

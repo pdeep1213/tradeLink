@@ -10,12 +10,12 @@ function UserHome({ profile }) {
   const [valDes, setvalDes] = useState(profile.pfdesc || "");
   const [profilePic, setProfilePic] = useState(profile.pfpic || test); 
   const [avgRating, setAvgRating] = useState(undefined);
+  const [doReload, setDoReload] = useState(false);
 
 const [showPopup, setShowPopup] = useState(false);
     const [profilePicPreview, setProfilePicPreview] = useState(profile.pfpic || test);
 
     // Fetch profile data when component mounts or when profile is updated
-
 useEffect(() => {
   if (profile.pfpic) {
     const parsedPicArray = JSON.parse(profile.pfpic);
@@ -103,7 +103,7 @@ const handleChangePicture = (e) => {
               add_a_photo
             </span>
           </div>
-          <div className="input-container-right">
+      <div className="input-container-right">
             <div className="input-container">
               <p className="input-text">UID:</p>
               <input
@@ -144,11 +144,10 @@ const handleChangePicture = (e) => {
 
             {avgRating !== undefined && (
               <div className="rating-container">
-                <p className="rating-label">Average User Rating:</p>
+                <p className="input-text">Average User Rating:</p>
                 <div className="rating-value">{avgRating.toFixed(2)} / 2</div>
               </div>
             )}
-
             <button className="saveButton" onClick={click}>
               Save
             </button>

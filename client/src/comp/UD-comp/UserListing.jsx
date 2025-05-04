@@ -17,13 +17,15 @@ function UserListing() {
       const response = await fetch("http://128.6.60.7:8080/send_listings", {
         credentials: "include",
       });
-
-      if (!response.ok) {
+      let rows;
+      if (response.status == 400)
+        rows = [];
+      else if (!response.ok) {
         console.error("Failed to fetch items", response.status, response.statusText);
         return;
       }
 
-      const rows = await response.json();
+      rows = await response.json();
       setItems(rows);
     } catch (error) {
       console.error("Error fetching items", error);
@@ -40,8 +42,10 @@ function UserListing() {
 
   return (
     <div className="user-listing">
-      <h1 className='listing-title'>My Listing</h1>
-      <Link to="/listItem" className='add-listing'>Sell Item</Link> 
+      <div className="user-listing-header">
+  <Link to="/listItem" className="add-listings">Sell Item</Link>
+  <h1 className="listing-title">My Listing</h1>
+</div>
       <div className='items-box'>
        {items.length > 0 ? (
           items.map((item, index) => (
