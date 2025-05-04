@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import test from "../FINANCE.png";
 import './AdminProfile.css'; 
 
@@ -6,18 +6,44 @@ function AdminDashboard({ profile }) {
   const [valUsername, setValUsername] = useState(profile.username);
   const [valEmail, setvalEmail] = useState(profile.email);
   const [valUID, setvalUID] = useState(profile.uid);
-  const [valPass, setvalPass] = useState(profile.password);  
-  // place holder
-  const [profilePic, setProfilePic] = useState(test);
+  const [profilePic, setProfilePic] = useState(profile.pfpic || test); 
+const [profilePicPreview, setProfilePicPreview] = useState(profile.pfpic || test);
 
-  const click = () => {
-    alert(val)
+
+useEffect(() => {
+  if (profile.pfpic) {
+    const parsedPicArray = JSON.parse(profile.pfpic);
+    if (parsedPicArray.length > 0) {
+      setProfilePicPreview(parsedPicArray[0]);
+    }
   }
+}, [profile.pfpic]);
 
-   const handleChangePicture = () => {
-    const newPic = prompt("Enter the new image:");
-    setProfilePic(newPic);
-  };  
+
+    const click = async () => {
+  const formData = new FormData();
+  formData.append('username', valUsername);
+    formData.append('files', profilePic);
+
+   await fetch('http://128.6.60.7:8080/updateProfile', {
+     credentials: "include",
+     method: 'POST',
+    body: formData
+  })
+  .catch(error => {
+    console.error('Error saving profile:', error);
+  });
+  location.reload();
+};
+
+
+const handleChangePicture = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setProfilePic(file);
+    setProfilePicPreview(URL.createObjectURL(file));
+  }
+};
 
   if (!profile) {
     return <h3>Loading profile...</h3>;
@@ -30,9 +56,24 @@ function AdminDashboard({ profile }) {
       <div className="adminProfile">
         <div className="profile-container">
           <div className="profile-picture-container" onClick={handleChangePicture} >
-          <img src={profilePic} alt="Profile" className="profile-picture" />
-        <span className="add_a_photo material-symbols-outlined">add_a_photo</span>  
-        </div>
+      <img
+              src={profilePicPreview} 
+              alt="Profile"
+              className="profile-picture"
+            />
+            <input
+              type="file"
+              id="fileInput"
+              style={{ display: 'none' }} 
+              onChange={handleChangePicture}
+            />
+            <span
+              className="add_a_photo material-symbols-outlined"
+              onClick={() => document.getElementById('fileInput').click()} 
+            >
+              add_a_photo
+            </span>  
+      </div>
           <div className="input-container-right">
             <div className="input-container">
               <p className="input-text">UID:</p> 
@@ -50,8 +91,6 @@ function AdminDashboard({ profile }) {
             </div>
 
             <div className="input-container">
-              <p className="input-text">Password:</p>
-              <input className="PASS-input" value={valPass} />
             </div>  
 
             <button className="saveButton" onClick={click}> Save </button>

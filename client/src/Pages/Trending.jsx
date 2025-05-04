@@ -61,12 +61,12 @@ const Trending = () => {
   return (
     <>
       <Navbar/>
-      <h1 style={{ color: "white", textAlign: "center", marginTop: "20px" }}>🔥 Trending Items</h1>
+      <h1 style={{ color: "white", textAlign: "center", marginTop: "12rem" }}> Trending Items</h1>
       <ItemListPage 
         userRole={userRole || "guest"} 
         profile={profile} 
-        items={items} 
-        fromCustomSource={true} 
+     items={items} 
+        fromCustomSource={true}
       />
       <span
         className="material-symbols-outlined chat-icon"

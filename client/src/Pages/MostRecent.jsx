@@ -83,13 +83,14 @@ const MostRecent = () => {
   return (
     <>
       <Navbar/>
-      <h1 style={{ color: "white", textAlign: "center", marginTop: "20px" }}>🆕 Recently Added Items</h1>
+      <h1 style={{ color: "white", textAlign: "center", marginTop: "12rem" }}> Recently Added Items</h1>
       <ItemListPage 
         userRole={userRole || "guest"} 
         profile={profile} 
-        items={items} 
+      items={items} 
         filters={{}} 
-        fromCustomSource={true} 
+        fromCustomSource={true}
+
       />
       <span className="material-symbols-outlined chat-icon" onClick={() => setIsChatOpen(true)} role="button" tabIndex="0">chat</span>
       <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />

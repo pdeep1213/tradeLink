@@ -57,7 +57,6 @@ function PurchasePage() {
 
           const data = await response.json();
           const id = data.sellerID;
-          console.log(data);
           return id;
       } catch (error) {
           console.error("Error fetching seller ID:", error);

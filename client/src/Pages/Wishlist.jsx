@@ -5,7 +5,7 @@ import './Wishlist.css';
 
 function Wishlist() {
   const fetchWishlistedItems = async () => {
-    const response = await fetch("http://128.6.60.7:8080/send_listings?type=main", {
+    const response = await fetch("http://128.6.60.7:8080/wishlist", {
       credentials: "include",
     });
 
@@ -14,7 +14,6 @@ function Wishlist() {
     }
 
     const items = await response.json();
-
     const updated = await Promise.all(items.map(async (item) => {
       try {
         const imgRes = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, {
@@ -34,7 +33,7 @@ function Wishlist() {
       }
     }));
 
-    return updated.filter(item => item.wished === true);
+    return updated;
   };
 
   const { data: items, isLoading, isError, error } = useQuery({

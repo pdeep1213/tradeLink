@@ -45,10 +45,17 @@ const profile = async (req, res) => {
 
 //I'm assuming this grabs a users wishlist
 const wishlist_uid = async (req, res) => {
-    const { uid } = req.params;
-      
+    const token = req.cookies.tradelink
+    if (!token) {
+        return res.status(400).json({ message: "No token provided" });
+    }
+    let con;
     try {
-        const [wishlistItems] = await db.query(`
+        const decoded = jwt.verify(token, jwt_token);
+        const uid = decoded.uid;
+        con = await db.getConnection();
+
+        const wishlistItems = await con.query(`
             SELECT 
               i.item_id, 
               i.itemname AS title, 
@@ -63,10 +70,13 @@ const wishlist_uid = async (req, res) => {
             GROUP BY i.item_id
           `, [uid]);
       
-        res.json(wishlistItems);
+        res.status(200).json(wishlistItems);
     } catch (err) {
         console.error('🔥 SQL ERROR:', err.message);
         res.status(500).json({ message: 'Server error', error: err.message });
+    }
+    finally{
+        con.release();
     }
 };
 

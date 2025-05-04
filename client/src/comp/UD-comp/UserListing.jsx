@@ -41,14 +41,15 @@ function UserListing() {
   return (
     <div className="user-listing">
       <h1 className='listing-title'>My Listing</h1>
-       <div className='items-box'>
+      <Link to="/listItem" className='add-listing'>Sell Item</Link> 
+      <div className='items-box'>
        {items.length > 0 ? (
           items.map((item, index) => (
             <ItemCard
               key={index}
               item={item}
               user={true}
-              type={'User'}
+              type={'user'}
               instock={item.instock}
               refreshItems={refreshItems}
               onEditClick={handleEditClick}
@@ -70,7 +71,6 @@ function UserListing() {
           onClose={closeModal}
         />
       )}
-       <Link to="/listItem" className='add-listing'>Sell Item</Link>
     </div>
   );
 }

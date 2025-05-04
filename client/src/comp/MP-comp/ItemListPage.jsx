@@ -94,7 +94,7 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
                                 type={uid_ === item.uid? userRole : "default"}
                                 key={item.item_id}
                                 user={userRole === "admin"}
-                                wished={!!item.wished}
+                                wished={item.wished}
                             />
                         ))
                     ) : (

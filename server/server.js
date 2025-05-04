@@ -125,7 +125,7 @@ app.get('/info/:uid', info);
 app.get('/profile', profile);
 
 //in profileHandler it is grabbing a person's wishlist
-app.get('/wishlist/:uid', wishlist_uid);
+app.get('/wishlist', wishlist_uid);
 
 //in profileHandler it is grabbing a person's average rating
 app.get('/userrating/:uid', getUserRating);
