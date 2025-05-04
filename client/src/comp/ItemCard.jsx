@@ -171,9 +171,9 @@ function ItemCard({
     4: { name: 'Others', color: '#808080' },
   };
 
-  const renderButtons = () => {
+  const renderButtons = (type) => {
     switch (type) {
-      case 'User':
+      case 'user':
         return (
           <>
             <button className="remove" onClick={(e) => { e.stopPropagation(); remove_btn(); }}>Remove</button>
@@ -186,6 +186,12 @@ function ItemCard({
         return (
           <button className="refund" onClick={(e) => { e.stopPropagation(); onRefund(); }}>Refund</button>
         );
+      case "admin":
+            return (
+                <>
+                 <button className="remove" onClick={(e) => { e.stopPropagation(); remove_btn(); }}>Remove</button>
+                </>
+            );
       default:
         return (
           <button className="add-to-cart" onClick={(e) => { e.stopPropagation(); purchase_click(); }}>Purchase</button>
@@ -217,7 +223,7 @@ function ItemCard({
               {wished ? <FaHeart color="red" /> : <FaRegHeart color="gray" />}
             </span>
           )}
-          {type === "User" && (
+          {type === "user" && (
             <span
               className="edit-icon"
               onClick={(e) => {
@@ -239,7 +245,7 @@ function ItemCard({
           </span>
         </div>
         <div className="btns">
-          {renderButtons()}
+          {renderButtons(type)}
         </div>
       </div>
     </div>

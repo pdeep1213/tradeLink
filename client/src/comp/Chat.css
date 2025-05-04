@@ -1,3 +1,4 @@
+
 .chat-overlay {
   position: fixed;
   z-index: 9;
@@ -27,11 +28,11 @@
 
 .chat-window.centered {
   position: fixed;
-  top: 40%;
-  left: 77%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-width: 30vw; 
-  height: 60vh; 
+width: 40vw; 
+  height: 70vh; 
   border-radius: 20px; 
 
 }
@@ -120,3 +121,4 @@ width: 30vw;
 .input-box button:hover {
   background-color: #0056b3;
 }
+

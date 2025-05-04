@@ -18,7 +18,7 @@ export default function Chat({ isOpen, onClose, receiver_id, fromMS = false }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
-  // Get Seller's Profile
+    // Get Seller's Profile
   useEffect(() => {
     const getSellerID = async () => {
       try {
@@ -148,6 +148,9 @@ export default function Chat({ isOpen, onClose, receiver_id, fromMS = false }) {
       console.error("Error sending message:", error.message);
     }
   };
+
+
+
 
   const chatWindowClass = fromMS ? "chat-window large" : "chat-window centered";
 

@@ -24,8 +24,6 @@
     flex-direction: column;
 overflow-y: auto;
 }
-
-
 /* Header and Footer Styling */
 .win-header, .win-footer {
     background: #f8f8f8;

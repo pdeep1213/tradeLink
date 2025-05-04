@@ -6,8 +6,7 @@ const sgMail = require('@sendgrid/mail');
 const sendEmail = async (email, subject, text) => {
     sgMail.setApiKey(process.env.SGMAIL);
     //skip unit test email
-    console.log(email[0]);
-    if (email.email == "user@a.com" || email.email == "user2@a.com" || email.email == "admin@a.com"){
+    if (email[0].email == "user@a.com" || email[0].email == "user2@a.com" || email[0].email == "admin@a.com"){
         return;
     }
     const msg = {

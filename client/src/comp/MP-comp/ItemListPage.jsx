@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useQuery } from '@tanstack/react-query';
 import ItemCard from '../../comp/ItemCard.jsx';
 import './ItemListPage.css';
 
 const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromCustomSource = false }) => {
+    const [uid_, setUID] = useState("");
 
     const fetchFilteredItems = async () => {
         let url;
@@ -32,6 +33,18 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
             }));
             return update;
         } else {
+            //start by fetching profile
+            try {
+                const response = await fetch("http://128.6.60.7:8080/profile", {
+                    credentials: 'include'
+                });
+                if (!response.ok) return;
+                const data = await response.json();
+                setUID(data.uid);
+            } catch (err) {
+                console.error("Error fetching profile:", err);
+            }
+
             const response = await fetch("http://128.6.60.7:8080/filter", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -39,7 +52,6 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
                 body: JSON.stringify(filters),
             });
             const result = await response.json();
-            console.log(result);
             if (!result.success) throw new Error("Filtering failed");
             const enrichedItems = await Promise.all(result.data.map(async (item) => {
                 try {
@@ -79,6 +91,7 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
                         displayItems.map(item => (
                             <ItemCard
                                 item={item}
+                                type={uid_ === item.uid? userRole : "default"}
                                 key={item.item_id}
                                 user={userRole === "admin"}
                                 wished={!!item.wished}
