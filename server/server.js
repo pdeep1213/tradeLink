@@ -264,6 +264,7 @@ app.post('/register', async (req, res) =>{
     const value = Object.values(data);
     const question = value.map(() => '?').join(', '); //this is to prevent sql injection attack
 
+
     let con;
     try{
         con = await db.getConnection();
@@ -371,7 +372,6 @@ app.post('/auth', async (req, res) => {
         html: `<p>Click the Link to Vertify Your Account: <a href=http://128.6.60.7:4173/auth?confirm=${vcode}>Verify</a></p>
         <p>Link Will Expire After 2 Hour</p> `,
     };
-
     try {
         await sgMail.send(msg);
         res.status(200).json({ message: "Verification email sent" });
