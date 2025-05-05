@@ -34,7 +34,18 @@ useEffect(() => {
       });
       const data = await response.json();
       if (data && typeof data.avg === "number") {
-        setAvgRating(data.avg);
+        if (data.avg == 0)
+          setAvgRating("No Rating");
+        else if (data.avg > 0 && data.avg <= 0.5)
+          setAvgRating("Awful");
+        else if (data.avg > 0.5 && data.avg <= 1)
+          setAvgRating("Bad");
+        else if (data.avg > 1 && data.avg <= 1.25)
+          setAvgRating("Neutral");
+        else if (data.avg > 1.25 && data.avg <= 1.5)
+          setAvgRating("Good");
+        else if (data.avg > 1.5 && data.avg <= 2)
+          setAvgRating("Great");
       }
     } catch (err) {
       console.error("Error fetching user rating:", err);
@@ -144,8 +155,8 @@ const handleChangePicture = (e) => {
 
             {avgRating !== undefined && (
               <div className="rating-container">
-                <p className="input-text">Average User Rating:</p>
-                <div className="rating-value">{avgRating.toFixed(2)} / 2</div>
+                <p className="input-text">Platform Standing:</p>
+                <div className="rating-value">{avgRating}</div>
               </div>
             )}
             <button className="saveButton" onClick={click}>

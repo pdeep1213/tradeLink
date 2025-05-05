@@ -9,7 +9,6 @@ import UserReport from './UserReport';
 import ItemReport from './ItemReport'; 
 import MyPurschases from './MyPurschases';
 import UserEarnings from './UserEarnings';
-import UserPayment from './UserPayment';
 
 function UDContentDisplay({ activeButton, profile }) {
   if (!profile) {
@@ -35,7 +34,6 @@ function UDContentDisplay({ activeButton, profile }) {
     userEarnings: <UserEarnings uid={profile.uid}></UserEarnings>,
     userListings: <UserListing></UserListing>,
     userPurschase : <MyPurschases profile={profile}></MyPurschases>,
-    userPayment: <UserPayment profile={profile} />,
 
   };
 

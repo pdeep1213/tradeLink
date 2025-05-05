@@ -52,7 +52,17 @@ const MostRecent = () => {
         const response = await fetch(`http://128.6.60.7:8080/recent`);
         if (!response.ok) return;
         const data = await response.json();
-        setItems(data);
+        const enrichItem = await Promise.all(data.map(async (item) => {
+            try{
+                const imgsRes=await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, {method: "POST"});
+                const imgData = imgsRes.ok? await imgsRes.json() : [];
+                console.log(imgData);
+                return {...item, img: imgData[0]?.imgpath || null};
+            }catch{
+                return {...item, img:null};
+            }
+        }));
+        setItems(enrichItem);
       } catch (error) {
         console.error(`Error fetching recent items:`, error);
       }

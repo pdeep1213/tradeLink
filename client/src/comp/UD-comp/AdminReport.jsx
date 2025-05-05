@@ -23,7 +23,7 @@ const [items, setItems] = useState([]);
       const enrichItem = await Promise.all(rows.map(async (item) => {
           try {
               const imgRes = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, {method: "POST"});
-              const imgData = imgsRes.ok ? await imgRes.json() : [];
+              const imgData = imgRes.ok ? await imgRes.json() : [];
               return {...item, img: imgData[0]?.imgpath || null};
           } catch {
               return {...item, img: null};
