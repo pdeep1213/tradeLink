@@ -44,7 +44,7 @@ function Edit({
 
       const data = await response.json();
 
-      if (response.ok) {cd 
+      if (response.ok) { 
         if (refreshItems) refreshItems();
         onClose();
       } else {

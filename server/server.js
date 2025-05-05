@@ -264,6 +264,7 @@ app.post('/register', async (req, res) =>{
     const value = Object.values(data);
     const question = value.map(() => '?').join(', '); //this is to prevent sql injection attack
 
+
     let con;
     try{
         con = await db.getConnection();
