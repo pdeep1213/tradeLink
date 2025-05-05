@@ -13,8 +13,17 @@ function MyPurschases({profile}) {
           credentials: 'include'
         });
 
-        const rows = await response.json();
-        setItems(rows);
+          const rows = await response.json();
+          const enrichItems = await Promise.all(rows.map(async (item) => {
+              try{
+                  const imgRes = await fetch(`http://128.6.60.7:8080/fetchImg?item_id=${item.item_id}`, {method:"POST"});
+                  const imgData = imgRes.ok ? await imgRes.json() : [];
+                  return {...item, img: imgData[0]?.imgpath || null};
+              }catch{
+                  return {...item, img:null};
+              }
+          }));
+          setItems(enrichItems);
         
       } catch (error) {
         console.error("Error fetching items", error);
