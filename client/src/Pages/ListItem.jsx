@@ -60,10 +60,7 @@ const handleFileChange = (e) => {
 
       var formdata = new FormData();
       formdata.append('item_id', result.item_id);
-      const imgArray = Array.from(images);
-      imgArray.forEach((image) => {
-        formdata.append('files', image);
-      });
+        formdata.append('files', images);
       const response2 = await fetch('http://128.6.60.7:8080/uploadImg', {
         method: 'POST',
         body: formdata,

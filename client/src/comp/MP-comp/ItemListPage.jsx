@@ -92,7 +92,7 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
                         displayItems.map(item => (
                             <ItemCard
                                 item={item}
-                                type={uid_ === item.uid? userRole : "default"}
+                                type={uid_ === item.uid || userRole === "admin"? userRole : "default"}
                                 key={item.item_id}
                                 user={userRole === "admin"}
                                 wished={item.wished}
