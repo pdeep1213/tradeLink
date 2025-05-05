@@ -241,7 +241,7 @@ function ItemCard({
               title="Edit Item"
               style={{ marginLeft: '10px', cursor: 'pointer' }}
             >
-              <FaEdit color="#555" />
+              <FaEdit color="white" />
             </span>
           )}
         </h2>

@@ -373,7 +373,9 @@ app.post('/auth', async (req, res) => {
         <p>Link Will Expire After 2 Hour</p> `,
     };
     try {
+        console.log("sending email");
         await sgMail.send(msg);
+        console.log("email sent");
         res.status(200).json({ message: "Verification email sent" });
     } catch (error) {
         console.error("Error sending email:", error);

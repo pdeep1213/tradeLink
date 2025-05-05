@@ -71,12 +71,19 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
         data: fetchedItems = [],
         isLoading,
         isError,
-        error
+        error,
+        refetch
     } = useQuery({
-        queryKey: ['filtered-items', filters],
+        queryKey: ['filtered-items', filters, userRole],
         queryFn: fetchFilteredItems,
         enabled: !fromCustomSource  // Only fetch if not using custom data
     });
+
+
+
+    const refreshItems = () => {
+        refetch();
+    }
 
     const displayItems = fromCustomSource ? propItems : fetchedItems;
 
@@ -96,6 +103,7 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
                                 key={item.item_id}
                                 user={userRole === "admin"}
                                 wished={item.wished}
+                                refreshItems={refreshItems}
                             />
                         ))
                     ) : (
