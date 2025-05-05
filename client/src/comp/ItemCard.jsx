@@ -209,7 +209,7 @@ function ItemCard({
 
   return (
     <div className="item-card" onClick={handleViewClick}>
-      <img src={item.img || Logo} alt={item.title} className="item-image" />
+      <img src={item.img ||item.image|| Logo} alt={item.title} className="item-image" />
       {(!user && uid) && (
         <div className="menu-container">
           <div className="menu-icon" onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}>...</div>
