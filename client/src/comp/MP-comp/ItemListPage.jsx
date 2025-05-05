@@ -6,6 +6,7 @@ import './ItemListPage.css';
 const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromCustomSource = false }) => {
     const [uid_, setUID] = useState("");
 
+   // Fetching items for guest user, doesnt include wishlist 
     const fetchFilteredItems = async () => {
         let url;
         if (userRole === "guest") {
@@ -44,7 +45,7 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
             } catch (err) {
                 console.error("Error fetching profile:", err);
             }
-
+// Fetching item for signed in user
             const response = await fetch("http://128.6.60.7:8080/filter", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -74,7 +75,7 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
     } = useQuery({
         queryKey: ['filtered-items', filters],
         queryFn: fetchFilteredItems,
-        enabled: !fromCustomSource  // ❗ Only fetch if not using custom data
+        enabled: !fromCustomSource  // Only fetch if not using custom data
     });
 
     const displayItems = fromCustomSource ? propItems : fetchedItems;
@@ -91,7 +92,7 @@ const ItemListPage = ({ userRole, profile, filters, items: propItems = [], fromC
                         displayItems.map(item => (
                             <ItemCard
                                 item={item}
-                                type={uid_ === item.uid? userRole : "default"}
+                                type={uid_ === item.uid || userRole === "admin"? userRole : "default"}
                                 key={item.item_id}
                                 user={userRole === "admin"}
                                 wished={item.wished}

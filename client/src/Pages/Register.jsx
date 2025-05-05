@@ -35,8 +35,21 @@ const Register = () => {
      });
      console.log(response);
      if (!response.ok){throw new Error('server error');}
+   //---------------------------------------------------------------- making a user account
      const result = await response.json();
-        console.log("Server Result: ", result);
+     //before navigation call auth
+     try {
+         const response = await fetch('http://128.6.60.7:8080/auth', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ email: formData.email })
+         });
+         if (!response.ok) throw new Error("Failed to send verification email");
+     } catch (error) {
+         console.error("Error sending email:", error);
+         alert("Failed to send verification email.");
+     }
+
         navigate("/login");
     } catch(error){ console.log("error: ", error);}
   };

@@ -15,6 +15,7 @@ import Messages from "./Pages/Messages.jsx";
 import Trending from "./Pages/Trending.jsx";
 import MostRecent from "./Pages/MostRecent.jsx";
 
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

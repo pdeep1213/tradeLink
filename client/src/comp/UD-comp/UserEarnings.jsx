@@ -7,6 +7,8 @@ function UserEarnings({uid}) {
     const [count, setCount] = useState(0);
     const [loading, setLoading] = useState(true);
   
+   
+    // fetches the earnings of the user from the backend, to load info in frontend
     useEffect(() => {
       const fetchEarnings = async () => {
         try {   
